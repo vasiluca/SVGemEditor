@@ -1,0 +1,1929 @@
+body {
+    margin: 0;
+    background-image: radial-gradient(#a8ff78, #78ffd6);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+    -webkit-user-select: none
+}
+
+body.no-transition * {
+    transition: all 0s !important
+}
+
+* {
+    margin: 0;
+    padding: 0
+}
+
+[aria-label] {
+    position: relative
+}
+
+[aria-label]::before {
+    content: attr(aria-label);
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    visibility: hidden;
+    opacity: 0;
+    padding: 3px 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 15px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.4);
+    transition: all 0s;
+    z-index: 50;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    line-height: 1
+}
+
+[aria-label]:hover::before {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.15s ease 1s
+}
+
+[aria-label]:active::before,
+[aria-label]:focus::before {
+    transition: all 0s;
+    visibility: hidden;
+    opacity: 0
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    letter-spacing: 1.75px;
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(-40px);
+    left: 0;
+    right: 0;
+    margin: 10px 0;
+    padding: 0
+}
+
+.splash {
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+    font-family: 'Montserrat', 'Roboto', sans-serif;
+    font-size: 20px;
+    transition: all 0.25s ease;
+    z-index: 5
+}
+
+.splash * {
+    transition: all 0.25s ease
+}
+
+.splash span {
+    display: block;
+    text-align: center;
+    line-height: 30px
+}
+
+.splash .start {
+    text-align: center;
+    width: 150px;
+    margin: 10px auto;
+    line-height: 30px;
+    background: cornflowerblue;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer
+}
+
+.splash .start:hover,
+.splash .start:active {
+    width: 200px
+}
+
+.splash .quickset {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    opacity: 0.5
+}
+
+.splash .quickset:hover {
+    opacity: 1
+}
+
+.splash .quickset input {
+    width: 110px;
+    padding: 0;
+    margin: 0 0 10px 0;
+    border: none;
+    border-bottom: 2px solid limegreen;
+    background: none;
+    outline: none;
+    text-align: center;
+    line-height: 20px;
+    font-size: 22px;
+    font-family: 'Roboto Condensed', sans-serif;
+    display: inline-block
+}
+
+.splash .quickset span {
+    width: 40px;
+    display: inline-block;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: green
+}
+
+.splash .quickset div {
+    padding: 10px 10px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px
+}
+
+.splash .quickset .material-icons {
+    padding-left: 5px;
+    float: right
+}
+
+.splash.hide {
+    top: 25px
+}
+
+.splash.hide .start {
+    width: 500px;
+    border-radius: 4px 4px 0 0
+}
+
+.splash.hide span {
+    opacity: 0
+}
+
+.splash.hide .quickset {
+    visibility: hidden;
+    opacity: 0
+}
+
+.splash.hide+.options {
+    transform: translate(-50%, 0%);
+    opacity: 1
+}
+
+.options {
+    background: white;
+    width: 480px;
+    padding: 40px 10px;
+    border-radius: 4px;
+    margin: 0 auto;
+    position: fixed;
+    top: 25px;
+    bottom: 25px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    transition: all 0.25s ease;
+    opacity: 0;
+    overflow-x: hidden
+}
+
+.options * {
+    transition: all 0.25s ease
+}
+
+.options>span {
+    display: inline-block;
+    line-height: 40px;
+    font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+    font-size: 20px;
+    vertical-align: middle
+}
+
+.options>span input[type='number'] {
+    width: 100px;
+    display: inline-block;
+    border: none;
+    box-shadow: 0 0 0 1px grey;
+    outline: none;
+    margin-left: 10px;
+    text-align: center;
+    height: 20px;
+    margin-top: -2px;
+    padding: 0;
+    vertical-align: middle
+}
+
+.options .create {
+    height: 40px;
+    width: 40px;
+    font-size: 40px;
+    line-height: 40px;
+    border-radius: 5px;
+    background: red;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background-color: limegreen;
+    color: white;
+    transform: translateX(100%);
+    opacity: 0
+}
+
+.options .create.show {
+    opacity: 1;
+    transform: translateX(0)
+}
+
+.svg-contain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-image: radial-gradient(#a8ff78, #78ffd6);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease, opacity 0.5s ease
+}
+
+.svg-contain.show {
+    opacity: 1;
+    visibility: visible
+}
+
+#editor {
+    position: fixed;
+    background-color: white;
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+    transition: all 0.15s ease
+}
+
+#movePreview,
+#overPreview,
+#snapping {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    pointer-events: none
+}
+
+.tools {
+    z-index: 20;
+    position: relative;
+    transition: all 0.15s ease
+}
+
+.tools .draggingLayer {
+    transform: scale(0.6);
+    position: absolute;
+    z-index: 50;
+    background-color: white;
+    opacity: 0.8
+}
+
+.tools.hide {
+    opacity: 0;
+    visibility: hidden
+}
+
+.tools .animation {
+    min-height: 125px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: white;
+    z-index: 100;
+    display: none
+}
+
+.tools .draggable {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    border-radius: 4px;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.4);
+    background: white;
+    white-space: nowrap;
+    transition: all 0.25s ease
+}
+
+.tools .draggable .drag {
+    text-align: center;
+    font-size: 20px;
+    background: whitesmoke;
+    width: 50px;
+    line-height: 20px;
+    padding: 0;
+    margin: 0;
+    display: block;
+    cursor: default
+}
+
+.tools .draggable .drag:active {
+    background: lightgrey
+}
+
+.tools .draggable:active {
+    transition: all 0s
+}
+
+.tools .draggable.shapes {
+    list-style-type: none;
+    top: 10px;
+    left: 10px
+}
+
+.tools .draggable.shapes>div {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.25s ease;
+    margin: 0
+}
+
+.tools .draggable.shapes>div .material-icons {
+    font-size: 34px;
+    text-align: center;
+    line-height: 40px;
+    display: block;
+    transition: all 0.25s ease
+}
+
+.tools .draggable.shapes>div::before {
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%)
+}
+
+.tools .draggable.shapes>div svg {
+    transition: all 0.25s ease
+}
+
+.tools .draggable.shapes>div svg * {
+    fill: black;
+    transition: all 0.25s ease
+}
+
+.tools .draggable.shapes>div:hover svg {
+    opacity: 0.5;
+    transform: scale(1.1)
+}
+
+.tools .draggable.shapes>div:hover .material-icons {
+    transform: scale(1.12);
+    opacity: 0.5
+}
+
+.tools .draggable.shapes>div.selected svg {
+    opacity: 1;
+    transform: scale(1)
+}
+
+.tools .draggable.shapes>div.selected svg * {
+    fill: cornflowerblue;
+    stroke: cornflowerblue
+}
+
+.tools .draggable.shapes>div.selected .material-icons {
+    transform: scale(1);
+    opacity: 1;
+    color: cornflowerblue
+}
+
+.tools .draggable.shapes.horiz>div {
+    display: inline-block;
+    vertical-align: top
+}
+
+.tools .draggable.shapes #image::after {
+    content: '';
+    letter-spacing: -1px;
+    position: absolute;
+    top: 10px;
+    left: 13px;
+    font-size: 17px;
+    font-family: 'Roboto Condensed', sans-serif;
+    color: white;
+    font-weight: 300
+}
+
+.tools .draggable.horiz .drag {
+    height: 50px;
+    width: 20px;
+    display: inline-block;
+    line-height: 50px;
+    vertical-align: top;
+    z-index: 20;
+    position: relative
+}
+
+.tools .draggable.horiz>*:last-child {
+    border-radius: 0 4px 4px 0
+}
+
+.tools .draggable.horiz>*:first-child {
+    border-radius: 4px 0 0 4px
+}
+
+.tools .draggable.verti>*:last-child {
+    border-radius: 0 0 4px 4px
+}
+
+.tools .draggable.verti>*:first-child {
+    border-radius: 4px 4px 0 0
+}
+
+.tools .draggable.color {
+    left: 10px;
+    bottom: 10px;
+    height: 50px;
+    width: 245px;
+    font-size: 0;
+    white-space: nowrap;
+    background-color: lightgrey;
+    overflow: visible
+}
+
+.tools .draggable.color .drag-bar {
+    position: absolute;
+    z-index: 15;
+    display: none
+}
+
+.tools .draggable.color .drag-bar.vertical {
+    cursor: ew-resize;
+    width: 4px;
+    top: 50px;
+    bottom: 0
+}
+
+.tools .draggable.color .drag-bar.vertical.left {
+    left: -2px
+}
+
+.tools .draggable.color .drag-bar.vertical.right {
+    right: -2px
+}
+
+.tools .draggable.color .drag-bar.horizontal {
+    cursor: ns-resize;
+    height: 4px;
+    left: 0;
+    right: 0
+}
+
+.tools .draggable.color .drag-bar.horizontal.top {
+    top: -2px;
+    left: 20px;
+    right: 20px
+}
+
+.tools .draggable.color .drag-bar.horizontal.bottom {
+    bottom: -2px
+}
+
+.tools .draggable.color .drag-corner {
+    position: absolute;
+    height: 6px;
+    width: 6px;
+    z-index: 20;
+    display: none
+}
+
+.tools .draggable.color .drag-corner.bottom-right {
+    right: -3px;
+    bottom: -3px;
+    cursor: nwse-resize
+}
+
+.tools .draggable.color .drag-corner.bottom-left {
+    left: -3px;
+    bottom: -3px;
+    cursor: nesw-resize
+}
+
+.tools .draggable.color .drag-corner.top-right {
+    top: -3px;
+    right: -3px;
+    cursor: nesw-resize
+}
+
+.tools .draggable.color .drag-corner.top-left {
+    top: -3px;
+    left: -3px;
+    cursor: nwse-resize
+}
+
+.tools .draggable.color.expand {
+    height: 306px
+}
+
+.tools .draggable.color.expand .drag-bar {
+    display: block
+}
+
+.tools .draggable.color.expand .drag-corner {
+    display: block
+}
+
+.tools .draggable.color>* {
+    position: relative;
+    z-index: 5
+}
+
+.tools .draggable.color>*:first-child,
+.tools .draggable.color>*:last-child {
+    border-radius: 0
+}
+
+.tools .draggable.color .contain-overflow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: lightgrey;
+    background-image: linear-gradient(to bottom, #d3d3d3, #d3d3d3 82px, rgba(211, 211, 211, 0.8) 82px, rgba(211, 211, 211, 0.8) 306px), url("./images/transparent-pattern.svg");
+    background-size: cover, 35px 32px;
+    background-position: 0 0, 0 82px
+}
+
+.tools .draggable.color .scrollbar {
+    position: absolute;
+    right: 0;
+    bottom: 32px;
+    top: 50px;
+    width: 14px;
+    background: lightgrey;
+    border-radius: 0 5px 5px 0;
+    transition: right 0.25s ease
+}
+
+.tools .draggable.color .scrollbar.show {
+    right: -14px
+}
+
+.tools .draggable.color .infoPanel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    line-height: 32px;
+    height: 32px
+}
+
+.tools .draggable.color .infoPanel.minimize {
+    height: 28px
+}
+
+.tools .draggable.color .infoPanel .tabName {
+    text-align: center;
+    background: linear-gradient(to top, #d3d3d3, rgba(211, 211, 211, 0));
+    color: black;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    z-index: 1;
+    text-shadow: 0 0 5px whitesmoke
+}
+
+.tools .draggable.color .infoPanel .infocolor {
+    font-family: 'Open Sans Condensed', 'Roboto Condensed', sans-serif;
+    font-size: 16px;
+    height: inherit;
+    line-height: inherit;
+    background-image: url(./images/transparent-pattern.svg);
+    background-size: 35px 32px;
+    cursor: n-resize;
+    color: black;
+    text-wrap: no-wrap;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    visibility: hidden
+}
+
+.tools .draggable.color .infoPanel .infocolor.smallColors {
+    cursor: s-resize
+}
+
+.tools .draggable.color .infoPanel .infocolor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: inherit
+}
+
+.tools .draggable.color .infoPanel .infocolor span {
+    position: absolute;
+    z-index: 1;
+    background-repeat: no-repeat;
+    vertical-align: top;
+    max-width: 60%;
+    transition: left 0.25s ease, right 0.25s ease
+}
+
+.tools .draggable.color .infoPanel .infocolor span::after,
+.tools .draggable.color .infoPanel .infocolor span::before {
+    width: 24px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: top;
+    position: absolute
+}
+
+.tools .draggable.color .infoPanel .infocolor span.left {
+    left: -50%;
+    padding-left: 4px
+}
+
+.tools .draggable.color .infoPanel .infocolor span.right {
+    right: -50%;
+    padding-right: 4px
+}
+
+.tools .draggable.color .infoPanel .infocolor.shadow span.left {
+    background-color: rgba(255, 255, 255, 0.15)
+}
+
+.tools .draggable.color .infoPanel .infocolor.shadow span.left::after {
+    content: '';
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0))
+}
+
+.tools .draggable.color .infoPanel .infocolor.shadow span.right {
+    background-color: rgba(255, 255, 255, 0.15)
+}
+
+.tools .draggable.color .infoPanel .infocolor.shadow span.right::before {
+    content: '';
+    background-image: linear-gradient(to left, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+    transform: translateX(-100%)
+}
+
+.tools .draggable.color .infoPanel .infocolor.light {
+    color: white
+}
+
+.tools .draggable.color .infoPanel .infocolor.light.shadow span.left {
+    background-color: rgba(0, 0, 0, 0.15)
+}
+
+.tools .draggable.color .infoPanel .infocolor.light.shadow span.left::after {
+    content: '';
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0))
+}
+
+.tools .draggable.color .infoPanel .infocolor.light.shadow span.right {
+    background-color: rgba(0, 0, 0, 0.15)
+}
+
+.tools .draggable.color .infoPanel .infocolor.light.shadow span.right::before {
+    content: '';
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+    transform: translateX(-100%)
+}
+
+.tools .draggable.color .infoPanel .infocolor:hover {
+    opacity: 1;
+    visibility: visible
+}
+
+.tools .draggable.color .infoPanel .infocolor:hover span.left {
+    left: 0
+}
+
+.tools .draggable.color .infoPanel .infocolor:hover span.right {
+    right: 0
+}
+
+.tools .draggable.color .infoPanel.show .infocolor {
+    opacity: 1;
+    visibility: visible
+}
+
+.tools .draggable.color .infoPanel.show .infocolor span.left {
+    left: 0
+}
+
+.tools .draggable.color .infoPanel.show .infocolor span.right {
+    right: 0
+}
+
+.tools .draggable.color input {
+    line-height: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 0 0 10px;
+    width: calc(100% - 50px);
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: all 0.15s ease;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0)
+}
+
+.tools .draggable.color input.user {
+    position: relative
+}
+
+.tools .draggable.color input.suggest {
+    position: absolute;
+    background: white
+}
+
+.tools .draggable.color .col {
+    width: 20px;
+    height: 50px;
+    background: black;
+    display: inline-block;
+    line-height: 70px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: -1px 0 0 white, -2px 0 0 whitesmoke;
+    z-index: 12;
+    position: relative
+}
+
+.tools .draggable.color .col::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-image: url(./images/transparent-pattern.svg);
+    background-size: 27px 28.3px;
+    background-position: 0 0
+}
+
+.tools .draggable.color .col::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: inherit
+}
+
+.tools .draggable.color .col .material-icons {
+    text-align: left;
+    font-size: 20px;
+    filter: invert(100%);
+    position: relative;
+    z-index: 2
+}
+
+.tools .draggable.color .col.hideButton .material-icons {
+    opacity: 0;
+    transition: opacity 0.25s ease 0.5s
+}
+
+.tools .draggable.color .col:hover .material-icons {
+    transition: opacity 0.1s ease;
+    opacity: 1
+}
+
+.tools .draggable.color .search-filter {
+    position: absolute;
+    right: 20px;
+    z-index: 14;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 15px;
+    padding-right: 5px;
+    text-align: center;
+    background-image: linear-gradient(to left, white 50%, rgba(255, 255, 255, 0));
+    cursor: pointer;
+    transition: all 0.15s ease
+}
+
+.tools .draggable.color .search-filter:hover {
+    color: cornflowerblue
+}
+
+.tools .draggable.color .category {
+    height: 32px;
+    background-color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    position: relative;
+    z-index: 11;
+    overflow: hidden
+}
+
+.tools .draggable.color .category .material-icons {
+    line-height: 32px;
+    width: 42px;
+    text-align: center;
+    transition: all 0.15s ease;
+    cursor: pointer
+}
+
+.tools .draggable.color .category .material-icons.select {
+    cursor: default;
+    color: cornflowerblue;
+    line-height: 28px;
+    box-shadow: 0 -4px 0 cornflowerblue inset
+}
+
+.tools .draggable.color .category .material-icons.validDrop {
+    color: darkgoldenrod;
+    transition: all 0.25s ease
+}
+
+.tools .draggable.color .category .material-icons.animate {
+    color: darkgoldenrod;
+    transform: scale(1.15)
+}
+
+.tools .draggable.color .swatches {
+    width: 245px;
+    white-space: normal;
+    position: static;
+    z-index: -1;
+    position: relative
+}
+
+.tools .draggable.color .swatches span {
+    height: 32px;
+    width: 35px;
+    display: inline-block;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    transition: height 0.25s ease
+}
+
+.tools .draggable.color .swatches span::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-image: url(./images/transparent-pattern.svg);
+    background-position: 0 0;
+    background-size: 35px 32px;
+    background-repeat: no-repeat
+}
+
+.tools .draggable.color .swatches span::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: inherit
+}
+
+.tools .draggable.color .swatches span.selectionCursor::before {
+    background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern.svg);
+    background-size: 31px 28px;
+    background-position: 2px 2px;
+    background-repeat: no-repeat, repeat
+}
+
+.tools .draggable.color .swatches span.selectionCursor::after {
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px
+}
+
+.tools .draggable.color .swatches span.selectionCursor.selected::before {
+    background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darker.svg)
+}
+
+.tools .draggable.color .swatches span.selectedFade::before {
+    background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-lighter.svg);
+    background-size: 31px 28px;
+    background-position: 2px 2px;
+    background-repeat: no-repeat, repeat;
+    transition: background-position 0.25s ease, background-size 0.25s ease
+}
+
+.tools .draggable.color .swatches span.selectedFade::after {
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    animation: select 0.5s linear
+}
+
+@keyframes select {
+    0% {
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0
+    }
+
+    50% {
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0
+    }
+
+    100% {
+        top: 1px;
+        right: 1px;
+        left: 1px;
+        bottom: 1px
+    }
+}
+
+.tools .draggable.color .swatches span.selectedFade:hover::before {
+    background-size: 35px 32px;
+    background-position: 0 0
+}
+
+.tools .draggable.color .swatches span.selectedFade.selected::before {
+    background-size: 31px 28px;
+    background-position: 2px 2px
+}
+
+.tools .draggable.color .swatches span.selected::before {
+    background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darker.svg);
+    background-size: 31px 28px;
+    background-position: 2px 2px;
+    background-repeat: no-repeat, repeat
+}
+
+@keyframes borderRotate1 {
+    0% {
+        background-position: 2px 2px, -17.5px -16px
+    }
+
+    100% {
+        background-position: 2px 2px, 0 0
+    }
+}
+
+.tools .draggable.color .swatches span.selected::after {
+    top: 1px;
+    right: 1px;
+    left: 1px;
+    bottom: 1px;
+    animation: bounce 0.15s linear 2 alternate
+}
+
+@keyframes bounce {
+    0% {
+        top: 1px;
+        right: 1px;
+        left: 1px;
+        bottom: 1px
+    }
+
+    100% {
+        top: 2px;
+        right: 2px;
+        left: 2px;
+        bottom: 2px
+    }
+}
+
+.tools .draggable.color .swatches span.selected.selectionCursor::before {
+    background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darkest.svg)
+}
+
+.tools .draggable.color .swatches span.new::before {
+    animation: borderRotate2 2s linear
+}
+
+@keyframes borderRotate2 {
+    0% {
+        background-position: 2px 2px, -35px -32px
+    }
+
+    100% {
+        background-position: 2px 2px, 0 0
+    }
+}
+
+.tools .draggable.color .swatches span.new.selected::after {
+    animation: bounce 0.15s linear 2 alternate
+}
+
+.tools .draggable.color .swatches span.deleted::after {
+    font-family: 'Material Icons';
+    content: 'close';
+    font-size: 18px;
+    line-height: 32px;
+    text-align: center;
+    color: black;
+    transition: visibility 0s linear 0.5s, line-height 0.15s ease;
+    box-shadow: 0 0 0 64px rgba(255, 255, 255, 0.5) inset
+}
+
+.tools .draggable.color .swatches span.empty-space {
+    opacity: 0;
+    cursor: default
+}
+
+.tools .draggable.color .swatches.smallColors span {
+    height: 16px
+}
+
+.tools .draggable.color .swatches.smallColors span::before {
+    font-size: 16px;
+    line-height: 16px
+}
+
+.tools .draggable.color .swatches[data-scheme='sundberg'][data-category='palette'] span {
+    width: 49px
+}
+
+.tools .draggable.color .swatches.searching span {
+    width: 32px
+}
+
+.tools .draggable.color .swatches .status {
+    width: 225px;
+    color: black;
+    position: relative;
+    top: 96px;
+    left: 10px;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    text-align: center
+}
+
+.tools .draggable.properties,
+.tools .draggable.actions {
+    height: 50px;
+    line-height: 50px;
+    bottom: 10px;
+    display: flex
+}
+
+.tools .draggable.properties div,
+.tools .draggable.actions div {
+    line-height: 50px;
+    width: 50px;
+    text-align: center;
+    font-size: 28px;
+    transition: all 0.25s ease;
+    flex: 0 0 50px;
+    cursor: default
+}
+
+.tools .draggable.properties div.disabled::after,
+.tools .draggable.actions div.disabled::after {
+    color: grey
+}
+
+.tools .draggable.properties div::before,
+.tools .draggable.actions div::before {
+    top: -10px;
+    transform: translateY(-100%) translateX(-50%)
+}
+
+.tools .draggable.properties div:hover,
+.tools .draggable.actions div:hover {
+    background-color: gainsboro;
+    transition: all 0s ease
+}
+
+.tools .draggable.properties div[data-icon]::after,
+.tools .draggable.actions div[data-icon]::after {
+    content: attr(data-icon);
+    position: absolute;
+    color: black;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 19px;
+    overflow: hidden;
+    display: block;
+    text-shadow: 0 0 1px 0 white
+}
+
+.tools .draggable.properties {
+    left: 275px
+}
+
+.tools .draggable.properties div {
+    background-image: radial-gradient(circle at center, lightgrey 62%, transparent 62%);
+    background-size: 0 0;
+    background-position: center;
+    background-repeat: no-repeat
+}
+
+.tools .draggable.properties div.toggled,
+.tools .draggable.properties div.fill {
+    background-size: 50px 50px
+}
+
+.tools .draggable.properties div.toggled:hover,
+.tools .draggable.properties div.fill:hover {
+    transition: all 0.25s ease;
+    background-color: white
+}
+
+.tools .draggable.properties div[aria-label="opacity"] {
+    background-image: radial-gradient(circle at center, white 0%, gainsboro 62%, transparent 62%)
+}
+
+.tools .draggable.properties div[aria-label="stroke"].fill,
+.tools .draggable.properties div[aria-label="fill"].fill {
+    background-image: radial-gradient(circle at center, gainsboro 31%, silver 56%, darkgrey 62%, transparent 62%)
+}
+
+.tools .draggable.properties div[aria-label="gradient"],
+.tools .draggable.properties div[aria-label="texture"] {
+    background-image: radial-gradient(circle at center, whitesmoke 32%, silver 56%, darkgrey 62%, transparent 62%)
+}
+
+.tools .draggable.properties div.fill {
+    background-size: 50px 50px
+}
+
+.tools .draggable.actions {
+    right: 10px
+}
+
+.tools .draggable.actions [aria-label='grid'].material-icons {
+    background: white;
+    color: black;
+    transition: color 0.25s ease
+}
+
+.tools .draggable.actions [aria-label='grid'].material-icons::after {
+    content: 'grid_off';
+    color: black;
+    position: absolute;
+    transition: all 0.5s ease, background-color 0s ease;
+    width: 50px;
+    flex: 0 0 50px;
+    top: 0;
+    left: 0;
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    background-color: inherit
+}
+
+.tools .draggable.actions [aria-label='grid'].material-icons.on {
+    color: cornflowerblue
+}
+
+.tools .draggable.actions [aria-label='grid'].material-icons.on::after {
+    height: 0;
+    color: cornflowerblue
+}
+
+.tools .draggable.actions [aria-label='more']:hover~.expand {
+    transition: all 0.15s ease 0.5s
+}
+
+.tools .draggable.actions [aria-label='more']~.expand {
+    width: 0;
+    transition: all 0.15s ease;
+    overflow: hidden;
+    display: flex;
+    opacity: 0
+}
+
+.tools .draggable.actions [aria-label='more']:active~.expand {
+    transition: all 0.15s ease
+}
+
+.tools .draggable.layers {
+    top: 10px;
+    right: 10px;
+    width: 50px
+}
+
+.tools .draggable.layers::after {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    content: 'LAYERS';
+    transform: translate(-50%);
+    display: block;
+    font-size: 18px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    z-index: -1
+}
+
+.tools .draggable.layers .all {
+    min-height: 150px;
+    overflow: hidden
+}
+
+.tools .draggable.layers .all div {
+    position: relative;
+    height: 50px;
+    width: 50px;
+    background-color: white;
+    text-align: center;
+    line-height: 50px
+}
+
+.tools .draggable.layers .all div.hidden::before {
+    content: 'visibility_off';
+    font-family: 'Material Icons';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 20px;
+    color: black;
+    height: 50px;
+    width: 50px;
+    text-align: right;
+    line-height: 80px;
+    background-image: linear-gradient(to top left, rgba(255, 255, 255, 0.75) 25%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.25) 100%);
+    z-index: 2;
+    text-shadow: 0 0 1px white
+}
+
+.tools .draggable.layers .all div:hover {
+    background-color: gainsboro
+}
+
+.tools .draggable.layers .all div.drop-above,
+.tools .draggable.layers .all div.drop-below {
+    z-index: 4
+}
+
+.tools .draggable.layers .all div.drop-above::after,
+.tools .draggable.layers .all div.drop-below::after {
+    content: '';
+    display: block;
+    width: 100%;
+    position: absolute;
+    height: 14px;
+    background-color: rgba(100, 149, 237, 0.6);
+    box-shadow: 0 0 0 1px #fff inset, 0 0 0 2px blue inset, 0 0 0 3px #fff inset;
+    z-index: 4
+}
+
+@keyframes darken-color-drop {
+    0% {
+        background-color: rgba(100, 149, 237, 0.6)
+    }
+
+    16% {
+        background-color: rgba(100, 149, 237, 0.6)
+    }
+
+    100% {
+        background-color: #6495ed
+    }
+}
+
+.tools .draggable.layers .all div.drop-above::after {
+    top: -7px
+}
+
+.tools .draggable.layers .all div.drop-below::after {
+    bottom: -7px
+}
+
+.tools .draggable.layers .all div.drop-group::after {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background-color: rgba(100, 149, 237, 0.6);
+    box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px #fff inset;
+    border-radius: 4px;
+    animation: fade-in 0.3s ease
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+
+        16% {}
+
+        opacity:0
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+.tools .draggable.layers .all div.selected {
+    box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px lightblue inset, 0 0 0 4px blue inset, 0 0 0 5px white inset
+}
+
+.tools .draggable.layers .all div.selected svg {
+    transform: scale(0.8)
+}
+
+.tools .draggable.layers .all div.selected.drop-group::after {
+    top: 9px;
+    right: 9px;
+    bottom: 9px;
+    left: 9px
+}
+
+.tools .draggable.layers .all div.selected.drop-below::after,
+.tools .draggable.layers .all div.selected.drop-above::after {
+    background-color: rgba(0, 0, 255, 0.6)
+}
+
+.tools .draggable.layers .all div.selected.hidden::before {
+    bottom: 5px;
+    right: 5px;
+    height: 40px;
+    width: 40px;
+    padding-right: -5px;
+    line-height: 70px
+}
+
+.tools .draggable.actions [aria-label='more']:hover~.expand,
+.tools .draggable.actions [aria-label='more']~.expand:hover,
+.tools .draggable.actions [aria-label='more']:active~.expand {
+    opacity: 1;
+    width: 100px;
+    overflow: visible
+}
+
+.colorCat,
+.schemes {
+    width: 100%;
+    z-index: 16;
+    visibility: hidden;
+    position: absolute;
+    top: 82px;
+    bottom: 32px;
+    overflow: hidden;
+    left: 0;
+    right: 0;
+    cursor: default;
+    transition: visibility 0.15s ease, opacity 0.15s ease;
+    opacity: 0
+}
+
+.colorCat.view,
+.schemes.view {
+    visibility: visible;
+    opacity: 1
+}
+
+.colorCat ul,
+.schemes ul {
+    list-style-type: none
+}
+
+.colorCat ul li,
+.schemes ul li {
+    position: relative;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    font-family: 'Barlow Semi Condensed', 'Roboto Condensed', sans-serif;
+    font-size: 19px;
+    transition: all 0.25s ease;
+    background-color: darkgrey
+}
+
+.colorCat ul li:nth-child(odd),
+.schemes ul li:nth-child(odd) {
+    background-color: silver
+}
+
+.schemes ul li {
+    position: relative;
+    background-image: url(./images/transparent-pattern.svg);
+    background-size: 7px 7px;
+    background-position: bottom left
+}
+
+.schemes ul li p {
+    position: relative;
+    display: block;
+    z-index: 10;
+    background-image: linear-gradient(to bottom, #8c8c8c 0, rgba(160, 160, 160, 0.6) 24px, rgba(140, 140, 140, 0) 32px), linear-gradient(to bottom, #b4b4b4 0, #dcdcdc 24px, rgba(220, 220, 220, 0) 32px);
+    background-repeat: no-repeat;
+    line-height: 28px;
+    height: 32px;
+    background-position: 0 0, 0 0;
+    background-size: 245px 0, auto 32px;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 0 grey inset
+}
+
+.schemes ul li.selected p,
+.schemes ul li:active p {
+    color: white;
+    background-size: 245px 32px, 245px 32px
+}
+
+.schemes ul li.transform-top {
+    top: -32px
+}
+
+.schemes ul li.transform-top~li {
+    bottom: -64px
+}
+
+.schemes ul li:hover p,
+.schemes ul li:active p {
+    background-position: 0 -3px, 0 -3px;
+    line-height: 26px
+}
+
+.schemes ul li .colorsPreview {
+    position: absolute;
+    height: 48px;
+    bottom: -32px;
+    width: inherit;
+    display: flex;
+    flex-wrap: no-wrap;
+    transition: bottom 0.15s ease, transform 0.15s ease;
+    left: 0;
+    right: 0
+}
+
+.schemes ul li .colorsPreview div {
+    min-width: 5px;
+    height: 48px;
+    flex-grow: 1
+}
+
+.schemes ul li .colorsPreviewScroll {
+    position: absolute;
+    left: 0;
+    width: inherit;
+    height: 48px;
+    bottom: -32px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    display: flex;
+    flex-wrap: no-wrap
+}
+
+.schemes ul li .colorsPreviewScroll div {
+    min-width: 5px;
+    height: 48px;
+    flex-grow: 1
+}
+
+.schemes ul li:hover .colorsPreviewScroll,
+.schemes ul li:active .colorsPreviewScroll {
+    opacity: 1
+}
+
+.schemes ul .settings.material-icons {
+    position: absolute;
+    bottom: -32px;
+    right: 0;
+    height: 32px;
+    width: 32px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 22px;
+    cursor: pointer
+}
+
+.schemes ul:active li.selected p {
+    color: black;
+    background-size: 245px 0, auto 32px
+}
+
+.schemes ul:active li.selected:active p {
+    color: white;
+    background-size: 245px 32px, auto 32px
+}
+
+.warn {
+    background: whitesmoke;
+    height: 200px;
+    width: 400px;
+    position: fixed;
+    left: 50%;
+    top: 20px;
+    margin-left: -200px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    transition: all 0.25s ease;
+    transform: scale(0.8);
+    visibility: hidden;
+    opacity: 0;
+    margin-top: -100px;
+    z-index: 100
+}
+
+.warn p {
+    margin: 20px;
+    padding: 0;
+    font-size: 20px
+}
+
+.warn.show {
+    visibility: visible;
+    opacity: 1;
+    margin-top: 0;
+    transform: scale(1);
+    animation: pop-up 0.5s ease 0.25s
+}
+
+@keyframes pop-up {
+    25% {
+        transform: scale(1.05)
+    }
+
+    50% {
+        transform: scale(0.95)
+    }
+
+    75% {
+        transform: scale(1)
+    }
+
+    100% {}
+}
+
+.warn .confirm,
+.warn .cancel {
+    position: absolute;
+    width: 90px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 2px
+}
+
+.warn .confirm:active,
+.warn .cancel:active {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))
+}
+
+.warn .confirm {
+    bottom: 10px;
+    right: 10px;
+    background-color: cornflowerblue;
+    color: white
+}
+
+.warn .confirm:hover {
+    box-shadow: 0 0 0 1px blue inset
+}
+
+.warn .cancel {
+    right: 110px;
+    bottom: 10px;
+    background-color: lightgrey
+}
+
+.warn .cancel:hover {
+    box-shadow: 0 0 0 1px grey inset
+}
+
+.selection {
+    position: fixed;
+    box-shadow: 0 0 0 1px #337bcc inset;
+    display: none;
+    z-index: 100;
+    margin: -4px 0 0 -4px;
+    z-index: 15;
+    transition: visibility 0.25s ease, opacity 0.25s ease;
+    border: 4px solid transparent
+}
+
+.selection.clickThrough {
+    pointer-events: none
+}
+
+.selection * {
+    background: #337bcc;
+    border: 1px solid whitesmoke;
+    box-shadow: 0 0 1px 1px lightgrey;
+    border-radius: 50%;
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    margin: -4px
+}
+
+.selection.hide {
+    opacity: 0;
+    visibility: hidden
+}
+
+.selection.selecting {
+    background: rgba(51, 123, 204, 0.15);
+    border: none
+}
+
+.selection.selecting * {
+    display: none
+}
+
+.selection .top-handle {
+    top: 0;
+    left: 50%;
+    cursor: ns-resize
+}
+
+.selection .right-handle {
+    right: 0;
+    top: 50%;
+    cursor: ew-resize
+}
+
+.selection .bottom-handle {
+    bottom: 0;
+    left: 50%;
+    cursor: ns-resize
+}
+
+.selection .left-handle {
+    left: 0;
+    top: 50%;
+    cursor: ew-resize
+}
+
+.selection .top-left-handle {
+    left: 0;
+    top: 0;
+    cursor: nwse-resize
+}
+
+.selection .top-right-handle {
+    top: 0;
+    right: 0;
+    cursor: nesw-resize
+}
+
+.selection .bottom-left-handle {
+    bottom: 0;
+    left: 0;
+    cursor: nesw-resize
+}
+
+.selection .bottom-right-handle {
+    bottom: 0;
+    right: 0;
+    cursor: nwse-resize
+}
+
+@keyframes interactive {
+    50% {
+        background-color: rgba(100, 149, 237, 0.5)
+    }
+
+    100% {
+        background-color: rgba(100, 149, 255, 0)
+    }
+}
+
+@keyframes shine {
+    0% {}
+
+    100% {
+        border: 2px dashed #6495ed;
+        box-shadow: 0 0 0 1px inset crimson, 0 0 0 1px crimson
+    }
+}
+
+.hiddenTemplates>* {
+    display: none
+}
+
+.hiddenTemplates .animatables {
+    display: block
+}
+
+.hiddenTemplates .animatables .animatable {
+    z-index: 50;
+    position: fixed;
+    height: 32px;
+    width: 35px;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+}
+
+.propertyScrubber {
+    height: 0;
+    width: 46px;
+    border-radius: 4px 4px 0 0;
+    background: whitesmoke;
+    position: fixed;
+    transition: all 0.15s ease;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.4);
+    z-index: 4;
+    transition: all 0s ease;
+    visibility: hidden;
+    overflow: hidden
+}
+
+.propertyScrubber .scrub {
+    position: absolute;
+    display: block;
+    bottom: 0;
+    width: 46px;
+    height: 0;
+    background-color: white;
+    background-image: linear-gradient(to bottom, rgba(190, 190, 190, 0.8), rgba(200, 200, 200, 0.5));
+    background-size: 46px 200px;
+    background-repeat: no-repeat;
+    transform: scale(1, 0);
+    transition: transform 0.15s ease;
+    transform-origin: 0 100%
+}
+
+.propertyScrubber::after {
+    content: attr(data-value);
+    display: block;
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    text-align: center
+}
+
+.propertyScrubber.smallText::after {
+    font-size: 14px;
+    color: grey
+}
+
+.propertyScrubber.down {
+    border-radius: 0 0 4px 4px
+}
+
+.propertyScrubber.down .scrub {
+    bottom: auto;
+    top: 0;
+    transform-origin: 0 0;
+    background-image: linear-gradient(to top, rgba(200, 200, 200, 0.8), rgba(200, 200, 200, 0.5));
+    background-position: bottom;
+    background-repeat: no-repeat
+}
+
+.propertyScrubber.show {
+    transition: height 0.15s ease, top 0.15s ease;
+    visibility: visible;
+    height: 190px
+}
+
+.propertyScrubber.show .scrub {
+    transform: scale(1, 1)
+}
+
+span.colorDragging {
+    position: fixed;
+    border-radius: 0;
+    z-index: 200;
+    height: 32px;
+    width: 35px;
+    cursor: grabbing;
+    transition: border-radius 0.5s ease, margin 0s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, top 0.5s ease, left 0.5s ease, height 0.5s ease
+}
+
+span.colorDragging::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    right: 0;
+    background-image: url(./images/transparent-pattern.svg);
+    background-size: 32px
+}
+
+span.colorDragging.scrolling {
+    transition: border-radius 0.5s ease, margin 0.15s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, top 0.5s ease, left 0.5s ease, height 0.5s ease
+}
+
+span.colorDragging.smallColors {
+    height: 16px
+}
+
+span.colorDragging.dragging {
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    transition: border-radius 0.5s ease, margin 0.5s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, height 0.5s ease
+}
+
+span.colorDragging.dragging.drop-shrink {
+    transform: scale(0.75);
+    cursor: copy
+}
+
+span.colorDragging.dragging.drop-grow {
+    transform: scale(1.25);
+    cursor: grab
+}
+
+span.colorDragging.dragging.drop-grow::after {
+    content: attr(data-overicon);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-family: 'Material Icons';
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    opacity: 0;
+    line-height: 32px;
+    transition: opacity 0.5s ease;
+    display: block
+}
+
+span.colorDragging.dragging.shrink-out {
+    transform: scale(0);
+    transition: all 0.4s ease, transform 0.3s ease 0.1s
+}
+
+span.colorDragging.dragging.grow-out {
+    transform: scale(1.5);
+    border-radius: 2px;
+    opacity: 0;
+    transition: all 0.5s ease, opacity 0.25s ease 0.25s
+}
+
+span.colorDragging.dragging.grow-out::after {
+    opacity: 1
+}
+
+span.colorDragging.dragging.remove {
+    opacity: 0.5;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5), 0 0 10px 0 rgba(0, 0, 0, 0.5) inset, 0 0 15px 0 rgba(255, 255, 255, 0.5) inset;
+    transition: opacity 0.1s ease 0.4s ease, filter 0.4s ease, box-shadow 0s ease;
+    cursor: not-allowed
+}
+
+.numberPreview {
+    font-size: 12.5px;
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    text-shadow: 1px 0 0 #fff, 0 1px 0 #fff, 1px 1px 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff, -1px -1px 0 #fff, 1px -1px #fff, -1px 1px #fff;
+    display: none;
+    z-index: 100;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    font-weight: bold
+}
+
+.quickOptions {
+    display: none;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    height: 400px;
+    width: 400px;
+    background: white;
+    z-index: 500;
+    border-radius: 4px
+}

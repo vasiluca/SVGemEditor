@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>SVG Drawing App</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+	<link rel="stylesheet" href="./app.css" />
+	<!--link(href='./libs/fonts/material/material-icons.css' rel='stylesheet')-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+	<link
+		href="https://fonts.googleapis.com/css?family=Montserrat|Roboto|Roboto+Condensed:300,400|Open+Sans+Condensed:300|Barlow+Semi+Condensed"
+		rel="stylesheet" />
+	<script src="./libs/jquery.js"></script>
+	<script src="./core.js"></script>
+	<!--script(src='./color-module.js')-->
+</head>
+
+<body>
+	<div class="splash">
+		<h1>SVG EDITOR</h1>
+		<span>CREATE NEW PROJECT</span>
+		<div class="start">START</div>
+		<div class="quickset">
+			<span>W:</span><input type="number" placeholder="WIDTH" /><span>H:</span><input type="number"
+				placeholder="HEIGHT" />
+			<div class="settings">
+				OPTIONS<i class="material-icons">settings</i>
+			</div>
+		</div>
+	</div>
+	<div class="options">
+		<span>DOCUMENT RATIO/SIZE:</span><span class="size"><input type="number" placeholder="WIDTH (PX)"
+				min="1" /><input type="number" placeholder="HEIGHT (PX)" min="1" /></span>
+		<div class="create material-icons">navigate_next</div>
+		<br /><input id="autosize" type="checkbox" /><label for="autosize">Create document to current window
+			size</label>
+	</div>
+	<div class="svg-contain">
+		<svg id="editor" xmlns="http://www.w3.org/2000/svg"></svg><svg id="movePreview"></svg><svg
+			id="overPreview"></svg><svg id="snapping"></svg>
+	</div>
+	<div class="tools">
+		<div class="propertyScrubber">
+			<div class="scrub"></div>
+		</div>
+		<div class="draggable properties horiz">
+			<div aria-label="stroke" data-icon="border_color" class="material-icons toggled">
+				border_color
+			</div>
+			<div aria-label="fill" data-icon="format_color_fill" class="material-icons">
+				format_color_fill
+			</div>
+			<div aria-label="gradient" class="material-icons">gradient</div>
+			<div aria-label="texture" class="material-icons">texture</div>
+			<div aria-label="opacity" data-icon="" class="material-icons">
+				opacity
+			</div>
+			<div aria-label="blur" class="material-icons">blur_on</div>
+			<div aria-label="grain" class="material-icons">grain</div>
+			<div aria-label="delete" class="material-icons">delete</div>
+			<span class="material-icons drag">drag_handle</span>
+		</div>
+		<div class="draggable layers verti">
+			<div class="all"></div>
+			<span class="material-icons drag">drag_handle</span>
+		</div>
+		<div class="draggable actions horiz">
+			<span aria-label="drag" class="material-icons drag">drag_handle</span>
+			<div aria-label="undo" id="undo" class="material-icons">
+				undo
+			</div>
+			<div aria-label="redo" id="redo" class="material-icons">
+				redo
+			</div>
+			<div aria-label="move back" id="move-back" class="material-icons">
+				flip_to_back
+			</div>
+			<div aria-label="move up" id="move-up" class="material-icons">
+				flip_to_front
+			</div>
+			<div aria-label="create reference" class="material-icons">
+				bookmark_border
+			</div>
+			<div aria-label="grid" id="grid" class="material-icons">
+				grid_on
+			</div>
+			<div aria-label="zoom" class="material-icons">
+				fullscreen_exit
+			</div>
+			<div aria-label="more" id="more-horiz" class="material-icons">
+				more_horiz
+			</div>
+			<span class="expand">
+				<div aria-label="new page" class="material-icons">
+					note_add
+				</div>
+				<div aria-label="export" class="material-icons">
+					save_alt
+				</div>
+			</span>
+		</div>
+		<div class="draggable shapes verti">
+			<div id="rect" aria-label="rectangle">
+				<svg viewbox="0 0 50 50">
+					<rect x="6" y="6" height="38" width="38"></rect>
+				</svg>
+			</div>
+			<div id="ellipse" aria-label="ellipse">
+				<svg viewbox="0 0 50 50">
+					<circle cx="25" cy="25" r="19"></circle>
+				</svg>
+			</div>
+			<div id="line" aria-label="line">
+				<svg viewbox="0 0 50 50">
+					<line x1="5" y1="5" x2="45" y2="45" stroke-width="4" stroke="black"></line>
+				</svg>
+			</div>
+			<div id="path" aria-label="pen">
+				<span class="material-icons">create</span>
+			</div>
+			<!--#brush(aria-label='brush') -->
+			<!--	span.material-icons brush-->
+			<div id="text" aria-label="text">
+				<span class="material-icons">text_fields</span>
+			</div>
+			<div id="library" aria-label="library">
+				<span class="material-icons">perm_media</span>
+			</div>
+			<div id="image" aria-label="image">
+				<span class="material-icons">photo</span>
+			</div>
+			<div id="animate" aria-label="animate">
+				<span class="material-icons">movie_creation</span>
+			</div>
+			<span aria-label="drag" class="material-icons drag">drag_handle</span>
+		</div>
+		<div class="draggable color horiz">
+			<div class="drag-bar horizontal top"></div>
+			<div class="drag-bar horizontal bottom"></div>
+			<div class="scrollbar">
+				<div class="bar"></div>
+			</div>
+			<div class="contain-overflow">
+				<span class="drag material-icons">drag_handle</span><input type="text" class="suggest" /><input
+					type="text" placeholder="color - hex, rgb, hsl" class="user" />
+				<!--.search-filter.material-icons search-->
+				<!--span.-->
+				<div class="col">
+					<span class="material-icons">unfold_more</span>
+				</div>
+				<div class="category">
+					<span aria-label="palette" class="material-icons select">sort</span><span aria-label="tuner"
+						class="material-icons">tune</span><span aria-label="recent"
+						class="material-icons">history</span><span aria-label="saved"
+						class="material-icons">star_border</span><span aria-label="picker"
+						class="material-icons">colorize</span>
+				</div>
+				<div data-category="palette" data-scheme="html" class="swatches"></div>
+				<div class="schemes">
+					<ul>
+						<li data-scheme="html" class="selected">
+							<p>HTML</p>
+						</li>
+						<li data-scheme="webSafe">
+							<p>WEB SAFE</p>
+						</li>
+						<li data-scheme="flat">
+							<p>FLAT DESIGN</p>
+						</li>
+						<li data-scheme="material">
+							<p>GOOGLE MATERIAL</p>
+						</li>
+						<li data-scheme="sundberg">
+							<p>SUNDBERG'S THESAURUS</p>
+						</li>
+						<li data-scheme="pantone_cmyk_coated">
+							<p>PANTONE CMYK COATED</p>
+						</li>
+						<li data-scheme></li>
+					</ul>
+				</div>
+				<div class="infoPanel">
+					<div class="tabName">PALETTE</div>
+					<div class="infocolor">
+						<span class="left"> </span><span class="right"> </span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="animation"></div>
+	</div>
+	<div class="hiddenTemplates">
+		<div class="colorCat">
+			<ul>
+				<li class="grey">GREY</li>
+				<li class="red">RED</li>
+				<li class="yellow">YELLOW</li>
+				<li class="green">GREEN</li>
+				<li class="blue">BLUE</li>
+				<li class="purple">PURPLE</li>
+			</ul>
+		</div>
+		<div class="export">
+			<div class="settings material-icons">settings</div>
+		</div>
+		<div class="settings"></div>
+		<div class="animatables"></div>
+		<div class="infoPanel">
+			<span class="left"></span><span class="right"></span>
+		</div>
+		<div class="warn">
+			<p>
+				An update is available. Would you like to install it now?
+				Installing the update now will not cause any data loss. You
+				will see changes the next time you reopen or refresh SVGGem.
+				You can always install an update later.
+			</p>
+			<!-- An update is available. Would you like to install it? Installing the update now will not cause any data loss. You will see changes the next time you reopen SVGGem. You can always update it later--><span
+				class="confirm">CONFIRM</span><span class="cancel">CANCEL</span>
+		</div>
+		<div class="selection">
+			<div class="left-handle"></div>
+			<div class="top-handle"></div>
+			<div class="right-handle"></div>
+			<div class="bottom-handle"></div>
+			<div class="top-left-handle"></div>
+			<div class="top-right-handle"></div>
+			<div class="bottom-left-handle"></div>
+			<div class="bottom-right-handle"></div>
+		</div>
+		<div class="quickOptions"></div>
+		<div class="numberPreview"></div>
+	</div>
+	<input id="inputFile" type="file" accept=".jpg, .jpeg, .png, .svg, .gif" multiple />
+</body>
+
+</html>
