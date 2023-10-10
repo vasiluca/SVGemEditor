@@ -1,0 +1,58 @@
+// compileCompressed: ../$1.css
+
+canvas
+	display: inline-block
+	background: lightgrey
+	&:active
+		cursor: none
+
+.picker-container
+	position: relative
+
+.color
+	height: 35px
+	width: 210px
+	background-color: red
+	line-height: 35px
+	color: white
+	font-family: sans-serif
+	font-weight: 300
+	padding: 0 5px
+	box-sizing: border-box
+	font-size: 13px
+	text-transform: lowercase
+	background-image: linear-gradient(to right, rgba(0,0,0,0.5) 140px, transparent 140px)
+	position: absolute
+	.hex
+		display: none
+	&.toggle
+		.rgb
+			display: none
+		.hex
+			display: block
+	.prevColor
+		position: absolute
+		left: 140px
+		height: 35px
+		width: 35px
+.presets
+	div
+		height: 25px
+		width: 25px
+		background: grey
+		display: inline-block
+		cursor: pointer
+
+#color-shade
+	margin-top: 35px
+
+.colors-clip
+	display: inline-block
+	height: 245px
+	overflow: hidden
+	background: red
+	position: absolute
+	#colors
+		width: 35px
+		height: 245px
+		transition: all 0.25s ease

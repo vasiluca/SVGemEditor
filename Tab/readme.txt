@@ -1,0 +1,1 @@
+All functionality, including UI related functionality will be included as part of each Tab Module.

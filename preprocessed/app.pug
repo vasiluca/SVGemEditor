@@ -1,0 +1,193 @@
+// output: ../$1.html, pretty: false
+
+doctype html
+html
+	head
+		title SVG Drawing App
+		meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1')
+		link(rel='stylesheet', href='./app.css')
+		//link(href='./libs/fonts/material/material-icons.css' rel='stylesheet')
+		link(href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet")
+		link(href='https://fonts.googleapis.com/css?family=Montserrat|Roboto|Roboto+Condensed:300,400|Open+Sans+Condensed:300|Barlow+Semi+Condensed', rel='stylesheet')
+		script(src='./libs/jquery.js')
+		script(src='./core.js')
+		//script(src='./color-module.js')
+	body
+		//- Copyright © 2018, Luca Vasilache.
+		.splash
+			h1 SVG EDITOR
+			span
+				| CREATE NEW PROJECT
+			.start
+				| START
+			.quickset
+				span W:
+				input(type='number', placeholder='WIDTH')
+				span H:
+				input(type='number', placeholder='HEIGHT')
+				.settings
+					| OPTIONS
+					i.material-icons settings
+		.options
+			span DOCUMENT RATIO/SIZE:
+			span.size
+				input(type='number', placeholder='WIDTH (PX)', min='1')
+				input(type='number', placeholder='HEIGHT (PX)', min='1')
+			.create.material-icons navigate_next
+			br
+			input#autosize(type='checkbox')
+			label(for='autosize') Create document to current window size
+		.svg-contain
+			svg#editor(xmlns='http://www.w3.org/2000/svg')
+			svg#movePreview
+			svg#overPreview
+			svg#snapping
+		.tools
+			.propertyScrubber
+				.scrub
+			.draggable.properties.horiz
+				.material-icons.toggled(aria-label='stroke' data-icon='border_color') border_color
+				.material-icons(aria-label='fill' data-icon='format_color_fill') format_color_fill
+				.material-icons(aria-label='gradient') gradient
+				.material-icons(aria-label='texture') texture
+				//-.material-icons(aria-label='gradient', data-icon='') gradient
+				.material-icons(aria-label='opacity' data-icon='') opacity
+				.material-icons(aria-label='blur') blur_on
+				.material-icons(aria-label='grain') grain
+				.material-icons(aria-label='delete') delete
+				span.material-icons.drag drag_handle
+				
+			.draggable.layers.verti
+				.all
+				span.material-icons.drag drag_handle
+			.draggable.actions.horiz
+				span.material-icons.drag(aria-label='drag') drag_handle
+				.material-icons(aria-label='undo' id='undo') undo
+				.material-icons(aria-label='redo' id='redo') redo
+				.material-icons(aria-label='move back' id='move-back') flip_to_back
+				.material-icons(aria-label='move up' id='move-up') flip_to_front
+				.material-icons(aria-label='create reference') bookmark_border
+				.material-icons(aria-label='grid' id='grid') grid_on
+				.material-icons(aria-label='zoom') fullscreen_exit
+				.material-icons(aria-label='more' id='more-horiz') more_horiz
+				span.expand
+					.material-icons(aria-label='new page') note_add
+					.material-icons(aria-label='export') save_alt
+					
+			.draggable.shapes.verti
+				//-#shapes(aria-label='shapes')
+					span.material-icons category
+				#rect(aria-label='rectangle')
+					svg(viewbox='0 0 50 50')
+						rect(x='6', y='6', height='38', width='38')
+				#ellipse(aria-label='ellipse')
+					svg(viewbox='0 0 50 50')
+						circle(cx='25', cy='25', r='19')
+				#line(aria-label='line')
+					svg(viewbox='0 0 50 50')
+						line(x1='5', y1='5', x2='45', y2='45', stroke-width='4', stroke='black')
+				#path(aria-label='pen')
+					span.material-icons create
+				//#brush(aria-label='brush') 
+				//	span.material-icons brush
+				#text(aria-label='text') 
+					span.material-icons text_fields
+				#library(aria-label='library')
+					span.material-icons perm_media
+				#image(aria-label='image') 
+					span.material-icons photo
+					//- add_photo-alternate
+				#animate(aria-label='animate')
+					span.material-icons movie_creation
+				span.material-icons.drag(aria-label='drag')
+					| drag_handle
+			.draggable.color.horiz
+				//-.drag-bar.vertical.left
+				//-.drag-bar.vertical.right
+				.drag-bar.horizontal.top
+				.drag-bar.horizontal.bottom
+				//-.drag-corner.bottom-right
+				//-.drag-corner.bottom-left
+				//-.drag-corner.top-right 
+				//-.drag-corner.top-left
+				.scrollbar
+					.bar
+				.contain-overflow
+					span.drag.material-icons
+						| drag_handle
+					input.suggest(type='text')
+					input.user(type='text', placeholder='color - hex, rgb, hsl')
+					//.search-filter.material-icons search
+					//span.
+					.col
+						span.material-icons
+							| unfold_more
+					.category
+						span.material-icons.select(aria-label='palette') sort
+						span.material-icons(aria-label='tuner') tune
+						span.material-icons(aria-label='recent') history
+						span.material-icons(aria-label='saved') star_border
+						span.material-icons(aria-label='picker') colorize
+					.swatches(data-category='palette' data-scheme='html')
+					.schemes
+						ul
+							li(data-scheme='html').selected
+								p HTML
+							li(data-scheme='webSafe') 
+								p WEB SAFE
+							li(data-scheme='flat')
+								p FLAT DESIGN
+							li(data-scheme='material')
+								p GOOGLE MATERIAL
+							li(data-scheme='sundberg')
+								p SUNDBERG'S THESAURUS
+							li(data-scheme='pantone_cmyk_coated')
+								p PANTONE CMYK COATED
+							li(data-scheme)
+					.infoPanel
+						.tabName PALETTE
+						.infocolor
+							span.left 
+							span.right 
+			.animation
+		.hiddenTemplates
+			.colorCat
+				ul
+					li.grey GREY
+					li.red RED
+					li.yellow YELLOW
+					li.green GREEN
+					li.blue BLUE
+					li.purple PURPLE
+			.export 
+			
+				.settings.material-icons settings
+			.settings
+			.animatables
+			//-.picker
+				.shades
+				.recents
+			.infoPanel
+				span.left
+				span.right
+			.warn
+				p
+					| An update is available. Would you like to install it now? Installing the update now will not cause any 
+					| data loss. You will see changes the next time you reopen or refresh SVGGem. You can always install an update later.
+				// An update is available. Would you like to install it? Installing the update now will not cause any data loss. You will see changes the next time you reopen SVGGem. You can always update it later
+				span.confirm CONFIRM
+				span.cancel CANCEL
+			.selection
+				.left-handle
+				.top-handle
+				.right-handle
+				.bottom-handle
+				.top-left-handle 
+				.top-right-handle 
+				.bottom-left-handle 
+				.bottom-right-handle
+			.quickOptions
+			.numberPreview
+
+		input(id='inputFile' type="file" accept=".jpg, .jpeg, .png, .svg, .gif" multiple)
