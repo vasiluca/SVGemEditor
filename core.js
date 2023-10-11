@@ -530,6 +530,10 @@ $(document).ready(function() {
     images: [],
     imageIndex: -1
   }
+
+
+  var translateX = 0;
+  var translateY = 0;
   var svg = {
     numID: 0,
     created: false,
@@ -2906,6 +2910,8 @@ $(document).ready(function() {
         return this.collections[this.scheme][key];
       }
     }
+    
+    var preview; // including the variable outside the layers object seems to help in preventing glitches when dragging layers
     var layers = {
       all: [],
       update: function() {
@@ -3133,6 +3139,7 @@ $(document).ready(function() {
       setNumValue: function() { // Change the value of a property
         var property = this.scrubberTo;
         var valueChange = cache.stop[1] - cache.start[1];
+        var scrubAmount = 0;
         if (!$('.propertyScrubber').hasClass('down')) {
           valueChange = cache.start[1] - cache.stop[1];
         }
@@ -3745,7 +3752,7 @@ $(document).ready(function() {
     });
 
     $('.category span').click(function() {
-      label = $(this).attr('aria-label');
+      var label = $(this).attr('aria-label');
       colors.draw(label);
       $('.schemes, .colorCat').removeClass('view');
       $('.category span').removeClass('select');
