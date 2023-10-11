@@ -11,8 +11,11 @@
 		href="https://fonts.googleapis.com/css?family=Montserrat|Roboto|Roboto+Condensed:300,400|Open+Sans+Condensed:300|Barlow+Semi+Condensed"
 		rel="stylesheet" />
 	<script src="./libs/jquery.js"></script>
-	<script src="./core.js"></script>
-	<!--script(src='./color-module.js')-->
+	<!--TODO: including type="module" for the script tag appears to cause the application to glitch. This needs to be resolved-->
+	<script src="./core.js"></script> <!-- type="module" allows support for es6 module imports and exports -->
+		<script nomodule>
+			alert("Your browser does not support modules!"); // this alert will occur when modules is not supported
+		</script>
 </head>
 
 <body>

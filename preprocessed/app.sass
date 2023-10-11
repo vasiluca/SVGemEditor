@@ -1,0 +1,1467 @@
+// compileCompressed: ../$1.css
+
+// %background-defaults
+// 	background-repeat: no-repeat
+/* Copyright © 2018, Luca Vasilache */
+
+body
+	margin: 0
+	background-image:  radial-gradient(#a8ff78, #78ffd6)
+	background-size: cover
+	background-repeat: no-repeat
+	background-attachment: fixed
+	min-height: 100vh
+	overflow: hidden
+	font-family: 'Roboto', sans-serif
+	user-select: none
+	-webkit-user-select: none
+	&.no-transition
+		*
+			transition: all 0s !important
+*
+	margin: 0
+	padding: 0
+	//box-sizing: border-box
+
+[aria-label]
+	position: relative
+	&::before
+		content: attr(aria-label)
+		position: absolute
+		top: calc(100% + 6px)
+		left: 50%
+		transform: translateX(-50%)
+		visibility: hidden
+		opacity: 0
+		padding: 3px 4px
+		border-radius: 2px
+		background: rgba(255,255,255,0.9)
+		font-size: 15px
+		box-shadow: 0 0 4px 0 rgba(0,0,0,0.4)
+		transition: all 0s
+		z-index: 50
+		font-family: 'Roboto', sans-serif
+		color: black
+		line-height: 1
+	&:hover
+		&::before
+			visibility: visible
+			opacity: 1
+			transition: all 0.15s ease 1s
+	&:active, &:focus
+		&::before
+			transition: all 0s
+			visibility: hidden
+			opacity: 0
+
+
+
+h1
+	font-family: 'Roboto', sans-serif
+	text-align: center
+	letter-spacing: 1.75px
+	position: absolute
+	bottom: 50%
+	transform: translateY(-40px)
+	left: 0
+	right: 0
+	margin: 10px 0
+	padding: 0
+.splash
+	position: fixed
+	top: 50%
+	width: 100%
+	transform: translateY(-50%)
+	font-family: 'Montserrat', 'Roboto', sans-serif
+	font-size: 20px
+	transition: all 0.25s ease
+	z-index: 5
+	*
+		transition: all 0.25s ease
+	span
+		display: block
+		text-align: center
+		line-height: 30px
+	.start
+		text-align: center
+		width: 150px
+		margin: 10px auto
+		line-height: 30px
+		background: cornflowerblue
+		color: white
+		border-radius: 4px
+		cursor: pointer
+		&:hover, &:active
+			width: 200px
+	.quickset
+		position: absolute
+		left: 50%
+		transform: translateX(-50%)
+		width: 150px
+		opacity: 0.5
+		&:hover
+			opacity: 1
+		input
+			width: 110px
+			padding: 0
+			margin: 0 0 10px 0
+			border: none
+			border-bottom: 2px solid limegreen
+			background: none
+			outline: none
+			text-align: center
+			line-height: 20px
+			font-size: 22px
+			font-family: 'Roboto Condensed', sans-serif
+			display: inline-block
+		span
+			width: 40px
+			display: inline-block
+			font-family: 'Roboto', sans-serif
+			font-weight: bold
+			color: green
+		div
+			padding: 10px 10px
+			cursor: pointer
+			background: rgba(255,255,255,0.5)
+			border-radius: 4px
+		.material-icons
+			padding-left: 5px
+			float: right
+	&.hide
+		top: 25px
+		.start
+			width: 500px
+			border-radius: 4px 4px 0 0
+		span
+			opacity: 0
+		.quickset
+			visibility: hidden
+			opacity: 0
+		+ .options
+			transform: translate(-50%,0%)
+			opacity: 1
+
+// Color Component
+$colorsWidth: 35px
+$colorsHeight: 32px
+$rows: 7
+$columns: 6
+//$containerHeight: $colorsHeight * $rows + 82
+$containerWidth: $colorsWidth * $columns
+$containerHeight: 306px
+.options
+	background: white
+	width: 480px
+	padding: 40px 10px
+	border-radius: 4px
+	margin: 0 auto
+	position: fixed
+	top: 25px
+	bottom: 25px
+	left: 50%
+	transform: translate(-50%,50%)
+	transition: all 0.25s ease
+	opacity: 0
+	overflow-x: hidden
+	*
+		transition: all 0.25s ease
+	> span
+		display: inline-block
+		line-height: 40px
+		font-family: 'Roboto Condensed', 'Roboto', sans-serif
+		font-size: 20px
+		vertical-align: middle
+		input[type='number']
+			width: 100px
+			display: inline-block
+			border: none
+			box-shadow: 0 0 0 1px grey
+			outline: none
+			margin-left: 10px
+			text-align: center
+			height: 20px
+			margin-top: -2px
+			padding: 0
+			vertical-align: middle
+	.create
+		height: 40px
+		width: 40px
+		font-size: 40px
+		line-height: 40px
+		border-radius: 5px
+		background: red
+		text-align: center
+		cursor: pointer
+		position: absolute
+		top: 40px
+		right: 10px
+		background-color: limegreen
+		color: white
+		transform: translateX(100%)
+		opacity: 0
+		&.show
+			opacity: 1
+			transform: translateX(0)
+
+.svg-contain
+	position: absolute
+	top: 0
+	left: 0
+	height: 100vh
+	width: 100vw
+	background-image: radial-gradient(#a8ff78, #78ffd6)
+	background-size: cover
+	background-repeat: no-repeat
+	background-attachment: fixed
+	z-index: 10
+	opacity: 0
+	visibility: hidden
+	transition: all 0.15s ease, opacity 0.5s ease
+	&.show
+		opacity: 1
+		visibility: visible
+#editor
+	position: fixed
+	background-color: white
+	top: 0
+	left: 0
+	cursor: crosshair
+	transition: all 0.15s ease
+#movePreview, #overPreview, #snapping
+	position: fixed
+	height: 100vh
+	width: 100vw
+	pointer-events: none
+.tools
+	z-index: 20
+	position: relative
+	transition: all 0.15s ease
+	.draggingLayer
+		transform: scale(0.6)
+		position: absolute
+		z-index: 50
+		background-color: white
+		opacity: 0.8
+	&.hide
+		opacity: 0
+		visibility: hidden
+	.animation
+		min-height: 125px
+		position: fixed
+		bottom: 0
+		right: 0
+		left: 0
+		background: white
+		z-index: 100
+		display: none
+	.draggable
+		margin: 0
+		padding: 0
+		position: fixed
+		border-radius: 4px
+		box-shadow: 0 0 6px 1px rgba(0,0,0,0.4)
+		background: white
+		white-space: nowrap
+		transition: all 0.25s ease
+		.drag
+			text-align: center
+			font-size: 20px
+			background: whitesmoke
+			width: 50px
+			line-height: 20px
+			padding: 0
+			margin: 0
+			display: block
+			cursor: default
+			&:active
+				background: lightgrey
+		&:active
+			transition: all 0s
+		&.shapes
+			list-style-type: none
+			top: 10px
+			left: 10px
+			> div
+				width: 40px
+				height: 40px
+				cursor: pointer
+				padding: 5px
+				transition: all 0.25s ease
+				margin: 0
+				.material-icons
+					font-size: 34px
+					text-align: center
+					line-height: 40px
+					display: block
+					transition: all 0.25s ease
+				&::before
+					left: calc(100% + 10px)
+					top: 50%
+					transform: translateY(-50%)
+				svg
+					transition: all 0.25s ease
+					*
+						fill: black
+						transition: all 0.25s ease
+				&:hover
+					svg
+						opacity: 0.5
+						transform: scale(1.1)
+					.material-icons
+						transform: scale(1.12)
+						opacity: 0.5
+				&.selected
+					svg
+						opacity: 1
+						transform: scale(1)
+						*
+							fill: cornflowerblue
+							stroke: cornflowerblue
+					.material-icons
+						transform: scale(1)
+						opacity: 1
+						color: cornflowerblue
+			&.horiz
+				> div
+					display: inline-block
+					vertical-align: top
+			#image::after
+				content: ''
+				letter-spacing: -1px
+				position: absolute
+				top: 10px
+				left: 13px
+				font-size: 17px
+				font-family: 'Roboto Condensed', sans-serif
+				color: white
+				font-weight: 300
+		&.horiz
+			.drag
+				height: 50px
+				width: 20px
+				display: inline-block
+				line-height: 50px
+				vertical-align: top
+				z-index: 20
+				position: relative
+			> *:last-child
+				border-radius: 0 4px 4px 0
+			> *:first-child
+				border-radius: 4px 0 0 4px
+		&.verti
+			> *:last-child
+				border-radius: 0 0 4px 4px
+			> *:first-child
+				border-radius: 4px 4px 0 0
+		&.color
+			left: 10px
+			bottom: 10px
+			height: 50px
+			width: 245px
+			font-size: 0
+			white-space: nowrap
+			background-color: lightgrey
+			overflow: visible
+			.drag-bar
+				position: absolute
+				z-index: 15
+				display: none
+				&.vertical
+					cursor: ew-resize
+					width: 4px
+					top: 50px
+					bottom: 0
+					&.left
+						left: -2px
+					&.right
+						right: -2px
+				&.horizontal
+					cursor: ns-resize
+					height: 4px
+					left: 0
+					right: 0
+					&.top
+						top: -2px
+						left: 20px
+						right: 20px
+					&.bottom
+						bottom: -2px
+			.drag-corner
+				position: absolute
+				height: 6px
+				width: 6px
+				z-index: 20
+				display: none
+				&.bottom-right
+					right: -3px
+					bottom: -3px
+					cursor: nwse-resize
+				&.bottom-left
+					left: -3px
+					bottom: -3px
+					cursor: nesw-resize
+				&.top-right
+					top: -3px
+					right: -3px
+					cursor: nesw-resize
+				&.top-left
+					top: -3px
+					left: -3px
+					cursor: nwse-resize
+			&.expand
+				height: $containerHeight
+				.drag-bar
+					display: block
+				.drag-corner
+					display: block
+			> *
+				position: relative
+				z-index: 5
+			> *:first-child, > *:last-child
+				border-radius: 0
+			.contain-overflow
+				position: absolute
+				top: 0
+				right: 0
+				left: 0
+				bottom: 0
+				border-radius: 5px
+				overflow: hidden
+				background-color: lightgrey
+				background-image: linear-gradient(to bottom, rgba(211,211,211,1), rgba(211,211,211,1) 82px, rgba(211,211,211,0.8) 82px, rgba(211,211,211,0.8) 306px), url('./images/transparent-pattern.svg')
+				background-size: cover, 35px 32px
+				background-position: 0 0, 0 82px
+			.scrollbar
+				position: absolute
+				right: 0
+				bottom: 32px
+				top: 50px
+				width: 14px
+				background: lightgrey
+				border-radius: 0 5px 5px 0
+				transition: right 0.25s ease
+				&.show
+					right: -14px
+			.infoPanel
+				position: absolute
+				bottom: 0
+				left: 0
+				right: 0
+				line-height: 32px
+				height: 32px
+				&.minimize
+					height: 28px
+				.tabName
+					text-align: center
+					background: linear-gradient(to top, rgba(211,211,211,1), rgba(211,211,211,0))
+					color: black
+					font-size: 14px
+					font-family: 'Montserrat', sans-serif
+					z-index: 1
+					text-shadow: 0 0 5px whitesmoke
+				.infocolor
+					font-family: 'Open Sans Condensed', 'Roboto Condensed', sans-serif
+					font-size: 16px
+					height: inherit
+					line-height: inherit
+					//background-image: radial-gradient(circle at 65% 50%, rgba(255,255,255,0) 13px, rgba(255,255,255,0) 13px)
+					background-image: url(./images/transparent-pattern.svg)
+					background-size: 35px 32px
+					cursor: n-resize
+					color: black
+					text-wrap: no-wrap
+					position: absolute
+					bottom: 0
+					top: 0
+					right: 0
+					left: 0
+					opacity: 0
+					transition: opacity 0.25s ease, visibility 0.25s ease
+					visibility: hidden
+					&.smallColors
+						cursor: s-resize
+					&::before
+						content: ''
+						position: absolute
+						top: 0
+						bottom: 0
+						left: 0
+						right: 0
+						background-color: inherit
+					span
+						position: absolute
+						z-index: 1
+						background-repeat: no-repeat
+						vertical-align: top
+						max-width: 60%
+						transition: left 0.25s ease, right 0.25s ease
+						&::after, &::before
+							width: 24px
+							height: 32px
+							display: inline-block
+							vertical-align: top
+							position: absolute
+						&.left
+							left: -50%
+							padding-left: 4px
+						&.right
+							right: -50%
+							padding-right: 4px
+
+					&.shadow
+						//$shadowColor: rgb(185,185,185)
+						//text-shadow: 1px 1px 0 $shadowColor, -1px -1px 0 $shadowColor, 1px 0 0 $shadowColor, -1px 0 0 $shadowColor, 0 1px 0 $shadowColor, 0 -1px 0 $shadowColor, 1px -1px 0 $shadowColor, -1px 1px 0 $shadowColor, 0 0 5px $shadowColor
+						//font-weight: bold
+						span
+							&.left
+								background-color: rgba(255,255,255,0.15)
+								&::after
+									content: ''
+									background-image: linear-gradient(to right, rgba(255,255,255,0.15), rgba(255,255,255,0))
+							&.right
+								background-color: rgba(255,255,255,0.15)
+								&::before
+									content: ''
+									background-image: linear-gradient(to left, rgba(255,255,255,0.15), rgba(255,255,255,0))
+									transform: translateX(-100%)
+					&.light
+						//background-image: radial-gradient(circle at 65% 50%, rgba(255,255,255,0) 13px, rgba(255,255,255,0.75) 13px)
+						color: white
+						&.shadow
+							//$shadowColor: rgb(70,70,70)
+							//text-shadow: 1px 1px 0 $shadowColor, -1px -1px 0 $shadowColor, 1px 0 0 $shadowColor, -1px 0 0 $shadowColor, 0 1px 0 $shadowColor, 0 -1px 0 $shadowColor, 1px -1px 0 $shadowColor, -1px 1px 0 $shadowColor, 0 0 5px $shadowColor
+							span
+								&.left
+									background-color: rgba(0,0,0,0.15)
+									&::after
+										content: ''
+										background-image: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0))
+								&.right
+									background-color: rgba(0,0,0,0.15)
+									&::before
+										content: ''
+										background-image: linear-gradient(to left, rgba(0,0,0,0.15), rgba(0,0,0,0))
+										transform: translateX(-100%)
+				.infocolor:hover
+					opacity: 1
+					visibility: visible
+					span
+						&.left
+							left: 0
+						&.right
+							right: 0
+				&.show
+					.infocolor
+						opacity: 1
+						visibility: visible
+						span
+							&.left
+								left: 0
+							&.right
+								right: 0
+
+			input
+				line-height: 50px
+				height: 50px
+				border: none
+				outline: none
+				display: inline-block
+				vertical-align: top
+				padding: 0 0 0 10px
+				width: calc(100% - 50px)
+				font-family: 'Roboto Condensed', sans-serif
+				font-size: 16px
+				text-transform: uppercase
+				transition: all 0.15s ease
+				z-index: 10
+				background: rgba(255,255,255,0)
+				&.user
+					position: relative
+				&.suggest
+					position: absolute
+					background: white
+			.col
+				width: 20px
+				height: 50px
+				background: black
+				display: inline-block
+				line-height: 70px
+				text-align: left
+				cursor: pointer
+				box-shadow: -1px 0 0 white, -2px 0 0 whitesmoke
+				z-index: 12
+				position: relative
+				&::before
+					content: ''
+					display: block
+					position: absolute
+					top: 0
+					bottom: 0
+					right: 0
+					left: 0
+					background-image: url(./images/transparent-pattern.svg)
+					background-size: 27px 28.3px
+					background-position: 0 0
+				&::after
+					content: ''
+					position: absolute
+					top: 0
+					right: 0
+					bottom: 0
+					left: 0
+					background: inherit
+				.material-icons
+					text-align: left
+					font-size: 20px
+					filter: invert(100%)
+					position: relative
+					z-index: 2
+				&.hideButton
+					.material-icons
+						opacity: 0
+						transition: opacity 0.25s ease 0.5s
+				&:hover
+					.material-icons
+						transition: opacity 0.1s ease
+						opacity: 1
+			.search-filter
+				position: absolute
+				right: 20px
+				z-index: 14
+				height: 50px
+				line-height: 50px
+				padding-left: 15px
+				padding-right: 5px
+				text-align: center
+				background-image: linear-gradient(to left, white 50%, rgba(255,255,255,0))
+				cursor: pointer
+				transition: all 0.15s ease
+				&:hover
+					color: cornflowerblue
+			.category
+				height: 32px
+				background-color: rgba(255,255,255,0.75)
+				display: flex
+				justify-content: space-between
+				padding: 0 10px
+				position: relative
+				z-index: 11
+				overflow: hidden
+				.material-icons
+					line-height: 32px
+					width: 42px
+					text-align: center
+					transition: all 0.15s ease
+					cursor: pointer
+					&.select
+						cursor: default
+						color: cornflowerblue
+						line-height: 28px
+						box-shadow: 0 -4px 0 cornflowerblue inset
+					&.validDrop
+						color: darkgoldenrod
+						transition: all 0.25s ease
+					&.animate
+						color: darkgoldenrod
+						transform: scale(1.15)
+			.swatches
+				//min-height: 224px
+				width: 245px
+				white-space: normal
+				position: static
+				z-index: -1
+				position: relative
+				span
+					height: 32px
+					width: $colorsWidth
+					display: inline-block
+					cursor: pointer
+					top: 0
+					left: 0
+					position: relative
+					background-size: cover
+					background-repeat: no-repeat
+					overflow: hidden
+					transition: height 0.25s ease
+					&::before
+						content: ''
+						display: block
+						position: absolute
+						top: 0
+						bottom: 0
+						right: 0
+						left: 0
+						background-image: url(./images/transparent-pattern.svg)
+						background-position: 0 0
+						background-size: 35px 32px
+						background-repeat: no-repeat
+					&::after
+						content: ''
+						display: block
+						position: absolute
+						top: 0
+						bottom: 0
+						right: 0
+						left: 0
+						background: inherit
+					&.selectionCursor
+						&::before
+							background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern.svg)
+							background-size: 31px 28px
+							background-position: 2px 2px
+							background-repeat: no-repeat, repeat
+						&::after
+							top: 1px
+							left: 1px
+							right: 1px
+							bottom: 1px
+						&.selected
+							&::before
+								background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darker.svg)
+					&.selectedFade
+						&::before
+							background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-lighter.svg)
+							background-size: 31px 28px
+							background-position: 2px 2px
+							background-repeat: no-repeat, repeat
+							transition: background-position 0.25s ease, background-size 0.25s ease
+						&::after
+							top: 1px
+							left: 1px
+							right: 1px
+							bottom: 1px
+							animation: select 0.5s linear
+							@keyframes select
+								0%
+									top: 0
+									right: 0
+									left: 0
+									bottom: 0
+								50%
+									top: 0
+									right: 0
+									left: 0
+									bottom: 0
+								100%
+									top: 1px
+									right: 1px
+									left: 1px
+									bottom: 1px
+						&:hover
+							&::before
+								background-size: 35px 32px
+								background-position: 0 0
+						&.selected
+							&::before
+								background-size: 31px 28px
+								background-position: 2px 2px
+					&.selected
+						&::before
+							background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darker.svg)
+							background-size: 31px 28px
+							background-position: 2px 2px
+							background-repeat: no-repeat, repeat
+							//animation: borderRotate1 1s linear
+							@keyframes borderRotate1
+								0%
+									background-position: 2px 2px, -17.5px -16px
+								100%
+									background-position: 2px 2px, 0 0
+						&::after
+							top: 1px
+							right: 1px
+							left: 1px
+							bottom: 1px
+							animation: bounce 0.15s linear 2 alternate
+							@keyframes bounce
+								0%
+									top: 1px
+									right: 1px
+									left: 1px
+									bottom: 1px
+								100%
+									top: 2px
+									right: 2px
+									left: 2px
+									bottom: 2px
+						&.selectionCursor
+							&::before
+								background-image: url(./images/transparent-pattern.svg), url(./images/transparent-pattern-darkest.svg)
+							//&::after
+								animation: bounce 0s, bounce2 0.15s linear 2 alternate
+								@keyframes bounce2
+									0%
+										top: 1px
+										right: 1px
+										left: 1px
+										bottom: 1px
+									100%
+										top: 2px
+										right: 2px
+										left: 2px
+										bottom: 2px
+					&.new
+						&::before
+							animation: borderRotate2 2s linear
+							@keyframes borderRotate2
+								0%
+									background-position: 2px 2px, -35px -32px
+								100%
+									background-position: 2px 2px, 0 0
+						&.selected
+							&::after
+								animation: bounce 0.15s linear 2 alternate
+					&.deleted
+						&::after
+							font-family: 'Material Icons'
+							content: 'close'
+							font-size: 18px
+							line-height: 32px
+							text-align: center
+							color: black
+							transition: visibility 0s linear 0.5s, line-height 0.15s ease
+							box-shadow: 0 0 0 64px rgba(255,255,255,0.5) inset
+					&.empty-space
+						opacity: 0
+						cursor: default
+				&.smallColors
+					span
+						height: 16px
+						&::before
+							font-size: 16px
+							line-height: 16px
+				&[data-scheme='sundberg'][data-category='palette']
+					span
+						width: 49px
+				&.searching
+					span
+						width: 32px
+				.status
+					width: 225px
+					color: black
+					position: relative
+					top: 96px
+					left: 10px
+					right: 10px
+					transform: translateY(-50%)
+					font-size: 16px
+					text-align: center
+		$selectedWidth: 22px
+		&.properties, &.actions
+			height: 50px
+			line-height: 50px
+			bottom: 10px
+			display: flex
+			div
+				line-height: 50px
+				width: 50px
+				text-align: center
+				font-size: 28px
+				transition: all 0.25s ease
+				flex: 0 0 50px
+				cursor: default
+				&.disabled
+					&::after
+						color: grey
+				&::before
+					top: -10px
+					transform: translateY(-100%) translateX(-50%)
+				&:hover
+					background-color: gainsboro
+					transition: all 0s ease
+				&[data-icon]::after
+					content: attr(data-icon)
+					position: absolute
+					color: black
+					z-index: 10
+					left: 0
+					top: 0
+					right: 0
+					bottom: 19px
+					overflow: hidden
+					display: block
+					text-shadow: 0 0 1px 0 white
+		&.properties
+			left: 275px
+			div
+				background-image: radial-gradient(circle at center, lightgrey 62%, transparent 62%)
+				background-size: 0 0
+				background-position: center
+				background-repeat: no-repeat
+				&.toggled, &.fill
+					background-size: 50px 50px
+					&:hover
+						transition: all 0.25s ease
+						background-color: white
+				&[aria-label="opacity"]
+					background-image: radial-gradient(circle at center, white 0%, gainsboro 62%, transparent 62%)
+				&[aria-label="stroke"].fill, &[aria-label="fill"].fill
+					background-image: radial-gradient(circle at center, gainsboro 31%, silver 56%, darkgrey 62%, transparent 62%)
+				&[aria-label="gradient"], &[aria-label="texture"]
+					background-image: radial-gradient(circle at center, whitesmoke 32%, silver 56%, darkgrey 62%, transparent 62%)
+				&.fill
+					background-size: 50px 50px
+
+		&.actions
+			right: 10px
+			[aria-label='grid'].material-icons
+				background: white
+				color: black
+				transition: color 0.25s ease
+				&::after
+					content: 'grid_off'
+					color: black
+					position: absolute
+					transition: all 0.5s ease, background-color 0s ease
+					width: 50px
+					flex: 0 0 50px
+					top: 0
+					left: 0
+					height: 50px
+					line-height: 50px
+					overflow: hidden
+					background-color: inherit
+				&.on
+					color: cornflowerblue
+					&::after
+						height: 0
+						color: cornflowerblue
+			[aria-label='more']
+				&:hover
+					~ .expand
+						@extend %equal-expanded
+						transition: all 0.15s ease 0.5s
+				~ .expand
+					width: 0
+					transition: all 0.15s ease
+					overflow: hidden
+					display: flex
+					opacity: 0
+					&:hover
+						@extend %equal-expanded
+				&:active
+					~ .expand
+						@extend %equal-expanded
+						transition: all 0.15s ease
+
+		&.layers
+			top: 10px
+			right: 10px
+			width: 50px
+			&::after
+				position: absolute
+				top: 20px
+				left: 50%
+				content: 'LAYERS'
+				transform: translate(-50%)
+				display: block
+				font-size: 18px
+				font-family: 'Open Sans Condensed', sans-serif
+				z-index: -1
+			.all
+				min-height: 150px
+				overflow: hidden
+				div
+					position: relative
+					height: 50px
+					width: 50px
+					background-color: white
+					text-align: center
+					line-height: 50px
+					&.hidden
+						&::before
+							content: 'visibility_off'
+							font-family: 'Material Icons'
+							display: block
+							position: absolute
+							bottom: 0
+							right: 0
+							font-size: 20px
+							color: black
+							height: 50px
+							width: 50px
+							text-align: right
+							line-height: 80px
+							background-image: linear-gradient(to top left, rgba(255,255,255,0.75) 25%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.25) 100%)
+							z-index: 2
+							text-shadow: 0 0 1px white
+					&:hover
+						background-color: gainsboro
+					&.drop-above, &.drop-below
+						z-index: 4
+						&::after
+							content: ''
+							display: block
+							width: 100%
+							position: absolute
+							height: 14px
+							background-color: rgba(100, 149, 237, 0.6)
+							box-shadow: 0 0 0 1px rgba(255,255,255,1) inset, 0 0 0 2px blue inset, 0 0 0 3px rgba(255,255,255,1) inset
+							//animation: darken-color-drop 0.3s ease
+							z-index: 4
+							@keyframes darken-color-drop
+								0%
+									background-color: rgba(100, 149, 237, 0.6)
+								16%
+									background-color: rgba(100, 149, 237, 0.6)
+								100%
+									background-color: rgba(100,149,237,1)
+					&.drop-above::after
+						top: -7px
+					&.drop-below::after
+						bottom: -7px
+					&.drop-group
+						&::after
+							content: ''
+							position: absolute
+							display: block
+							top: 5px
+							bottom: 5px
+							left: 5px
+							right: 5px
+							background-color: rgba(100, 149, 237, 0.6)
+							box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px rgba(255,255,255,1) inset
+							border-radius: 4px
+							animation: fade-in 0.3s ease
+							@keyframes fade-in
+								0%
+									opacity: 0
+							  16%
+									opacity: 0
+								100%
+									opacity: 1
+					&.selected
+						box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px lightblue inset, 0 0 0 4px blue inset, 0 0 0 5px white inset
+						svg
+							transform: scale(0.8)
+						&.drop-group
+							&::after
+								top: 9px
+								right: 9px
+								bottom: 9px
+								left: 9px
+						&.drop-below, &.drop-above
+							&::after
+								background-color: rgba(0, 0, 255, 0.6)
+						&.hidden
+							&::before
+								bottom: 5px
+								right: 5px
+								height: 40px
+								width: 40px
+								padding-right: -5px
+								line-height: 70px
+
+%equal-expanded
+	opacity: 1
+	width: 100px
+	overflow: visible
+
+.colorCat, .schemes
+	width: 100%
+	z-index: 16
+	visibility: hidden
+	position: absolute
+	top: 82px
+	bottom: 32px
+	overflow: hidden
+	left: 0
+	right: 0
+	cursor: default
+	transition: visibility 0.15s ease, opacity 0.15s ease
+	opacity: 0
+	&.view
+		visibility: visible
+		opacity: 1
+	ul
+		list-style-type: none
+		li
+			position: relative
+			height: 32px
+			text-align: center
+			line-height: 32px
+			font-family: 'Barlow Semi Condensed', 'Roboto Condensed', sans-serif
+			font-size: 19px
+			transition: all 0.25s ease
+			background-color: darkgrey
+			&:nth-child(odd)
+				background-color: silver
+
+.schemes
+	ul
+		li
+			position: relative
+			background-image: url(./images/transparent-pattern.svg)
+			background-size: 7px 7px
+			background-position: bottom left
+			p
+				position: relative
+				display: block
+				z-index: 10
+				background-image: linear-gradient(to bottom, rgba(140,140,140,1) 0, rgba(160,160,160,0.6) 24px, rgba(140,140,140,0) 32px), linear-gradient(to bottom, rgba(180,180,180,1) 0, rgba(220,220,220,1) 24px, rgba(220,220,220,0) 32px)
+				background-repeat: no-repeat
+				line-height: 28px
+				height: 32px
+				background-position: 0 0, 0 0
+				background-size: 245px 0, auto 32px
+				transition: all 0.15s ease
+				box-shadow: 0 1px 0 grey inset
+			&.selected, &:active
+				p
+					color: white
+					background-size: 245px 32px, 245px 32px
+			&.transform-top
+				top: -32px
+				~ li
+					bottom: -64px
+			&:hover p, &:active p
+				background-position: 0 -3px, 0 -3px
+				line-height: 26px
+			.colorsPreview
+				position: absolute
+				height: 48px
+				bottom: -32px
+				width: inherit
+				display: flex
+				flex-wrap: no-wrap
+				transition: bottom 0.15s ease, transform 0.15s ease
+				left: 0
+				right: 0
+				div
+					min-width: 5px
+					height: 48px
+					flex-grow: 1
+			.colorsPreviewScroll
+				position: absolute
+				left: 0
+				width: inherit
+				height: 48px
+				bottom: -32px
+				opacity: 0
+				transition: opacity 0.15s ease
+				display: flex
+				flex-wrap: no-wrap
+				div
+					min-width: 5px
+					height: 48px
+					flex-grow: 1
+			&:hover, &:active
+				.colorsPreviewScroll
+					opacity: 1
+		.settings.material-icons
+			position: absolute
+			bottom: -32px
+			right: 0
+			height: 32px
+			width: 32px
+			text-align: center
+			line-height: 32px
+			font-size: 22px
+			cursor: pointer
+	ul:active
+		li.selected
+			p
+				color: black
+				background-size: 245px 0, auto 32px
+		li.selected:active
+			p
+				color: white
+				background-size: 245px 32px, auto 32px
+.warn
+	background: whitesmoke
+	height: 200px
+	width: 400px
+	position: fixed
+	left: 50%
+	top: 20px
+	margin-left: -200px
+	border-radius: 4px
+	box-shadow: 0 0 5px 0 rgba(0,0,0,0.5)
+	transition: all 0.25s ease
+	transform: scale(0.8)
+	visibility: hidden
+	opacity: 0
+	margin-top: -100px
+	z-index: 100
+	p
+		margin: 20px
+		padding: 0
+		font-size: 20px
+	&.show
+		visibility: visible
+		opacity: 1
+		margin-top: 0
+		transform: scale(1)
+		animation: pop-up 0.5s ease 0.25s
+		@keyframes pop-up
+			25%
+				transform: scale(1.05)
+			50%
+				transform: scale(0.95)
+			75%
+				transform: scale(1)
+				//box-shadow: 0 0 5px 2.5px red
+			100%
+				//box-shadow: 0 0 5px rgba(0,0,0,0.5)
+	.confirm, .cancel
+		position: absolute
+		width: 90px
+		height: 30px
+		line-height: 30px
+		text-align: center
+		border-radius: 2px
+		&:active
+			background-image: linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.2))
+	.confirm
+		bottom: 10px
+		right: 10px
+		background-color: cornflowerblue
+		color: white
+		&:hover
+			box-shadow: 0 0 0 1px blue inset
+	.cancel
+		right: 110px
+		bottom: 10px
+		background-color: lightgrey
+		&:hover
+			box-shadow: 0 0 0 1px grey inset
+
+.selection
+	position: fixed
+	box-shadow: 0 0 0 1px rgba(51, 123, 204, 1) inset
+	//animation: interactive 1s linear
+	display: none
+	z-index: 100
+	margin: -4px 0 0 -4px
+	z-index: 15
+	transition: visibility 0.25s ease, opacity 0.25s ease
+	border: 4px solid transparent
+	&.clickThrough
+		pointer-events: none
+	*
+		background: rgba(51, 123, 204, 1)
+		border: 1px solid whitesmoke
+		box-shadow: 0 0 1px 1px lightgrey
+		border-radius: 50%
+		position: absolute
+		height: 8px
+		width: 8px
+		margin: -4px
+	&.hide
+		opacity: 0
+		visibility: hidden
+	&.selecting
+		background: rgba(51, 123, 204, 0.15)
+		border: none
+		*
+			display: none
+	.top-handle
+		top: 0
+		left: 50%
+		cursor: ns-resize
+	.right-handle
+		right: 0
+		top: 50%
+		cursor: ew-resize
+	.bottom-handle
+		bottom: 0
+		left: 50%
+		cursor: ns-resize
+	.left-handle
+		left: 0
+		top: 50%
+		cursor: ew-resize
+	.top-left-handle
+		left: 0
+		top: 0
+		cursor: nwse-resize
+	.top-right-handle
+		top: 0
+		right: 0
+		cursor: nesw-resize
+	.bottom-left-handle
+		bottom: 0
+		left: 0
+		cursor: nesw-resize
+	.bottom-right-handle
+		bottom: 0
+		right: 0
+		cursor: nwse-resize
+	@keyframes interactive
+		50%
+			background-color: rgba(100, 149, 237, 0.5)
+		100%
+			background-color: rgba(100, 149, 327, 0)
+	@keyframes shine
+		0%
+		100%
+			border: 2px dashed rgba(100, 149, 237, 1)
+			box-shadow: 0 0 0 1px inset rgba(220, 20, 60, 1), 0 0 0 1px rgba(220, 20, 60, 1)
+
+.hiddenTemplates
+	> *
+		display: none
+	.animatables
+		display: block
+		.animatable
+			z-index: 50
+			position: fixed
+			height: $colorsHeight
+			width: $colorsWidth
+			opacity: 0
+			visibility: hidden
+			box-shadow: 0 0 5px rgba(0,0,0,0.5)
+.propertyScrubber
+	height: 0
+	width: 46px
+	border-radius: 4px 4px 0 0
+	background: whitesmoke
+	position: fixed
+	transition: all 0.15s ease
+	box-shadow: 0 0 6px 1px rgba(0,0,0,0.4)
+	z-index: 4
+	transition: all 0s ease
+	visibility: hidden
+	overflow: hidden
+	.scrub
+		position: absolute
+		display: block
+		bottom: 0
+		width: 46px
+		height: 0
+		background-color: white
+		background-image: linear-gradient(to bottom, rgba(190, 190, 190, 0.8), rgba(200, 200, 200, 0.5))
+		background-size: 46px 200px
+		background-repeat: no-repeat
+		transform: scale(1,0)
+		transition: transform 0.15s ease
+		transform-origin: 0 100%
+	&::after
+		content: attr(data-value)
+		display: block
+		font-size: 18px
+		position: absolute
+		top: 50%
+		left: 50%
+		transform: translate(-50%,-50%)
+		color: black
+		text-align: center
+	&.smallText::after
+		font-size: 14px
+		color: grey
+	&.down
+		border-radius: 0 0 4px 4px
+		.scrub
+			bottom: auto
+			top: 0
+			transform-origin: 0 0
+			background-image: linear-gradient(to top, rgba(200, 200, 200, 0.8), rgba(200, 200, 200, 0.5))
+			background-position: bottom
+			background-repeat: no-repeat
+
+	&.show
+		transition: height 0.15s ease, top 0.15s ease
+		visibility: visible
+		height: 190px
+		.scrub
+			transform: scale(1,1)
+
+
+span.colorDragging
+	position: fixed
+	border-radius: 0
+	z-index: 200
+	height: 32px
+	width: 35px
+	cursor: grabbing
+	transition: border-radius 0.5s ease, margin 0s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, top 0.5s ease, left 0.5s ease, height 0.5s ease
+	&::before
+		content: ''
+		display: block
+		position: absolute
+		top: 0
+		right: 0
+		left: 0
+		right: 0
+		background-image: url(./images/transparent-pattern.svg)
+		background-size: 32px
+	&.scrolling
+		transition: border-radius 0.5s ease, margin 0.15s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, top 0.5s ease, left 0.5s ease, height 0.5s ease
+	&.smallColors
+		height: 16px
+	&.dragging
+		box-shadow: 0 0 5px 0 rgba(0,0,0,0.5)
+		border-radius: 50%
+		width: 32px
+		height: 32px
+		transition: border-radius 0.5s ease, margin 0.5s ease, box-shadow 0.5s ease, transform 0.25s ease, opacity 0.25s ease, width 0.25s ease, filter 0.25s ease, height 0.5s ease
+		&.drop-shrink
+			transform: scale(0.75)
+			cursor: copy
+		&.drop-grow
+			transform: scale(1.25)
+			cursor: grab
+			&::after
+				content: attr(data-overicon)
+				position: absolute
+				top: 0
+				right: 0
+				bottom: 0
+				left: 0
+				font-family: 'Material Icons'
+				font-size: 18px
+				color: black
+				text-align: center
+				opacity: 0
+				line-height: 32px
+				transition: opacity 0.5s ease
+				display: block
+		&.shrink-out
+			transform: scale(0)
+			transition: all 0.4s ease, transform 0.3s ease 0.1s
+		&.grow-out
+			transform: scale(1.5)
+			border-radius: 2px
+			opacity: 0
+			transition: all 0.5s ease, opacity 0.25s ease 0.25s
+			&::after
+				opacity: 1
+			//animation: pop 0.5s ease
+			//@keyframes pop
+				0%
+					transform: scale(1)
+				50%
+					transform: scale(0.5)
+				100%
+					transform: scale(0.75)
+		&.remove
+			opacity: 0.5
+			//filter: blur(2px)
+			//box-shadow: 0 0 5px 0 black
+			box-shadow: 0 0 5px 0 rgba(0,0,0,0.5), 0 0 10px 0 rgba(0,0,0,0.5) inset, 0 0 15px 0 rgba(255,255,255,0.5) inset
+			transition: opacity 0.1s ease 0.4s ease, filter 0.4s ease, box-shadow 0s ease
+			cursor: not-allowed
+.numberPreview
+	font-size: 12.5px
+	font-family: 'Roboto', sans-serif
+	color: black
+	$outline: white
+	text-shadow: 1px 0 0 $outline, 0 1px 0 $outline, 1px 1px 0 $outline, -1px 0 0 $outline, 0 -1px 0 $outline, -1px -1px 0 $outline, 1px -1px $outline, -1px 1px $outline
+	display: none
+	z-index: 100
+	position: fixed
+	transform: translate(-50%,-50%)
+	font-weight: bold
+
+.quickOptions
+	display: none
+	position: fixed
+	top: 50%
+	transform: translate(-50%,-50%)
+	left: 50%
+	height: 400px
+	width: 400px
+	background: white
+	z-index: 500
+	border-radius: 4px
