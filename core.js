@@ -1,28 +1,8 @@
 import { cache, pressed } from './Cache.js';
+import { doc } from './SetUp.js';
 
 $(document).ready(function() {
-  var toggle = false;
-  $('.splash .settings').click(function() {
-    toggle = !toggle;
-    $('.splash').toggleClass('hide');
-    if (toggle) {
-      $('.start').html('OPTIONS');
-    } else {
-      $('.start').html('START');
-    }
-  });
-  var doc = {
-    size: [800, 800],
-    viewBox: function() {
-      $('#editor').attr({
-        'viewBox': '0 0 ' + this.size[0] + ' ' + this.size[1],
-        'width': this.size[0],
-        'height': this.size[1]
-      });
-      $('.svg-contain').addClass('show');
-    },
-    zoom: 1
-  };
+
 
   var ui = {
     cursor: function(type) {
@@ -314,22 +294,7 @@ $(document).ready(function() {
       }
     }
   }
-  $('.start').click(function() {
-    if (!toggle) {
-      doc.size = [$('.quickset input:eq(0)').val(), $('.quickset input:eq(1)').val()];
-      doc.viewBox();
-    }
-  });
 
-  $('.create').click(function() {
-    doc.size = [$('.size input:eq(0)').val(), $('.size input:eq(1)').val()];
-    doc.viewBox();
-    $('.splash').removeClass('hide');
-  });
-
-  $('.size input').change(function() {
-    $('.create').addClass('show');
-  });
   $(document).contextmenu(function(e) {
     e.preventDefault();
   }).keydown(function(e) {
@@ -417,6 +382,7 @@ $(document).ready(function() {
       $('.propertyScrubber').removeClass('show');
     }
   });
+  
   $('#autosize').change(function() {
     if ($(this).prop('checked')) {
       $('.size input').attr('disabled', 'disabled');
@@ -428,19 +394,7 @@ $(document).ready(function() {
     $('.create').addClass('show');
   });
 
-  $('.quickset input:eq(0)').val($(window).innerWidth());
-  $('.quickset input:eq(1)').val($(window).innerHeight());
 
-  $(window).resize(function() {
-    $('.quickset input:eq(0)').val($(window).innerWidth());
-    $('.quickset input:eq(1)').val($(window).innerHeight());
-    tabStates.adjustAllPos();
-  }).blur(function() {
-    for (var prop in pressed) {
-      pressed[prop] = false;
-    }
-    console.log('window blurred');
-  });
 
 
 

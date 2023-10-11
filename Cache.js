@@ -38,4 +38,11 @@ var pressed = {
     tabKey: false
 }
 
+$(window).blur(function() { // this ensures that when the user switches windows, all keypress states are reset
+    for (var prop in pressed) {
+      pressed[prop] = false;
+    }
+    console.log('window blurred');
+});
+
 export {cache, pressed};
