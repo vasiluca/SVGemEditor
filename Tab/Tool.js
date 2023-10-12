@@ -1,6 +1,7 @@
 /** This contains all functions pertaining to the Tools Tab */
 
-//TODO: Before exporting and importing tool, we need to move ui functions pertaining to the tool tab here so as to not break the application
+import { ui } from '../UI.js';
+
 var tool = {
 	toolType: 'line',
 	name: false,
@@ -9,32 +10,32 @@ var tool = {
 		$('.shapes div').removeClass('selected');
 		ui.hideTools(false);
 		if (kind == this.toolType) {
-		this.toolType = 'selection';
-		ui.cursor('default');
+			this.toolType = 'selection';
+			ui.cursor('default');
 		} else if (kind != 'selection') {
-		this.toolType = kind;
-		ui.cursor('crosshair');
-		$('#'+kind).addClass('selected');
+			this.toolType = kind;
+			ui.cursor('crosshair');
+			$('#'+kind).addClass('selected');
 		} else {
-		this.toolType = 'selection';
-		ui.cursor('default');
+			this.toolType = 'selection';
+			ui.cursor('default');
 		}
 		if (kind == 'image') {
-		if (tool.imageIndex == -1) {
-			$('#inputFile').trigger('click');
-			tool.imageIndex = tool.prevIndexIMG;
-		}
-		this.toolType = 'selection';
-		ui.hideTools('selection');
-		ui.cursor('copy');
+			if (tool.imageIndex == -1) {
+				$('#inputFile').trigger('click');
+				tool.imageIndex = tool.prevIndexIMG;
+			}
+			this.toolType = 'selection';
+			ui.hideTools('selection');
+			ui.cursor('copy');
 		}
 		if (kind == 'drag' && !pressed.spaceBar) {
-		this.toolType = 'selection';
-		ui.hideTools(true);
-		ui.cursor('drag');
+			this.toolType = 'selection';
+			ui.hideTools(true);
+			ui.cursor('drag');
 		}
 		if (kind == 'animate') {
-		this.toolType = 'selection';
+			this.toolType = 'selection';
 		}
 		this.name = kind;
 	},
