@@ -14,66 +14,7 @@ import { layers } from './Tab/Layer.js';
 $(document).ready(function() {
 
 
-  $(document).contextmenu(function(e) {
-    e.preventDefault();
-  }).keydown(function(e) {
-    
-    if (!$('.color input.user').is(':focus')) { // check that the user isn't actively typing in a color in the color tab
-      if ($('.svg-contain').hasClass('show')) { 
-            e.preventDefault();
-      }
-      switch (e.which) {
-        case 9: // Tab key is pressed
-          //$('.warn').toggleClass('show');
-          break;
-        case 16: // shift key pressed
-          pressed.shiftKey = true;
-          break;
-        case 17:
-          pressed.ctrlKey = true;
-          break;
-        case 18: // alt key (or option key on mac) is pressed
-          pressed.altKey = true;
-          break;
-        /*case 32: // Spacebar is pressed
-          tool.type = 'drag';
-          pressed.spaceBar = true;
-          break;*/
-        case 91: // Command key is presssed on mac
-        case 93:
-          pressed.cmdKey = true;
-          break;
-        case 27: // Escape key is pressed
-          if (tool.type == 'selection') {
-            $('.selection').css('display','none');
-            //cache.ele = false;
-          } else {
-            tool.type = 'selection';
-          }
-          break;
-        case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
-          cache.ele.remove();
-          layers.update();
-          $('.selection').css('display','none');
-          break;
-        case 9:
-          pressed.tabKey = true;
-          break;
-        case 20: // Caps lock key is pressed
-          if (cache.mapKeysTo == 'color') {
-            if ($('.color .user').is(':focus')) {
-              $('.color .user').blur();
-            } else {
-              $('.color .user').focus();
-            }
-          }
-          break;
-      }
-    }
-    if ($(e.target).is('.color *')) {
-      $('.color input.user').focus();
-    }
-  }).keyup(function(e) {
+  $(document).keyup(function(e) {
     switch (e.which) {
       case 16: // Shift key is lifted
         pressed.shiftKey = false;
