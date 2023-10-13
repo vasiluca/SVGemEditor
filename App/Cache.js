@@ -1,5 +1,7 @@
 /** This file stores all data that is temporary, and needed only for the current application session */
 
+import { tool } from './Tab/Tool.js';
+
 var cache = {
     size: [],
     start: [],
@@ -27,7 +29,7 @@ var cache = {
     dragTab: false,
     mapKeysTo: 'selection',
     moveAmount: 2
-}  
+}
 
 var pressed = {
     handle: false, // this refers to the blue handlebars that can resize a selected element

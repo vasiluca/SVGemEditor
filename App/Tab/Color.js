@@ -1,5 +1,7 @@
 /** This contains all functions pertaining to the Colors Tab */
 import { pressed } from '../Cache.js';
+import { ui } from '../UI.js';
+
 import { tabStates } from '../Tabs.js';
 
 var colors = { // This object contains data for the color draggable component
@@ -1071,6 +1073,8 @@ var colors = { // This object contains data for the color draggable component
 	return this.collections[this.scheme][key];
 	}
 }
-    
 
-export {colors};;
+
+
+
+export {colors};

@@ -1,3 +1,5 @@
+//** This provides the necessary functions to create an SVG element */
+
 import { cache, pressed } from '../Cache.js';
 
 import { svg } from './SVG.js';
@@ -5,29 +7,6 @@ import { svg } from './SVG.js';
 import { tool } from '../Tab/Tool.js';
 
 var draw = {
-    animate: function() {
-
-    },
-    path: function() { // The function for creating a path element
-      if (!svg.created) {
-        svg.pathData = cache.ele.attr('d').split(' ');
-      }
-      svg.new('path', {
-        d: "M " + cache.start[0] + "," + cache.start[1]
-      });
-    },
-    brush: function() {
-
-    },
-    text: function() {
-
-    },
-    polyline: function() { // The function for creating a polyline element
-
-    },
-    polygon: function() { // The function for creating a polygon element
-
-    },
     line: function() { // The function for creating a line
       svg.new('line', {
         'x1': cache.start[0],
@@ -146,6 +125,8 @@ var draw = {
       });
       svg.finished = true;
     },
+
+    //** This selection function adjusts the selection area over a selected SVG element */ */
     selection: function(ele) {
       var area = {
         x: cache.stop[0] > cache.start[0] ? cache.start[0] : cache.stop[0],
@@ -193,10 +174,28 @@ var draw = {
       }
       //$('#movePreview').html('');
       svg.finished = true;
-    }
+    },
       // if (tool.type != 'selection') {
       //   svg.selectionAreas[svg.numID - 1] = obj;
       // }
+    
+    //** For now try to focus on testing the existing functions */
+    // TODO: Most important is to implement text, polyline, and polygon
+    text: function() {},
+    polyline: function() { // The function for creating a polyline element
+    },
+    polygon: function() { // The function for creating a polygon element
+    },
+    
+    path: function() { // The function for creating a path element
+      if (!svg.created) {
+        svg.pathData = cache.ele.attr('d').split(' ');
+      }
+      svg.new('path', {
+        d: "M " + cache.start[0] + "," + cache.start[1]
+      });
+    },
+    brush: function() {}
 }
 
 export { draw }

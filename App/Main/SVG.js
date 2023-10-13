@@ -100,9 +100,6 @@ var svg = {
       }
       this.newScale = scale;
     },
-    setColor: function() {
-
-    },
     transform: function(axis) {
       var selection = $('.selection')[0].getBoundingClientRect();
       var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
@@ -156,7 +153,6 @@ var svg = {
           if (widthDiff == 0) {
             widthDiff = 1;
           }
-
 
           this.newScale[0] = selection.width/this.initial.preScaleW/doc.zoom;
         }
@@ -473,6 +469,10 @@ var svg = {
         $('.draggingPreview, .draggingPreview2').remove();
         $('.numberPreview').css('display','none');
       }
+    },
+
+    setColor: function() {
+
     },
     pathData: []
 }

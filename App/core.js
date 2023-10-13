@@ -14,13 +14,6 @@ import { layers } from './Tab/Layer.js';
 
 $(document).ready(function() {
 
-
-  $(document).mousedown(function(e) {
-    if ($('.propertyScrubber').hasClass('show') && !$(e.target).is('.propertyScrubber, .propertyScrubber *')) {
-      $('.propertyScrubber').removeClass('show');
-    }
-  });
-  
   $('#editor, .selection').mousedown(function(e) {
     if (e.which == 1) {
       cache.start = [e.clientX,e.clientY];
@@ -59,6 +52,8 @@ $(document).ready(function() {
       }
     }
   });
+
+
   $('#editor').mousemove(function(e) {
     if ($(e.target).is('#editor *') && cache.press == false && tool.type == 'selection' && !pressed.handle) {
       cache.hoverEle = $(e.target).attr('id');
@@ -193,12 +188,250 @@ $(document).ready(function() {
     }
   });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    $('.properties div').click(function() {
+      if (!$(this).attr('disabled') && $(this).is('[data-icon]')) {
+        if (!$(this).is('[data-icon=""]')) {
+          property.colorTo = $(this).attr('aria-label');
+        }
+        if (!$('.color').hasClass('expand')) {
+          tabStates.color.expand(true);
+          tabStates.color.quickView = true;
+          tabStates.color.keepOpen = false;
+        }
+        if (!pressed.shiftKey) {
+          if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
+            $('.properties div[aria-label="stroke"], .properties div[aria-label="fill"]').removeClass('toggled');
+          }
+        }
+        if ($(this).is('[aria-label="opacity"]')) {
+          $(this).toggleClass('toggled');
+        } else {
+          $(this).addClass('toggled');
+        }
+      }
+      if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
+        if ($(this).hasClass('toggled')) {
+          $('.properties div').removeClass('fill');
+          $(this).addClass('fill');
+        }
+      } else if ($(this).is('[aria-label="gradient"], [aria-label="texture"]')) {
+        $('.properties div').removeClass('fill');
+        $(this).addClass('fill');
+      }
+    }).mousedown(function() {
+      cache.swipe = true;
+      property.scrubberTo = $(this);
+      cache.btnArea = {
+        left: $(this).offset().left,
+        right: $(this).offset().left + $(this).width(),
+        top: $(this).offset().top,
+        bottom: $(this).offset().top + $(this).height()
+      };
+    }).mouseleave(function(e) {
+      if (cache.swipe && !$('.propertyScrubber').hasClass('show')) {
+        cache.start = [e.clientX,e.clientY];
+        if (e.clientX > cache.btnArea.left && e.clientX < cache.btnArea.right) {
+          cache.start = [e.clientX,e.clientY];
+          if (e.clientY < cache.btnArea.top + 5) {
+            ui.scrubber(true);
+          }
+          if (e.clientY > cache.btnArea.bottom - 5) {
+            ui.scrubber(true,'down');
+          }
+        }
+        property.setNumValue();
+      }
+    }).contextmenu(function(){
+      /*if ($(this).is('[aria-label="stroke"]')) {
+        if (parseInt(cache.ele.attr('stroke-opacity')) > 0) {
+          cache.ele.attr('stroke-opacity',0);
+          cache.ele
+        } else {
+          cache.ele.attr('stroke-opacity',tool.strokeOpacity);
+        }
+      }*/
+      if ($(this).is('[aria-label="stroke"]')) {
+        if (cache.ele.attr('paint-order') == 'stroke') {
+          cache.ele.removeAttr('paint-order');
+          tool.paintOrder = '';
+          cache.ele.attr('stroke-opacity',0);
+          setTimeout(function() {
+            cache.ele.attr('stroke-opacity',tool.strokeOpacity);
+          }, 0);
+          $(this)
+        } else {
+          cache.ele.attr('paint-order','stroke');
+          tool.paintOrder = 'stroke';
+          cache.ele.attr('stroke-opacity',0);
+          setTimeout(function() {
+            cache.ele.attr('stroke-opacity',tool.strokeOpacity);
+          },0);
+        }
+      }
+    })
+
+
+    $('.layers .all').on('mouseenter', 'div', function(e) {
+      /*cache.ele = $(e.target).attr('id');
+      draw.selection(true);*/
+    }).on('mousedown','div',function(e) {
+      if (e.which == 1) { // Right Click
+        ui.resizeHandles(true);
+        cache.start = [e.clientX,e.clientY];
+        layers.select = true;
+        layers.selectedLayer = false;
+        layers.current = $(this);
+        $('.selection').css('display','block');
+        //cache.ele = $(this).attr('id');
+        //draw.selection(cache.ele);
+      }
+    }).on('mouseup', 'div', function(e) {
+      if (e.which == 1) {
+        if (layers.reorder) {
+          layers.drop($(this));
+        } else if (!layers.selecting) {
+          var selected = $(this).hasClass('selected');
+          if (pressed.shiftKey) {
+            if (selected) {
+              $(this).removeClass('selected');
+            } else {
+              $(this).addClass('selected');
+            }
+          } else {
+            $('.layers div').removeClass('selected');
+            $(this).addClass('selected');
+          }
+        }
+        $('.draggingLayer').remove();
+        $('.layers div').removeClass('drop-above drop-below drop-group');
+      } else if (e.which == 3) {
+        $(this).toggleClass('hidden');
+        if ($(this).css('display')) {
+          $(this).css('display','');
+        }
+        if ($(this).hasClass('hidden')) {
+          $('#editor #' + $(this).attr('id')).attr({'display': 'none'});
+        } else {
+          $('#editor #' + $(this).attr('id')).removeAttr('display');
+        }
+        if (!pressed.shiftKey) {
+          if ($('.layers .selected').length > 1 && $(this).hasClass('selected')) {
+            if ($(this).hasClass('hidden')) {
+              $('.layers .selected').addClass('hidden');
+              $('.layers .selected').each(function() {
+                $('#editor #' + $(this).attr('id')).attr({'display': 'none'});
+              });
+            } else {
+              $('.layers .selected').removeClass('hidden');
+              $('.layers .selected').each(function() {
+                $('#editor #' + $(this).attr('id')).removeAttr('display');
+              });
+            }
+          }
+        }
+
+      }
+    }).on('mouseleave','div',function() {
+      if (layers.reorder) {
+        $('.layers div').removeClass('drop-above drop-below drop-group');
+      } else if (layers.select) {
+        if (pressed.shiftKey) {
+          layers.selecting = true;
+          $(this).addClass('selected');
+        } else {
+          layers.reorder = true;
+        }
+      }
+      if (cache.start[1] < cache.stop[1]) {
+        $(this).addClass('layerAboveCursor');
+      }
+    }).on('mouseenter','div',function() {
+      if (layers.reorder) {
+        ui.showDropArea($(this));
+      } else if (layers.selecting) {
+        $(this).addClass('selected');
+      }
+    }).on('mousemove', 'div', function() {
+      if (layers.reorder) {
+        ui.showDropArea($(this));
+      }
+    }).mouseleave(function() {
+      if (layers.reorder) {
+        $('.draggingLayer').remove();
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //** From this point, onward is non-crucial functionality or jQuery events (not as important to test) */
+  // TODO: add the the below functions to their corresponding modules
+  
   $('.propertyScrubber').mousedown(function(e) {
     cache.swipe = true;
     cache.start = [e.clientX,e.clientY];
   });
 
-  $('.draggable').mousedown(function(e) {
+  $('.shapes').on('click', 'div', function(e) {
+    $('[aria-label="fill"]').removeAttr('disabled');
+    tool.type = $(this).attr('id');
+  });
+  
+  $(document).mousedown(function(e) {
+    if ($('.propertyScrubber').hasClass('show') && !$(e.target).is('.propertyScrubber, .propertyScrubber *')) {
+      $('.propertyScrubber').removeClass('show');
+    }
+  });
+
+    $('.draggable').mousedown(function(e) {
     if ($(e.target).is('.drag, .drag *') && e.which == 1) {
       cache.dragTab = true;
       cache.start = [e.clientX - $(this).offset().left, e.clientY - $(this).offset().top];
@@ -222,13 +455,86 @@ $(document).ready(function() {
     }
   });
 
-  $('.shapes').on('click', 'div', function(e) {
-    $('[aria-label="fill"]').removeAttr('disabled');
-    tool.type = $(this).attr('id');
+
+
+    $(document).on('wheel',function(e) {
+      if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
+        if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
+          if (doc.zoom > 1 || doc.size[0]*doc.zoom > $(window).width() || doc.size[1]*doc.zoom > $(window).height()) {
+            doc.zoom -= 0.25;
+            if (doc.zoom > 10) {
+              doc.zoom -= 0.5;
+            }
+          }
+        }
+        if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
+          if (doc.zoom < 20) {
+            doc.zoom += 0.25;
+            if (doc.zoom < 10) {
+              doc.zoom += 0.5;
+            }
+          }
+        }
+        var offsetTop = ($(window).height()/2 - e.clientY) * doc.zoom;
+        var offsetLeft = ($(window).width()/2 - e.clientX) * doc.zoom;
+        if (doc.zoom <= 1) {
+          offsetTop = ($(window).height() - doc.size[1]*doc.zoom)/2;
+          offsetLeft = ($(window).width() - doc.size[0]*doc.zoom)/2;
+        }
+        $('#editor').css({
+          'transform': 'scale('+doc.zoom+')',
+          'top': offsetTop,
+          'left': offsetLeft
+        });
+        draw.selection(cache.ele);
+      }
+  });
+
+  function readAndInsert(file) {
+    var reader = new FileReader();
+    var image = new Image();
+    image.src = this.result;
+    var width = 100;
+    var height = 100;
+    reader.readAsDataURL(file);
+    reader.onload = function() {
+      tool.images.push({
+        result: this.result,
+        width: width,
+        height: height
+      });
+    }
+  }
+
+  $('#inputFile').change(function(e) {
+    tool.images = [];
+    var files = e.target.files;
+    tool.imageIndex = files.length-1;
+    tool.prevIndexIMG = files.length-1;
+    for (var i = 0; i < files.length; i++) {
+      readAndInsert(files[i]);
+    }
+  });
+
+  $('#image').contextmenu(function() {
+    $('#inputFile').trigger('click');
   });
 
 
-    // Color Module
+
+
+
+
+
+
+
+
+
+
+
+  // TODO: TO be organized later
+//** Color functions included below */
+
 
     $('.color .col').click(function() {
       tabStates.color.expand();
@@ -551,6 +857,8 @@ $(document).ready(function() {
     }).keyup(function() {
       tabStates.color.transitionScroll = true;
     });
+
+    
     $('.color').mouseover(function() {
       cache.mapKeysTo = 'colors';
     }).mouseout(function() {
@@ -582,186 +890,6 @@ $(document).ready(function() {
     }
 
 
-
-
-    $('.layers .all').on('mouseenter', 'div', function(e) {
-      /*cache.ele = $(e.target).attr('id');
-      draw.selection(true);*/
-    }).on('mousedown','div',function(e) {
-      if (e.which == 1) { // Right Click
-        ui.resizeHandles(true);
-        cache.start = [e.clientX,e.clientY];
-        layers.select = true;
-        layers.selectedLayer = false;
-        layers.current = $(this);
-        $('.selection').css('display','block');
-        //cache.ele = $(this).attr('id');
-        //draw.selection(cache.ele);
-      }
-    }).on('mouseup', 'div', function(e) {
-      if (e.which == 1) {
-        if (layers.reorder) {
-          layers.drop($(this));
-        } else if (!layers.selecting) {
-          var selected = $(this).hasClass('selected');
-          if (pressed.shiftKey) {
-            if (selected) {
-              $(this).removeClass('selected');
-            } else {
-              $(this).addClass('selected');
-            }
-          } else {
-            $('.layers div').removeClass('selected');
-            $(this).addClass('selected');
-          }
-        }
-        $('.draggingLayer').remove();
-        $('.layers div').removeClass('drop-above drop-below drop-group');
-      } else if (e.which == 3) {
-        $(this).toggleClass('hidden');
-        if ($(this).css('display')) {
-          $(this).css('display','');
-        }
-        if ($(this).hasClass('hidden')) {
-          $('#editor #' + $(this).attr('id')).attr({'display': 'none'});
-        } else {
-          $('#editor #' + $(this).attr('id')).removeAttr('display');
-        }
-        if (!pressed.shiftKey) {
-          if ($('.layers .selected').length > 1 && $(this).hasClass('selected')) {
-            if ($(this).hasClass('hidden')) {
-              $('.layers .selected').addClass('hidden');
-              $('.layers .selected').each(function() {
-                $('#editor #' + $(this).attr('id')).attr({'display': 'none'});
-              });
-            } else {
-              $('.layers .selected').removeClass('hidden');
-              $('.layers .selected').each(function() {
-                $('#editor #' + $(this).attr('id')).removeAttr('display');
-              });
-            }
-          }
-        }
-
-      }
-    }).on('mouseleave','div',function() {
-      if (layers.reorder) {
-        $('.layers div').removeClass('drop-above drop-below drop-group');
-      } else if (layers.select) {
-        if (pressed.shiftKey) {
-          layers.selecting = true;
-          $(this).addClass('selected');
-        } else {
-          layers.reorder = true;
-        }
-      }
-      if (cache.start[1] < cache.stop[1]) {
-        $(this).addClass('layerAboveCursor');
-      }
-    }).on('mouseenter','div',function() {
-      if (layers.reorder) {
-        ui.showDropArea($(this));
-      } else if (layers.selecting) {
-        $(this).addClass('selected');
-      }
-    }).on('mousemove', 'div', function() {
-      if (layers.reorder) {
-        ui.showDropArea($(this));
-      }
-    }).mouseleave(function() {
-      if (layers.reorder) {
-        $('.draggingLayer').remove();
-      }
-    });
-
-
-
-
-    $('.properties div').click(function() {
-      if (!$(this).attr('disabled') && $(this).is('[data-icon]')) {
-        if (!$(this).is('[data-icon=""]')) {
-          property.colorTo = $(this).attr('aria-label');
-        }
-        if (!$('.color').hasClass('expand')) {
-          tabStates.color.expand(true);
-          tabStates.color.quickView = true;
-          tabStates.color.keepOpen = false;
-        }
-        if (!pressed.shiftKey) {
-          if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
-            $('.properties div[aria-label="stroke"], .properties div[aria-label="fill"]').removeClass('toggled');
-          }
-        }
-        if ($(this).is('[aria-label="opacity"]')) {
-          $(this).toggleClass('toggled');
-        } else {
-          $(this).addClass('toggled');
-        }
-      }
-      if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
-        if ($(this).hasClass('toggled')) {
-          $('.properties div').removeClass('fill');
-          $(this).addClass('fill');
-        }
-      } else if ($(this).is('[aria-label="gradient"], [aria-label="texture"]')) {
-        $('.properties div').removeClass('fill');
-        $(this).addClass('fill');
-      }
-    }).mousedown(function() {
-      cache.swipe = true;
-      property.scrubberTo = $(this);
-      cache.btnArea = {
-        left: $(this).offset().left,
-        right: $(this).offset().left + $(this).width(),
-        top: $(this).offset().top,
-        bottom: $(this).offset().top + $(this).height()
-      };
-    }).mouseleave(function(e) {
-      if (cache.swipe && !$('.propertyScrubber').hasClass('show')) {
-        cache.start = [e.clientX,e.clientY];
-        if (e.clientX > cache.btnArea.left && e.clientX < cache.btnArea.right) {
-          cache.start = [e.clientX,e.clientY];
-          if (e.clientY < cache.btnArea.top + 5) {
-            ui.scrubber(true);
-          }
-          if (e.clientY > cache.btnArea.bottom - 5) {
-            ui.scrubber(true,'down');
-          }
-        }
-        property.setNumValue();
-      }
-    }).contextmenu(function(){
-      /*if ($(this).is('[aria-label="stroke"]')) {
-        if (parseInt(cache.ele.attr('stroke-opacity')) > 0) {
-          cache.ele.attr('stroke-opacity',0);
-          cache.ele
-        } else {
-          cache.ele.attr('stroke-opacity',tool.strokeOpacity);
-        }
-      }*/
-      if ($(this).is('[aria-label="stroke"]')) {
-        if (cache.ele.attr('paint-order') == 'stroke') {
-          cache.ele.removeAttr('paint-order');
-          tool.paintOrder = '';
-          cache.ele.attr('stroke-opacity',0);
-          setTimeout(function() {
-            cache.ele.attr('stroke-opacity',tool.strokeOpacity);
-          }, 0);
-          $(this)
-        } else {
-          cache.ele.attr('paint-order','stroke');
-          tool.paintOrder = 'stroke';
-          cache.ele.attr('stroke-opacity',0);
-          setTimeout(function() {
-            cache.ele.attr('stroke-opacity',tool.strokeOpacity);
-          },0);
-        }
-      }
-    })
-
-
-
-    
 
     var last, diff;
     $('.color').on('wheel', function(e) {
@@ -858,68 +986,5 @@ $(document).ready(function() {
 
     colors.draw();
 
-    $(document).on('wheel',function(e) {
-      if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
-        if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
-          if (doc.zoom > 1 || doc.size[0]*doc.zoom > $(window).width() || doc.size[1]*doc.zoom > $(window).height()) {
-            doc.zoom -= 0.25;
-            if (doc.zoom > 10) {
-              doc.zoom -= 0.5;
-            }
-          }
-        }
-        if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
-          if (doc.zoom < 20) {
-            doc.zoom += 0.25;
-            if (doc.zoom < 10) {
-              doc.zoom += 0.5;
-            }
-          }
-        }
-        var offsetTop = ($(window).height()/2 - e.clientY) * doc.zoom;
-        var offsetLeft = ($(window).width()/2 - e.clientX) * doc.zoom;
-        if (doc.zoom <= 1) {
-          offsetTop = ($(window).height() - doc.size[1]*doc.zoom)/2;
-          offsetLeft = ($(window).width() - doc.size[0]*doc.zoom)/2;
-        }
-        $('#editor').css({
-          'transform': 'scale('+doc.zoom+')',
-          'top': offsetTop,
-          'left': offsetLeft
-        });
-        draw.selection(cache.ele);
-      }
-  });
-
-  function readAndInsert(file) {
-    var reader = new FileReader();
-    var image = new Image();
-    image.src = this.result;
-    var width = 100;
-    var height = 100;
-    reader.readAsDataURL(file);
-    reader.onload = function() {
-      tool.images.push({
-        result: this.result,
-        width: width,
-        height: height
-      });
-    }
-  }
-
-  $('#inputFile').change(function(e) {
-    tool.images = [];
-    var files = e.target.files;
-    tool.imageIndex = files.length-1;
-    tool.prevIndexIMG = files.length-1;
-    for (var i = 0; i < files.length; i++) {
-      readAndInsert(files[i]);
-    }
-  });
-
-  $('#image').contextmenu(function() {
-    $('#inputFile').trigger('click');
-  });
-
-  ui.colorListPreview();
+    ui.colorListPreview(); 
 });
