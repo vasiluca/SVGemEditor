@@ -1,4 +1,4 @@
-//** This contains all functions that are shared among the draggable Tabs */
+//* This contains all functions that are shared among the draggable Tabs */
 
 // import {} from './Tab/Tool.js';
 // import {} from './Tab/Color.js';

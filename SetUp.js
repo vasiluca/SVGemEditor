@@ -1,5 +1,7 @@
 // This includes all the canvas [document] set up settings
 
+import { tabStates } from './Tabs.js';
+
 // these are the textboxes which automatically are set to contain the current window height and width by default
 $('.quickset input:eq(0)').val($(window).innerWidth());
 $('.quickset input:eq(1)').val($(window).innerHeight());

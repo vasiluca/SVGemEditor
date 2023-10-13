@@ -9,49 +9,18 @@ import { draw } from './Draw.js';
 import { tool } from './Tab/Tool.js'
 import { colors } from './Tab/Color.js';
 import { property } from './Tab/Property.js';
+import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
 import { layers } from './Tab/Layer.js';
 
 $(document).ready(function() {
 
 
-  $(document).keyup(function(e) {
-    switch (e.which) {
-      case 16: // Shift key is lifted
-        pressed.shiftKey = false;
-        break;
-      case 17:
-        pressed.ctrlKey = false;
-        break;
-      case 18:
-        pressed.altKey = false;
-        break;
-      case 32: // Spacebar is lifted
-        pressed.spaceBar = false;
-        tool.type = 'selection';
-        break;
-      case 91: // Command key is lifted on mac
-      case 93:
-        pressed.cmdKey = false;
-        break;
-      case 9:
-        pressed.tabKey = false;
-
-    }
-  }).mousedown(function(e) {
+  $(document).mousedown(function(e) {
     if ($('.propertyScrubber').hasClass('show') && !$(e.target).is('.propertyScrubber, .propertyScrubber *')) {
       $('.propertyScrubber').removeClass('show');
     }
   });
   
-
-
-
-
-
-
-
-
-
   $('#editor, .selection').mousedown(function(e) {
     if (e.which == 1) {
       cache.start = [e.clientX,e.clientY];
@@ -789,27 +758,6 @@ $(document).ready(function() {
         }
       }
     })
-    $('.actions div').click(function(e) {
-      switch ($(e.target).attr('id')) {
-        case 'move-up':
-          layers.moveUp();
-          break;
-        case 'move-back':
-          layers.moveBack();
-          break;
-        case 'grid':
-          $('[aria-label="grid"]').toggleClass('on');
-      }
-    }).dblclick(function(e) {
-      switch ($(e.target).attr('id')) {
-        case 'move-up':
-          layers.moveUp(true);
-          break;
-        case 'move-back':
-          layers.moveBack(true);
-          break;
-      }
-    });
 
 
 

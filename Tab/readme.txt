@@ -1,1 +1,1 @@
-All functionality, including UI related functionality will be included as part of each Tab Module.
+All functionality the main functionality associated with each Tab will be included in this Tab directory.
