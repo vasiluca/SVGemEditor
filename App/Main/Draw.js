@@ -1,8 +1,8 @@
-import { cache, pressed } from './Cache.js';
+import { cache, pressed } from '../Cache.js';
 
 import { svg } from './SVG.js';
 
-import { tool } from './Tab/Tool.js';
+import { tool } from '../Tab/Tool.js';
 
 var draw = {
     animate: function() {

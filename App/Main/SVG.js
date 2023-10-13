@@ -1,10 +1,10 @@
 //** This provides the necessary functions to manipulate SVG elements of different types */
 
-import { cache, pressed } from './Cache.js';
-import { doc } from './SetUp.js';
+import { cache, pressed } from '../Cache.js';
+import { doc } from '../SetUp.js';
 import { draw } from './Draw.js';
 
-import { tool } from './Tab/Tool.js';
+import { tool } from '../Tab/Tool.js';
 
 
 var translateX = 0;
