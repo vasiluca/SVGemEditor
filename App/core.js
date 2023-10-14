@@ -3,8 +3,8 @@ import { doc } from './SetUp.js';
 import { tabStates, util } from './Tabs.js';
 import { ui } from './UI.js';
 
-import { svg } from './Main/SVG.js';
-import { draw } from './Main/Draw.js';
+import { svg } from './CanvasElements/Main/SVG.js';
+import { draw } from './CanvasElements/Main/Draw.js';
 
 import { tool } from './Tab/Tool.js'
 import { colors } from './Tab/Color.js';
@@ -200,8 +200,16 @@ $(document).ready(function() {
 
 
 
-
   
+
+
+
+
+
+
+
+
+
 
     $('.properties div').click(function() {
       if (!$(this).attr('disabled') && $(this).is('[data-icon]')) {

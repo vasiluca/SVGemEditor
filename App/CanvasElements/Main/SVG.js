@@ -1,10 +1,10 @@
 //** This provides the necessary functions to manipulate SVG elements of different types */
 
-import { cache, pressed } from '../Cache.js';
-import { doc } from '../SetUp.js';
+import { cache, pressed } from '../../Cache.js';
+import { doc } from '../../SetUp.js';
 import { draw } from './Draw.js';
 
-import { tool } from '../Tab/Tool.js';
+import { tool } from '../../Tab/Tool.js';
 
 
 var translateX = 0;
@@ -17,6 +17,7 @@ var svg = {
         if (!id) {
           id = this.numID;
         }
+        // the below code simply append to the HTML Document
         $('#editor').html($('#editor').html() + '<' + ele + ' id=' + id + '/>');
         this.id = '#' + id;
         cache.ele = id;

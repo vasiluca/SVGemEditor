@@ -1,0 +1,3 @@
+class Line extends Element {
+
+}

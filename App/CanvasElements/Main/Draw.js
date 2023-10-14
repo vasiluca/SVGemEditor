@@ -1,10 +1,10 @@
 //** This provides the necessary functions to create an SVG element */
 
-import { cache, pressed } from '../Cache.js';
+import { cache, pressed } from '../../Cache.js';
 
 import { svg } from './SVG.js';
 
-import { tool } from '../Tab/Tool.js';
+import { tool } from '../../Tab/Tool.js';
 
 var draw = {
     line: function() { // The function for creating a line
