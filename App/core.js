@@ -95,7 +95,7 @@ $(document).ready(function() {
       draw[tool.type]();
     }
     if (pressed.handle) {
-      svg.transform();
+      svg.resize();
     }
     if (pressed.element) {
       svg.move();

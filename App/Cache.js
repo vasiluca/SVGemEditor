@@ -1,4 +1,8 @@
-/** This file stores all data that is temporary, and needed only for the current application session */
+//** This file stores all data that is temporary, and needed only for the current application session */
+/**
+ * The cursor position on mousedown and mouseup events is made public through here
+ * because it's not worth passing them as global parameters 
+ */
 
 import { tool } from './Tab/Tool.js';
 

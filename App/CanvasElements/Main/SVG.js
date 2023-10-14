@@ -10,18 +10,18 @@ import { tool } from '../../Tab/Tool.js';
 var translateX = 0;
 var translateY = 0;
 var svg = {
-    numID: 0,
+    numID: 0, // each time a new element is added, the ID is incremented
     created: false,
     new: function(ele, attr, id) {
       if (svg.created == false) {
         if (!id) {
           id = this.numID;
+          this.numID++;
         }
         // the below code simply append to the HTML Document
         $('#editor').html($('#editor').html() + '<' + ele + ' id=' + id + '/>');
         this.id = '#' + id;
         cache.ele = id;
-        this.numID++;
         this.created = true;
         this.finished = false;
       }
@@ -101,7 +101,7 @@ var svg = {
       }
       this.newScale = scale;
     },
-    transform: function(axis) {
+    resize: function(axis) {
       var selection = $('.selection')[0].getBoundingClientRect();
       var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
       var bottomHandle = pressed.handle.includes('bottom'); // Check if a handle on the bottom is being pressed

@@ -1,23 +1,22 @@
-//** This will be extended by all Elements since their attributes need to b */
- /*
- 
+//** This will be extended by all SVG Element Types */
+/**
+ * This Class and Sub-classes will contain properties of an
+ * element and some calculation logic corresponding to the element.
+ * 
+ * This Class and Sub-classes should not contain any [$jQuery] events
  */
 
 class Element {
-	#width;
-	#height;
-	#x;
-	#xRight;
-	#y;
-	#yBottom;
+	selectionArea
 
-	Element(ele) {
-		this.width = ele[0].getBoundingClientRect().width;
-		this.height = ele[0].getBoundingClientRect().height;
-		this.x = ele[0].getBoundingClientRect().left;
-		this.xRight = ele[0].getBoundingClientRect().right;
-		this.y = ele[0].getBoundingClientRect().top;
-		this.yBottom = ele[0].getBoundingClientRect().bottom;
+	/**
+	 * The constructor of each Element should contain the logic 
+	 * associated with creating that Object on the SVG Editor
+	 * 
+	 * @param {} ele 
+	 */
+	Element() {
+
 	}
 
 	/**
@@ -59,6 +58,11 @@ class Element {
 	 * @param {} ele 
 	 */
 	select(ele) {
-
+		selectionArea.width = ele[0].getBoundingClientRect().width;
+		selectionArea.height = ele[0].getBoundingClientRect().height;
+		selectionArea.x = ele[0].getBoundingClientRect().left;
+		selectionArea.xRight = ele[0].getBoundingClientRect().right;
+		selectionArea.y = ele[0].getBoundingClientRect().top;
+		selectionArea.yBottom = ele[0].getBoundingClientRect().bottom;
 	}
 }
