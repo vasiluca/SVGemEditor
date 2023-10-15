@@ -8,6 +8,8 @@ import { Rectangle } from '../Elements/Element/Rectangle.js';
 import { cache } from '../../Cache.js';
 import { tool } from '../../Tab/Tool.js';
 
+import { test } from '../../Tests/createEle.test.js';
+
 var newSVG = {
 	// TODO: In the future will need to get the highest ID elements in an opened existing SVG to set numID to
 	numID: 0, // this will increment each time an element is created in order to give each element a unique ID
@@ -59,6 +61,9 @@ var newSVG = {
 		}
 
 		$(this.id).attr(attr);
+
+		//** run the test on the specific type of element created, make sure attributes valid */
+		test[type]; 
 	}
 	
 }

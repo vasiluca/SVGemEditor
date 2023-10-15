@@ -1,6 +1,7 @@
 // This includes all the canvas [document] set up settings
 
 import { tabStates } from './Tabs.js';
+import * as test from './Tests/document.test.js';
 
 // these are the textboxes which automatically are set to contain the current window height and width by default
 $('.quickset input:eq(0)').val($(window).innerWidth());
@@ -26,7 +27,7 @@ var doc = {
         'height': this.size[1]
       });
       $('.svg-contain').addClass('show');
-	  $('.tools').removeClass('hide'); // make the tools visible
+	    $('.tools').removeClass('hide'); // make the tools visible
     },
     zoom: 1
 };
@@ -54,6 +55,8 @@ $('.create').click(function() { // .create is the button clicked on the settings
 	doc.size = [$('.size input:eq(0)').val(), $('.size input:eq(1)').val()];
 	doc.viewBox();
 	$('.splash').removeClass('hide');
+   
+  test.runTest(); //** Checks that the document height and width are valid */
 });
 
 $('.size input').change(function() {
