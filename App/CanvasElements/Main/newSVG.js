@@ -1,8 +1,11 @@
 //** Functions related to creating new SVG Elements will go here */
 
-import { cache } from '../../Cache.js';
-
 import { Line } from '../Elements/Element/Line.js';
+import { Circle } from '../Elements/Element/Circle.js';
+import { Ellipse } from '../Elements/Element/Ellipse.js';
+import { Rectangle } from '../Elements/Element/Rectangle.js';
+
+import { cache } from '../../Cache.js';
 import { tool } from '../../Tab/Tool.js';
 
 var newSVG = {
@@ -14,11 +17,10 @@ var newSVG = {
 	finished: false,
 
 	//** This gives us easy access to Element Object functions, without requiring us to use a switch statement */
-	//** This is because JavaScript allows us to access object properties using this syntax: Obj["key"] */
+	//** This is because JavaScript allows us to access object properties using this syntax:  Obj["key"] */
 	//** Which means we can pass in the object property we want to access as a String */
-	element: {
+	type: {
 		line: new Line()
-		// ,
 		// circle: new Circle(),
 		// ellipse: new Ellipse(),
 		// rectangle: new Rectangle()
@@ -43,9 +45,8 @@ var newSVG = {
 			this.created = true;
 			this.finished = false;
 		}
-		this.element['line'] = new Line(); // TODO: This raises the question as to whether Object-Oriented Programming should be used
-
-		let attr = this.element[type]; // this will set the proper attributes based on the element type being created
+		// TODO: Perhaps Syntax similar to OOP can be used, but its unclear to what extent there will be true OOP
+		let attr = this.type[type].createAttr(); // this will set the proper attributes based on the element type being created
 		
 		// after the element was created, we will also want to update certain attributes related to its property
 		attr['stroke-width'] = tool.strokeWidth;

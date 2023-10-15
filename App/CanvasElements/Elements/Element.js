@@ -7,7 +7,7 @@
  */
 
 class Element {
-	selectionArea
+	selectionArea;
 
 	/**
 	 * The constructor of each Element should contain the logic 
@@ -15,8 +15,8 @@ class Element {
 	 * 
 	 * @param {} ele 
 	 */
-	Element() {
-
+	constructor() {
+		
 	}
 
 	/**
@@ -66,3 +66,5 @@ class Element {
 		selectionArea.yBottom = ele[0].getBoundingClientRect().bottom;
 	}
 }
+
+export { Element }

@@ -1,5 +1,6 @@
+import { Element } from '../Element.js';
+
 import { cache } from '../../../Cache.js';
-import { svg } from '../../SVG.js';
 
 class Circle extends Element {
 	#cx;
@@ -24,3 +25,5 @@ class Circle extends Element {
     	r = parseFloat(ele.attr('rx'));
 	}
 }
+
+export { Circle }
