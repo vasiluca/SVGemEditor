@@ -5,6 +5,7 @@ import { ui } from './UI.js';
 
 import { svg } from './CanvasElements/Main/SVG.js';
 import { draw } from './CanvasElements/Main/Draw.js';
+import * as events from './CanvasElements/Events.js'; // No Objects exported there are event functions
 
 import { tool } from './Tab/Tool.js'
 import { colors } from './Tab/Color.js';
@@ -90,16 +91,17 @@ $(document).ready(function() {
   });
 
   $(document).mousemove(function(e) {
-    cache.stop = [e.clientX,e.clientY];
-    if (cache.press && tool.type != 'selection') {
-      draw[tool.type]();
-    }
-    if (pressed.handle) {
-      svg.resize();
-    }
-    if (pressed.element) {
-      svg.move();
-    }
+    // // TODO: move cache.stop & top 3 ifs to Events
+// cache.stop = [e.clientX,e.clientY];
+//       if (cache.press && tool.type != 'selection') {
+//         draw[tool.type]();
+//       }
+//       if (pressed.handle) {
+//         svg.resize();
+//       }
+//       if (pressed.element) {
+//         svg.move();
+//       }
     if (cache.dragTab == true) {
       tabStates.focused.css({
         'left': e.clientX - cache.start[0],
@@ -159,10 +161,10 @@ $(document).ready(function() {
       draw.selection(cache.ele);
       layers.update();
     }
-    cache.press = false;
-    pressed.handle = false;
-    pressed.element = false;
-    svg.created = false;
+// cache.press = false; // TODO: cache, pressed, svg already moved to events, remove this comment block
+//       pressed.handle = false;
+//       pressed.element = false;
+//       svg.created = false;
     cache.swipe = false;
     if (cache.dragTab) {
       tabStates.adjustPos();
