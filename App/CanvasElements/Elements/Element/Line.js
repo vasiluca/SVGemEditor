@@ -11,21 +11,8 @@ class Line extends Element {
 
 	constructor () {
 		super(); // super must be always be called in a Sub-Class in JavaScript
-		// TODO: This constructor might be used in the future, although it's not guaranteed
+		// This constructor might be used in the future, although it's not guaranteed
 	}
-
-	/**
-	 * Will return attributes necessary for creating a line given a dragged position 
-	 */
-	// Line() {
-    //  	var radius = Math.sqrt(Math.pow(cache.stop[0] - cache.start[0], 2) + Math.pow(cache.stop[1] - cache.start[1], 2));
-	// 	return new {
-	// 		'x1': cache.start[0],
-	// 		'y1': cache.start[1],
-	// 		'x2': cache.stop[0],
-	// 		'y2': cache.stop[1]
-	// 	}
-	// }
 
 	createAttr() {
      	var radius = Math.sqrt(Math.pow(cache.stop[0] - cache.start[0], 2) + Math.pow(cache.stop[1] - cache.start[1], 2));

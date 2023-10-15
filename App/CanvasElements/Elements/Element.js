@@ -11,7 +11,9 @@ class Element {
 
 	/**
 	 * The constructor of each Element should contain the logic 
-	 * associated with creating that Object on the SVG Editor
+	 * associated with creating that Object on the SVG Editor.
+	 * 
+	 * //** If this constructor will have logic, it will only be after the user is completely done drawing an Element
 	 * 
 	 * @param {} ele 
 	 */

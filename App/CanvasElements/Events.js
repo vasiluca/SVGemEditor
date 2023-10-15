@@ -28,8 +28,11 @@ $(document).mousemove(function(e) {
 });
 
 $(document).mouseup(function() {
-	newSVG.created = false;
-
+  if (newSVG.created) {
+    draw.selection(cache.ele);
+    newSVG.created = false;
+  }
+  
   cache.press = false;
   pressed.handle = false;
   pressed.element = false;

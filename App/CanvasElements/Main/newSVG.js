@@ -19,11 +19,12 @@ var newSVG = {
 	//** This gives us easy access to Element Object functions, without requiring us to use a switch statement */
 	//** This is because JavaScript allows us to access object properties using this syntax:  Obj["key"] */
 	//** Which means we can pass in the object property we want to access as a String */
+	// Each of these type keys on the left should match the name given to the SVG element tags
 	type: {
-		line: new Line()
-		// circle: new Circle(),
-		// ellipse: new Ellipse(),
-		// rectangle: new Rectangle()
+		line: new Line(),
+		circle: new Circle(),
+		ellipse: new Ellipse(),
+		rect: new Rectangle()
 	},
 
 	// constructor(height) {
@@ -53,6 +54,7 @@ var newSVG = {
 		attr.stroke = tool.stroke;
 
 		if (type != 'line' && type != 'polyline') {
+			attr['fill'] = tool.fill; // use the last color that was used for the fill color
 			attr['paint-order'] = tool.paintOrder;
 		}
 
