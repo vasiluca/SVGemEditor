@@ -1,11 +1,30 @@
-//** This provides the necessary functions to manipulate SVG elements of different types */
+//** This provides functionality that is shared among new SVG elements and editing existing SVG elements */
+/** This functionality includes:
+ * - Drawing the selection area box (shown after an element is created or edited)
+ * - Having an Object which can be referenced to point to the static Object
+ */
 
 import { cache, pressed } from '../../Cache.js';
 import { doc } from '../../SetUp.js';
 import { draw } from './Draw.js';
 
+import { Line } from '../Elements/Element/Line.js';
+import { Circle } from '../Elements/Element/Circle.js';
+import { Ellipse } from '../Elements/Element/Ellipse.js';
+import { Rectangle } from '../Elements/Element/Rectangle.js';
+
 import { tool } from '../../Tab/Tool.js';
 
+//** This gives us easy access to Element Object functions, without requiring us to use a switch statement */
+//** This is because JavaScript allows us to access object properties using this syntax:  Obj["key"] */
+//** Which means we can pass in the object property we want to access as a String */
+// Each of these type keys on the left should match the name given to the SVG element tags
+var element = {
+  line: Line,
+  circle: Circle,
+  ellipse: Ellipse,
+  rect: Rectangle
+}
 
 var translateX = 0;
 var translateY = 0;
@@ -257,22 +276,22 @@ var svg = {
     move: function(direction) {
       translateX = cache.stop[0] - cache.start[0];
       translateY = cache.stop[1] - cache.start[1];
-      if (direction != undefined) {
-        switch (direction) {
-          case 'right':
-            translateX = cache.moveAmount;
-            break;
-          case 'left':
-            translateX = -cache.moveAmount;
-            break;
-          case 'up':
-            translateY = -cache.moveAmount;
-            break;
-          case 'down':
-            translateY = cache.moveAmount;
-            break;
-        }
-      }
+      // if (direction != undefined) {
+      //   switch (direction) {
+      //     case 'right':
+      //       translateX = cache.moveAmount;
+      //       break;
+      //     case 'left':
+      //       translateX = -cache.moveAmount;
+      //       break;
+      //     case 'up':
+      //       translateY = -cache.moveAmount;
+      //       break;
+      //     case 'down':
+      //       translateY = cache.moveAmount;
+      //       break;
+      //   }
+      // }
       translateX = translateX/this.initial.scale[0]/doc.zoom;
       translateY = translateY/this.initial.scale[1]/doc.zoom;
       var transXabs = Math.abs(translateX);
@@ -480,4 +499,4 @@ var svg = {
     pathData: []
 }
 
-export { svg };
+export { svg, element };

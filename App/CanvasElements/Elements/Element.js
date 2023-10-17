@@ -7,7 +7,7 @@
  */
 
 class Element {
-	selectionArea;
+	static selectionArea;
 
 	/**
 	 * The constructor of each Element should contain the logic 
@@ -32,31 +32,31 @@ class Element {
 	}
 
 	getWidth(ele) {
-		return width;
+		return selectionArea.width;
 	}
 
 	getHeight(ele) {
-		return height;
+		return selectionArea.height;
 	}
 
 	getX(ele) {
-		return x;
+		return selectionArea.x;
 	}
 
 	getXright(ele) {
-		return xRight;
+		return selectionArea.xRight;
 	}
 
 	getY(ele) {
-		return y;
+		return selectionArea.y;
 	}
 
 	getYbottom(ele) {
-		return yBottom;
+		return selectionArea.yBottom;
 	}
 
 	/**
-	 * This will create the blue selection overlay for resizing
+	 * This will help create the blue selection overlay for resizing
 	 * @param {} ele 
 	 */
 	select(ele) {

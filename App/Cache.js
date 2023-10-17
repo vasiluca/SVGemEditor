@@ -31,8 +31,8 @@ var cache = {
     },
     selectedElements: [],
     dragTab: false,
-    mapKeysTo: 'selection',
-    moveAmount: 2
+    mapKeysTo: 'selection'
+    // moveAmount: 2
 }
 
 var pressed = {

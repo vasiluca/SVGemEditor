@@ -8,7 +8,7 @@ class Ellipse extends Element {
 		// This constructor might be used in the future, although it's not guaranteed
 	}
 
-	createAttr() {
+	static createAttr() {
 		var cx = cache.start[0];
 		var cy = cache.start[1];
 		var rx = Math.abs(cache.stop[0] - cache.start[0]);

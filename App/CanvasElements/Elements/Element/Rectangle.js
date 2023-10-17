@@ -8,7 +8,7 @@ class Rectangle extends Element {
 		// This constructor might be used in the future, although it's not guaranteed
 	}
 
-	createAttr() {
+	static createAttr() {
 		var width = Math.abs(cache.stop[0] - cache.start[0]);
 		var height = Math.abs(cache.stop[1] - cache.start[1]);
 		var x = cache.start[0];

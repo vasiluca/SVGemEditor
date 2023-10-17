@@ -1,14 +1,10 @@
 //** Functions related to creating new SVG Elements will go here */
 
-import { Line } from '../Elements/Element/Line.js';
-import { Circle } from '../Elements/Element/Circle.js';
-import { Ellipse } from '../Elements/Element/Ellipse.js';
-import { Rectangle } from '../Elements/Element/Rectangle.js';
-
 import { cache } from '../../Cache.js';
 import { tool } from '../../Tab/Tool.js';
 
 import { test } from '../../Tests/createEle.test.js';
+import { element } from './SVG.js';
 
 var newSVG = {
 	// TODO: In the future will need to get the highest ID elements in an opened existing SVG to set numID to
@@ -17,17 +13,6 @@ var newSVG = {
 
 	created: false,
 	finished: false,
-
-	//** This gives us easy access to Element Object functions, without requiring us to use a switch statement */
-	//** This is because JavaScript allows us to access object properties using this syntax:  Obj["key"] */
-	//** Which means we can pass in the object property we want to access as a String */
-	// Each of these type keys on the left should match the name given to the SVG element tags
-	type: {
-		line: new Line(),
-		circle: new Circle(),
-		ellipse: new Ellipse(),
-		rect: new Rectangle()
-	},
 
 	// constructor(height) {
 	// 	this.height = 0;
@@ -49,7 +34,8 @@ var newSVG = {
 			this.finished = false;
 		}
 		// TODO: Perhaps Syntax similar to OOP can be used, but its unclear to what extent there will be true OOP
-		let attr = this.type[type].createAttr(); // this will set the proper attributes based on the element type being created
+		// as demonstrated by the line of code below
+		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
 		
 		// after the element was created, we will also want to update certain attributes related to its property
 		attr['stroke-width'] = tool.strokeWidth;
