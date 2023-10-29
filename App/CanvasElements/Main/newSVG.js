@@ -18,6 +18,7 @@ var newSVG = {
 	// 	this.height = 0;
 	// }
 
+	// TODO: Split up events (mousedown from mouse dragging) so that the check for this.created is not needed
 	create(type, id) {
 		// this checks that the element was not created yet before appending, so this first if block runs once
 		if (this.created == false) { // this if block prevents the element from being appended/created twice
@@ -33,20 +34,6 @@ var newSVG = {
 			this.created = true;
 			this.finished = false;
 		}
-		// TODO: Perhaps Syntax similar to OOP can be used, but its unclear to what extent there will be true OOP
-		// as demonstrated by the line of code below
-		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
-		
-		// after the element was created, we will also want to update certain attributes related to its property
-		attr['stroke-width'] = tool.strokeWidth;
-		attr.stroke = tool.stroke;
-
-		if (type != 'line' && type != 'polyline') {
-			attr['fill'] = tool.fill; // use the last color that was used for the fill color
-			attr['paint-order'] = tool.paintOrder;
-		}
-
-		$(this.id).attr(attr);
 
 		//** run the test on the specific type of element created, make sure attributes valid */
 		test[type]; 
