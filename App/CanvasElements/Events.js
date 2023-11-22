@@ -14,16 +14,24 @@ import { draw } from './Main/Draw.js'; // TODO: will be removed
  */
 
 $(document).mousedown(function(e) {
-  if (cache.press && tool.type != 'selection') { // while the user is mouse pressing
-      newSVG.create(tool.type);  
+  if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
+      newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
   }
 }).mousemove(function(e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
 	cache.stop = [e.clientX,e.clientY];
-    if (cache.press && tool.type != 'selection') { // while the user is mouse pressing
+
+    if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
+      newSVG.creating = false;
+
+      newSVG.create(tool.type);
+    }
+
+    if (cache.press && tool.type != 'selection') {
       editSVG.update(tool.type);
     }
+
     if (pressed.handle) {
       svg.resize();
     }
@@ -33,10 +41,7 @@ $(document).mousedown(function(e) {
 });
 
 $(document).mouseup(function() {
-  if (newSVG.created) {
-    draw.selection(cache.ele);
-    newSVG.created = false;
-  }
+  draw.selection(cache.ele);
   
   cache.press = false;
   pressed.handle = false;
