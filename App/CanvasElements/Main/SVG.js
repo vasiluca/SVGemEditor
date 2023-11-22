@@ -31,26 +31,6 @@ var translateY = 0;
 var svg = {
     numID: 0, // each time a new element is added, the ID is incremented
     created: false,
-    // new: function(ele, attr, id) {
-    //   if (svg.created == false) {
-    //     if (!id) {
-    //       id = this.numID;
-    //       this.numID++;
-    //     }
-    //     // the below code simply append to the HTML Document
-    //     $('#editor').html($('#editor').html() + '<' + ele + ' id=' + id + '/>');
-    //     this.id = '#' + id;
-    //     cache.ele = id;
-    //     this.created = true;
-    //     this.finished = false;
-    //   }
-    //   attr['stroke-width'] = tool.strokeWidth;
-    //   attr.stroke = tool.stroke;
-    //   if (ele != 'line' && ele != 'polyline') {
-    //     attr['paint-order'] = tool.paintOrder;
-    //   }
-    //   $(this.id).attr(attr);
-    // },
 
     resize: function(axis) {
       var selection = $('.selection')[0].getBoundingClientRect();

@@ -14,10 +14,6 @@ var newSVG = {
 	created: false,
 	finished: false,
 
-	// constructor(height) {
-	// 	this.height = 0;
-	// }
-
 	// TODO: Split up events (mousedown from mouse dragging) so that the check for this.created is not needed
 	create(type, id) {
 		// this checks that the element was not created yet before appending, so this first if block runs once

@@ -25,14 +25,6 @@ class Rectangle extends Element {
 			width = 0.1;
 		}
 
-		// svg.new('rect', {
-		// 	'x': x,
-		// 	'y': y,
-		// 	'width': width,
-		// 	'height': height,
-		// 	'fill': tool.fill
-		// });
-
 		// this accounts for if the user is drawing the Rectangle from bottom to top, or right to left
 		var widthDiff = cache.stop[0] - cache.start[0];
 		var heightDiff = cache.stop[1] - cache.start[1];
@@ -62,14 +54,6 @@ class Rectangle extends Element {
 			'width': width,
 			'height': height
 		}
-
-		// cache.ele.attr({
-		// 	'x': x,
-		// 	'y': y,
-		// 	'width': width,
-		// 	'height': height,
-		// 	'fill': tool.fill
-		// });
 	}
 }
 
