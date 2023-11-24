@@ -27,7 +27,6 @@ $(document).mousedown(function(e) {
 
       newSVG.create(tool.type);
     }
-
     if (cache.press && tool.type != 'selection') {
       editSVG.update(tool.type);
     }
@@ -41,6 +40,7 @@ $(document).mousedown(function(e) {
 });
 
 $(document).mouseup(function() {
+  newSVG.creating = false; // Prevent the user from creating an element after they Click and then Mousemove
   draw.selection(cache.ele);
   
   cache.press = false;
