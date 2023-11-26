@@ -1,5 +1,5 @@
 
-import { cache, pressed } from "../../../Cache"; 
+import { cache, pressed } from "../../../Cache.js"; 
 
 var move = function(direction) {
 	translateX = cache.stop[0] - cache.start[0];
@@ -88,7 +88,7 @@ var move = function(direction) {
 				'cy': this.circle.cy + translateY
 			});
 	}
-	draw.selection(cache.ele);
+	select.area(cache.ele);
 	this.previewMove();
 }
 

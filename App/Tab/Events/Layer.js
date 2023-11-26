@@ -1,4 +1,5 @@
 import { cache, pressed } from "../../Cache.js";
+import { select } from "../../CanvasElements/Selection.js";
 
 import { ui } from "../../UI.js";
 
@@ -6,7 +7,7 @@ import { layers } from "../Layer.js";
 
 $('.layers .all').on('mouseenter', 'div', function (e) {
 	/*cache.ele = $(e.target).attr('id');
-	draw.selection(true);*/
+	select.area(true);*/
 }).on('mousedown', 'div', function (e) {
 	if (e.which == 1) { // Right Click
 		ui.resizeHandles(true);
@@ -16,7 +17,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		layers.current = $(this);
 		$('.selection').css('display', 'block');
 		//cache.ele = $(this).attr('id');
-		//draw.selection(cache.ele);
+		//select.area(cache.ele);
 	}
 }).on('mouseup', 'div', function (e) {
 	if (e.which == 1) {

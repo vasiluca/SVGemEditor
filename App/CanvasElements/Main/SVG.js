@@ -351,7 +351,7 @@ var svg = {
             'cy': this.circle.cy + translateY
           });
       }
-      draw.selection(cache.ele);
+      select.area(cache.ele);
       this.previewMove();
     },
     
