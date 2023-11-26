@@ -7,6 +7,7 @@ import { svg } from "./Modify/SVG.js";
 import { select } from "./Selection.js";
 
 import { tool } from "../Tab/Tool.js";
+import { layers } from "../Tab/Layer.js";
 
 
 $('#editor, .selection').mousedown(function (e) {

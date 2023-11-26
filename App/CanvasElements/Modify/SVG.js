@@ -7,6 +7,7 @@
 import { cache, pressed } from '../../Cache.js';
 import { doc } from '../../SetUp.js';
 import { draw } from './Draw.js';
+import { select } from '../Selection.js';
 
 import { Line } from '../Elements/Element/Line.js';
 import { Circle } from '../Elements/Element/Circle.js';

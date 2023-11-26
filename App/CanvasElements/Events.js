@@ -1,6 +1,6 @@
 import { cache, pressed } from '../Cache.js';
 
-import { select } from './selection.js';
+import { select } from './Selection.js';
 
 import { svg } from './Modify/SVG.js';
 import { editSVG } from './Modify/editSVG.js';
