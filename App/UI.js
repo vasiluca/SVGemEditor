@@ -27,7 +27,7 @@ var ui = {
       }*/
     },
     hideTools: function(toggle) {
-      if (toggle == true) {
+      if (toggle == true) { 
         $('.selection, .tools').addClass('hide');
         ui.cursor('grab');
       } else if (toggle == 'selection') {
@@ -257,7 +257,7 @@ var ui = {
 
       } else {
         $('.schemes ul li').prepend('<div class="colorsPreview"></div><div class="colorsPreviewScroll"></div>');
-        $('.schemes ul li').each(function() {
+        $('.schemes ul li').on('each', function() {
           var scheme = $(this).attr('data-scheme');
           var array = colors.collections[scheme].colors;
           var empty = colors.collections[scheme].empty;

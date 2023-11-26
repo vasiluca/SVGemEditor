@@ -8,6 +8,8 @@
 
 import { cache, pressed } from './Cache.js';
 
+import { colors } from './Tab/Color.js';
+
 var tabStates = {
 	focused: undefined,
 	color: {
