@@ -1,7 +1,7 @@
 import { Element } from '../Element.js';
 
 import { cache } from '../../../Cache.js';
-import { newSVG } from '../../Main/newSVG.js';
+import { newSVG } from '../../Modify/newSVG.js';
 
 class Line extends Element {
 	static #x1;

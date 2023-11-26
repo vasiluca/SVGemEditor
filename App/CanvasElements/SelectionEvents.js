@@ -3,7 +3,7 @@ import { cache, pressed } from "../Cache.js";
 
 import { ui } from "../UI.js";
 
-import { svg } from "./Main/SVG.js";
+import { svg } from "./Modify/SVG.js";
 import { select } from "./Selection.js";
 
 import { tool } from "../Tab/Tool.js";
@@ -44,7 +44,7 @@ $('#editor, .selection').mousedown(function (e) {
 		ui.resizeHandles(true);
 		select.area(cache.ele);
 	}
-	
+
 	if (pressed.handle) {
 		select.area(cache.ele);
 		layers.update();

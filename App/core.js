@@ -3,7 +3,7 @@ import { doc } from './SetUp.js';
 import { tabStates, util } from './Tabs.js';
 import { ui } from './UI.js';
 
-import { svg } from './CanvasElements/Main/SVG.js';
+import { svg } from './CanvasElements/Modify/SVG.js';
 import { select } from './CanvasElements/Selection.js';
 import * as SelectionEvents from './CanvasElements/SelectionEvents.js';
 import * as Events from './CanvasElements/Events.js'; // No Objects exported there are event functions

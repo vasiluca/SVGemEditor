@@ -2,9 +2,9 @@ import { cache, pressed } from '../Cache.js';
 
 import { select } from './selection.js';
 
-import { svg } from './Main/SVG.js';
-import { editSVG } from './Main/editSVG.js';
-import { newSVG } from './Main/newSVG.js';
+import { svg } from './Modify/SVG.js';
+import { editSVG } from './Modify/editSVG.js';
+import { newSVG } from './Modify/newSVG.js';
 
 import { tool } from '../Tab/Tool.js';
 
