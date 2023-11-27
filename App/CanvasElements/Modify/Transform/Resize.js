@@ -1,12 +1,19 @@
-var resize = function(axis) {
+import { cache, pressed } from "../../../Cache.js";
+
+import { doc } from "../../../SetUp.js";
+
+import { svg } from "../SVG.js";
+
+var resize = function (initial, type) {
 	var selection = $('.selection')[0].getBoundingClientRect();
 	var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
 	var bottomHandle = pressed.handle.includes('bottom'); // Check if a handle on the bottom is being pressed
 	var topHandle = pressed.handle.includes('top');
 	var leftHandle = pressed.handle.includes('left');
 	var selectW, selectH;
-	var translateX = (selection.width - cache.origSelectArea.width)/this.initial.scale[0]/doc.zoom;
-	var translateY = (selection.height - cache.origSelectArea.height)/this.initial.scale[1]/doc.zoom;
+	// These two lines for translations are only for compensating for Zoom on the Canvas
+	var translateX = (selection.width - cache.origSelectArea.width) / initial.scale[0] / doc.zoom;
+	var translateY = (selection.height - cache.origSelectArea.height) / initial.scale[1] / doc.zoom;
 
 	if (bottomHandle) {
 		selectH = cache.stop[1] - cache.origSelectArea.y;
@@ -36,7 +43,7 @@ var resize = function(axis) {
 			'left': cache.origSelectArea.x - wDiff
 		});
 	}
-	
+
 	if (pressed.altKey) {
 		if (bottomHandle) {
 			var heightDiff = cache.stop[1] - (cache.origSelectArea.y + cache.origSelectArea.height);
@@ -44,7 +51,7 @@ var resize = function(axis) {
 				heightDiff = 1;
 			}
 
-			this.newScale[1] = selection.height/this.initial.preScaleH/doc.zoom;
+			svg.newScale[1] = selection.height / initial.preScaleH / doc.zoom;
 		}
 
 		if (rightHandle) {
@@ -54,27 +61,27 @@ var resize = function(axis) {
 				widthDiff = 1;
 			}
 
-			this.newScale[0] = selection.width/this.initial.preScaleW/doc.zoom;
+			svg.newScale[0] = selection.width / initial.preScaleW / doc.zoom;
 		}
 		cache.ele.attr({
-			'transform': 'scale('+this.newScale[0]+','+this.newScale[1]+') ' +
-			'translate('+0+','+0+')'
+			'transform': 'scale(' + svg.newScale[0] + ',' + svg.newScale[1] + ') ' +
+				'translate(' + 0 + ',' + 0 + ')'
 		});
 	} else {
 		if (pressed.shiftKey) {
-			var ratioX = Math.abs(this.initial.height/this.initial.width);
-			var ratioY = Math.abs(this.initial.width/this.initial.height);
+			var ratioX = Math.abs(initial.height / initial.width);
+			var ratioY = Math.abs(initial.width / initial.height);
 			if (pressed.handle != 'bottom-handle' && pressed.handle != 'top-handle') {
-				translateY = translateX*ratioX;
+				translateY = translateX * ratioX;
 				$('.selection').css({
-				'height': cache.ele[0].getBoundingClientRect().height,
-				'top': cache.ele[0].getBoundingClientRect().top
+					'height': cache.ele[0].getBoundingClientRect().height,
+					'top': cache.ele[0].getBoundingClientRect().top
 				});
 			} else {
-				translateX = translateY*ratioY;
+				translateX = translateY * ratioY;
 				$('.selection').css({
-				'width': cache.ele[0].getBoundingClientRect().width,
-				'left': cache.ele[0].getBoundingClientRect().left
+					'width': cache.ele[0].getBoundingClientRect().width,
+					'left': cache.ele[0].getBoundingClientRect().left
 				});
 			}
 			/*$('.selection').css({
@@ -84,23 +91,23 @@ var resize = function(axis) {
 			//console.log("Shift key is pressed");
 		}
 
-		switch (this.type) {
+		switch (svg.type) {
 			case 'line':
-				var x1 = this.line.x1;
-				var x2 = this.line.x2;
-				var y1 = this.line.y1;
-				var y2 = this.line.y2;
+				var x1 = svg.line.x1;
+				var x2 = svg.line.x2;
+				var y1 = svg.line.y1;
+				var y2 = svg.line.y2;
 				if (rightHandle) {
-					this.line.x2 > this.line.x1 ? x2 = this.line.x2 + translateX : x1 = this.line.x1 + translateX;
+					svg.line.x2 > svg.line.x1 ? x2 = svg.line.x2 + translateX : x1 = svg.line.x1 + translateX;
 				}
 				if (bottomHandle) {
-					this.line.y2 > this.line.y1 ? y2 = this.line.y2 + translateX : y1 = this.line.y1 + translateX;
+					svg.line.y2 > svg.line.y1 ? y2 = svg.line.y2 + translateX : y1 = svg.line.y1 + translateX;
 				}
 				if (topHandle) {
-					this.line.y1 < this.line.y2 ? y1 = this.line.y1 - translateX : y2 = this.line.y2 - translateX;
+					svg.line.y1 < svg.line.y2 ? y1 = svg.line.y1 - translateX : y2 = svg.line.y2 - translateX;
 				}
 				if (leftHandle) {
-					this.line.x1 < this.line.x2 ? x1 = this.line.x1 - translateX : x2 = this.line.x2 - translateX;
+					svg.line.x1 < svg.line.x2 ? x1 = svg.line.x1 - translateX : x2 = svg.line.x2 - translateX;
 				}
 				cache.ele.attr({
 					'x1': x1,
@@ -110,14 +117,14 @@ var resize = function(axis) {
 				});
 				break;
 			case 'rect':
-				var width = this.rect.width;
-				var height = this.rect.height;
-				var x = this.rect.x;
-				var y = this.rect.y;
+				var width = svg.rect.width;
+				var height = svg.rect.height;
+				var x = svg.rect.x;
+				var y = svg.rect.y;
 				if (rightHandle) {
 					if (pressed.cmdKey) {
 						x = x - translateX;
-						width = width + translateX*2;
+						width = width + translateX * 2;
 					} else {
 						width = width + translateX;
 					}
@@ -125,7 +132,7 @@ var resize = function(axis) {
 				if (bottomHandle) {
 					if (pressed.cmdKey) {
 						y = y - translateY;
-						height = height + translateY*2;
+						height = height + translateY * 2;
 					} else {
 						height = height + translateY;
 					}
@@ -133,7 +140,7 @@ var resize = function(axis) {
 				if (topHandle) {
 					if (pressed.cmdKey) {
 						y = y - translateY;
-						height = height + translateY*2;
+						height = height + translateY * 2;
 					} else {
 						height = height + translateY;
 						y = y - translateY;
@@ -142,10 +149,10 @@ var resize = function(axis) {
 				if (leftHandle) {
 					if (pressed.cmdKey) {
 						x = x - translateX;
-						width = width + translateX*2;
+						width = width + translateX * 2;
 					} else {
-						width = this.rect.width + translateX;
-						x = this.rect.x - translateX;
+						width = svg.rect.width + translateX;
+						x = svg.rect.x - translateX;
 					}
 				}
 				width < 1 ? width = 1 : null;
@@ -158,16 +165,16 @@ var resize = function(axis) {
 				});
 				break;
 			case 'ellipse':
-				var cx = this.ellipse.cx;
-				var cy = this.ellipse.cy;
-				var rx = this.ellipse.rx;
-				var ry = this.ellipse.ry;
+				var cx = svg.ellipse.cx;
+				var cy = svg.ellipse.cy;
+				var rx = svg.ellipse.rx;
+				var ry = svg.ellipse.ry;
 				if (rightHandle) {
 					if (pressed.cmdKey) {
-					rx = rx + translateX;
+						rx = rx + translateX;
 					} else {
-					rx = rx + translateX/2;
-					cx = cx + translateX/2;
+						rx = rx + translateX / 2;
+						cx = cx + translateX / 2;
 					}
 
 				}
@@ -175,24 +182,24 @@ var resize = function(axis) {
 					if (pressed.cmdKey) {
 						ry = ry + translateY;
 					} else {
-						ry = ry + translateY/2;
-						cy = cy + translateY/2;
+						ry = ry + translateY / 2;
+						cy = cy + translateY / 2;
 					}
 				}
 				if (topHandle) {
 					if (pressed.cmdKey) {
 						ry = ry + translateY;
 					} else {
-						ry = ry + translateY/2;
-						cy = cy - translateY/2;
+						ry = ry + translateY / 2;
+						cy = cy - translateY / 2;
 					}
 				}
 				if (leftHandle) {
 					if (pressed.cmdKey) {
 						rx = rx + translateX;
 					} else {
-						rx = rx + translateX/2;
-						cx = cx - translateX/2;
+						rx = rx + translateX / 2;
+						cx = cx - translateX / 2;
 					}
 				}
 				//rx < 1 ? rx = 1 : null;
@@ -214,7 +221,7 @@ var resize = function(axis) {
 					});
 					var index = cache.ele.index();
 					cache.ele.remove();
-					svg.new('ellipse',element.attr(),elementID).eq(index);
+					svg.new('ellipse', element.attr(), elementID).eq(index);
 				}
 
 		}

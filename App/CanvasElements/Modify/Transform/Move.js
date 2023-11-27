@@ -1,19 +1,23 @@
 
-import { cache, pressed } from "../../../Cache.js"; 
+import { cache, pressed } from "../../../Cache.js";
 
-var move = function(direction) {
-	translateX = cache.stop[0] - cache.start[0];
-	translateY = cache.stop[1] - cache.start[1];
+import { doc } from "../../../SetUp.js";
+
+import { svg } from "../SVG.js";
+
+var move = function(initial, type) {
+	var translateX = cache.stop[0] - cache.start[0];
+	var translateY = cache.stop[1] - cache.start[1];
 	
-	translateX = translateX/this.initial.scale[0]/doc.zoom;
-	translateY = translateY/this.initial.scale[1]/doc.zoom;
+	translateX = translateX/initial.scale[0]/doc.zoom;
+	translateY = translateY/initial.scale[1]/doc.zoom;
 
 	var transXabs = Math.abs(translateX);
 	var transYabs = Math.abs(translateY);
 
 	if ((pressed.shiftKey || pressed.cmdKey) && cache.dragDir == false) {
-		translateX *= this.initial.scale[0];
-		translateY *= this.initial.scale[1];
+		translateX *= initial.scale[0];
+		translateY *= initial.scale[1];
 		if (translateY/3 < translateX && translateY > translateX/3 ||
 			translateY/3 > translateX && translateY < translateX/3) { // Dragging element diagnolly left-up or right-down
 			translateY = translateX;
@@ -61,35 +65,34 @@ var move = function(direction) {
 		cache.dragDir = false;
 	}
 
-	switch (this.type) {
+	switch (type) {
 		case 'line':
 			cache.ele.attr({
-				'x1': (this.line.x1 + translateX),
-				'x2': (this.line.x2 + translateX),
-				'y1': (this.line.y1 + translateY),
-				'y2': (this.line.y2 + translateY)
+				'x1': (svg.line.x1 + translateX),
+				'x2': (svg.line.x2 + translateX),
+				'y1': (svg.line.y1 + translateY),
+				'y2': (svg.line.y2 + translateY)
 			});
 			break;
 		case 'rect':
 			cache.ele.attr({
-				'x': this.rect.x + translateX,
-				'y': this.rect.y + translateY
+				'x': svg.rect.x + translateX,
+				'y': svg.rect.y + translateY
 			});
 			break;
 		case 'ellipse':
 			cache.ele.attr({
-				'cx': this.ellipse.cx + translateX,
-				'cy': this.ellipse.cy + translateY
+				'cx': svg.ellipse.cx + translateX,
+				'cy': svg.ellipse.cy + translateY
 			});
 			break;
 		case 'circle':
 			cache.ele.attr({
-				'cx': this.circle.cx + translateX,
-				'cy': this.circle.cy + translateY
+				'cx': svg.circle.cx + translateX,
+				'cy': svg.circle.cy + translateY
 			});
 	}
-	select.area(cache.ele);
-	this.previewMove();
+	svg.previewMove();
 }
 
 export { move }

@@ -5,7 +5,7 @@ import { doc } from '../../SetUp.js';
 
 import { tool } from '../../Tab/Tool.js';
 
-import { element } from './SVG.js';
+import { element } from './SVG.js'; // Includes simple key-object pair for each element name
 
 var editSVG = {
 	update(type) {
