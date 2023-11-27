@@ -1,5 +1,5 @@
 /** This contains all functions pertaining to the Colors Tab */
-import { pressed } from '../Cache.js';
+import { cache, pressed } from '../Cache.js';
 import { ui } from '../UI.js';
 
 import { tabStates } from '../Tabs.js';

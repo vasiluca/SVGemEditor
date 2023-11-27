@@ -355,8 +355,6 @@ $(document).keydown(function (e) {
 		ui.sendColor();
 	}
 	cache.dragColor = false;
-	
-	$('.colorDragging').removeClass('dragging'); // TODO: Remove temporary fix for the color dragging not disappearing
 })
 
 
