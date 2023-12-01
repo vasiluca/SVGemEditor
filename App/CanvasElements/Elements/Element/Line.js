@@ -15,7 +15,6 @@ class Line extends Element {
 	}
 
 	static createAttr() {
-     	var radius = Math.sqrt(Math.pow(cache.stop[0] - cache.start[0], 2) + Math.pow(cache.stop[1] - cache.start[1], 2));
 		return {
 			'x1': cache.start[0],
 			'y1': cache.start[1],

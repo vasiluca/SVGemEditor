@@ -58,17 +58,6 @@ $(document).ready(function() {
 
   
   $(document).mousemove(function(e) {
-    // // TODO: move cache.stop & top 3 ifs to Events
-// cache.stop = [e.clientX,e.clientY];
-//       if (cache.press && tool.type != 'selection') {
-//         draw[tool.type]();
-//       }
-//       if (pressed.handle) {
-//         svg.resize();
-//       }
-//       if (pressed.element) {
-//         svg.move();
-//       }
     if (cache.dragTab == true) {
       tabStates.focused.css({
         'left': e.clientX - cache.start[0],
@@ -97,11 +86,6 @@ $(document).ready(function() {
       }
     }
   }).mouseup(function(e) {
-
-// cache.press = false; // TODO: cache, pressed, svg already moved to events, remove this comment block
-//       pressed.handle = false;
-//       pressed.element = false;
-//       svg.created = false;
     cache.swipe = false;
     if (cache.dragTab) {
       tabStates.adjustPos();

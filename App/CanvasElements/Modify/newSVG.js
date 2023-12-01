@@ -3,7 +3,7 @@
 import { cache } from '../../Cache.js';
 import { tool } from '../../Tab/Tool.js';
 
-import { test } from '../../Tests/createEle.test.js';
+import { test } from '../../Tests/Unit/createEle.test.js';
 import { element } from './SVG.js';
 
 var newSVG = {
@@ -14,7 +14,6 @@ var newSVG = {
 	creating: false, // indicates that the user moused-down and might drag to create an element
 	finished: false,
 
-	// TODO: Split up events (mousedown from mouse dragging) so that the check for this.created is not needed
 	create(type, id) {
 		
 		if (!id) {
