@@ -45,8 +45,8 @@ var select = {
 		$('.selection').css({
 			'left': area.x,
 			'top': area.y,
-			'width': area.width + 2,
-			'height': area.height + 2
+			'width': area.width,
+			'height': area.height
 		});
 	}
 }

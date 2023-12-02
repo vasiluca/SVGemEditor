@@ -107,6 +107,8 @@ var svg = {
 			y: cache.ele[0].getBoundingClientRect().top,
 			width: cache.ele[0].getBoundingClientRect().width,
 			height: cache.ele[0].getBoundingClientRect().height,
+			right: cache.ele[0].getBoundingClientRect().right,
+			bottom: cache.ele[0].getBoundingClientRect().bottom,
 			scale: scale,
 			rotate: rotate,
 			preScaleH: Math.abs(cache.origSelectArea.height - cache.origSelectArea.height / scale[1]),
