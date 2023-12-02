@@ -6,6 +6,8 @@
 
 import { tool } from './Tab/Tool.js';
 
+import { layers } from './Tab/Layer.js';
+
 var cache = {
     size: [],
     start: [],
