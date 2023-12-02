@@ -32,10 +32,10 @@ var select = {
 				$('.outline2').remove();
 			} else {
 				area = {
-					x: $(ele)[0].getBoundingClientRect().x,
-					y: $(ele)[0].getBoundingClientRect().y,
-					width: $(ele)[0].getBoundingClientRect().width,
-					height: $(ele)[0].getBoundingClientRect().height
+					x: ele[0].getBoundingClientRect().x,
+					y: ele[0].getBoundingClientRect().y,
+					width: ele[0].getBoundingClientRect().width,
+					height: ele[0].getBoundingClientRect().height
 				}
 			}
 		}

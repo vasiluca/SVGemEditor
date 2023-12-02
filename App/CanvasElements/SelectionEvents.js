@@ -59,7 +59,7 @@ $('#editor, .selection').mousedown(function (e) {
 			svg.storeAttr();
 			$('.selection').css('display', 'block');
 			tool.stroke = cache.ele.attr('stroke');
-			$('.layers #' + cache.ele).addClass('selected');
+			$('.layers #' + cache.svgID).addClass('selected');
 		}
 	}
 });

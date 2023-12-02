@@ -21,7 +21,10 @@ var cache = {
       this.svgID = val;
     },
     get ele() {
-      return $('#editor #'+this.svgID);
+      var element = $('#editor #' + this.svgID);
+      
+	    if (element.length > 0) // this will check that an element exists matching that ID
+        return element;
     },
     set hoverEle(val) {
       this.hovering = val;
