@@ -17,10 +17,10 @@ $('#editor, .selection').mousedown(function (e) {
 			$('.selection').css('display', 'none');
 			cache.press = true;
 		} else if ($(e.target).is('.selection *')) {
-			svg.storeAttr();
+			if (cache.ele) svg.storeAttr();
 			pressed.handle = $(e.target).attr('class');
 		} else if ($(e.target).is('.selection')) {
-			svg.storeAttr();
+			if (cache.ele) svg.storeAttr();
 			pressed.element = true;
 		} else {
 			cache.press = true;

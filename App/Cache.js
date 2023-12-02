@@ -93,7 +93,7 @@ $(window).blur(function() { // this ensures that when the user switches windows,
           }
           break;
         case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
-          cache.ele.remove();
+          if (cache.ele) cache.ele.remove();
           layers.update();
           $('.selection').css('display','none');
           break;
