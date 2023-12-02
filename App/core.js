@@ -323,7 +323,8 @@ $(document).ready(function() {
         $('#editor').css({
           'transform': 'scale('+doc.zoom+')',
           'top': offsetTop,
-          'left': offsetLeft
+          'left': offsetLeft,
+          'transition': '0s'
         });
         select.area(cache.ele);
       }

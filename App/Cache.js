@@ -53,7 +53,6 @@ $(window).blur(function() { // this ensures that when the user switches windows,
     for (var prop in pressed) {
       pressed[prop] = false;
     }
-    console.log('window blurred');
 });
 
   $(document).contextmenu(function(e) {
