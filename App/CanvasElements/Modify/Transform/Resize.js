@@ -5,9 +5,9 @@ import { doc } from "../../../SetUp.js";
 import { svg, element } from "../SVG.js";
 import { select } from "../../Selection.js";
 
-var xLi, xRi, yTi, yBi; // the original values will be stored in these vars
-
 var resize = function (initial, type) {
+	type = svg.type;
+	initial = svg.initial;
 	var selection = $('.selection')[0].getBoundingClientRect();
 	var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
 	var bottomHandle = pressed.handle.includes('bottom'); // Check if a handle on the bottom is being pressed
@@ -19,10 +19,10 @@ var resize = function (initial, type) {
 	var translateY = (selection.height - cache.origSelectArea.height) / initial.scale[1] / doc.zoom;
 
 	// Set the cache area for easily generating new element attribues
-	var leftX = cache.ele[0].getBoundingClientRect().left;
-	var rightX = cache.ele[0].getBoundingClientRect().right;
-	var topY = cache.ele[0].getBoundingClientRect().top;
-	var bottomY = cache.ele[0].getBoundingClientRect().bottom;
+	var leftX = initial.x;
+	var rightX = initial.right;
+	var topY = initial.y;
+	var bottomY = initial.bottom;
 
 	// var initialW = cache.ele[0].getBou;
 
@@ -61,7 +61,7 @@ var resize = function (initial, type) {
 	cache.start[1] = topY;
 	cache.stop[1] = bottomY;
 
-	if (svg.type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
+	if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
 		if (svg.line.x1 > svg.line.x2) {
 			var temp = cache.start[0];
 			cache.start[0] = cache.stop[0];
