@@ -13,6 +13,8 @@ import { tool } from './Tab/Tool.js'
 import { colors } from './Tab/Color.js';
 import * as ColorEvents from './Tab/Events/Color.js';
 import { property } from './Tab/Property.js';
+import * as PropertyEvents from './Tab/Events/Property.js';
+
 import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
 import { layers } from './Tab/Layer.js';
 import * as LayerEvents from './Tab/Events/Layer.js';
@@ -120,96 +122,6 @@ $(document).ready(function () {
 
 
 
-$('.properties div').click(function () {
-		if (!$(this).attr('disabled') && $(this).is('[data-icon]')) {
-			if (!$(this).is('[data-icon=""]')) {
-				property.colorTo = $(this).attr('aria-label');
-			}
-			if (!$('.color').hasClass('expand')) {
-				tabStates.color.expand(true);
-				tabStates.color.quickView = true;
-				tabStates.color.keepOpen = false;
-			}
-			if (!pressed.shiftKey) {
-				if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
-					$('.properties div[aria-label="stroke"], .properties div[aria-label="fill"]').removeClass('toggled');
-				}
-			}
-			if ($(this).is('[aria-label="opacity"]')) {
-				$(this).toggleClass('toggled');
-			} else {
-				$(this).addClass('toggled');
-			}
-		}
-		if ($(this).is('[aria-label="stroke"], [aria-label="fill"]')) {
-			if ($(this).hasClass('toggled')) {
-				$('.properties div').removeClass('fill');
-				$(this).addClass('fill');
-			}
-		} else if ($(this).is('[aria-label="gradient"], [aria-label="texture"]')) {
-			$('.properties div').removeClass('fill');
-			$(this).addClass('fill');
-		}
-	}).mousedown(function () {
-		cache.swipe = true;
-		property.scrubberTo = $(this);
-		cache.btnArea = {
-			left: $(this).offset().left,
-			right: $(this).offset().left + $(this).width(),
-			top: $(this).offset().top,
-			bottom: $(this).offset().top + $(this).height()
-		};
-	}).mouseleave(function (e) {
-		if (cache.swipe && !$('.propertyScrubber').hasClass('show')) {
-			cache.start = [e.clientX, e.clientY];
-			if (e.clientX > cache.btnArea.left && e.clientX < cache.btnArea.right) {
-				cache.start = [e.clientX, e.clientY];
-				if (e.clientY < cache.btnArea.top + 5) {
-					ui.scrubber(true);
-				}
-				if (e.clientY > cache.btnArea.bottom - 5) {
-					ui.scrubber(true, 'down');
-				}
-			}
-			property.setNumValue();
-		}
-	}).contextmenu(function () {
-		/*if ($(this).is('[aria-label="stroke"]')) {
-		  if (parseInt(cache.ele.attr('stroke-opacity')) > 0) {
-			cache.ele.attr('stroke-opacity',0);
-			cache.ele
-		  } else {
-			cache.ele.attr('stroke-opacity',tool.strokeOpacity);
-		  }
-		}*/
-		if ($(this).is('[aria-label="stroke"]')) {
-			if (cache.ele.attr('paint-order') == 'stroke') {
-				cache.ele.removeAttr('paint-order');
-				tool.paintOrder = '';
-				cache.ele.attr('stroke-opacity', 0);
-				setTimeout(function () {
-					cache.ele.attr('stroke-opacity', tool.strokeOpacity);
-				}, 0);
-				$(this)
-			} else {
-				cache.ele.attr('paint-order', 'stroke');
-				tool.paintOrder = 'stroke';
-				cache.ele.attr('stroke-opacity', 0);
-				setTimeout(function () {
-					cache.ele.attr('stroke-opacity', tool.strokeOpacity);
-				}, 0);
-			}
-		}
-	})
-
-
-
-
-
-
-
-
-
 
 
 
@@ -243,20 +155,9 @@ $('.properties div').click(function () {
 	//** From this point, onward is non-crucial functionality or jQuery events (not as important to test) */
 	// TODO: add the the below functions to their corresponding modules
 
-	$('.propertyScrubber').mousedown(function (e) {
-		cache.swipe = true;
-		cache.start = [e.clientX, e.clientY];
-	});
-
 	$('.shapes').on('click', 'div', function (e) {
 		$('[aria-label="fill"]').removeAttr('disabled');
 		tool.type = $(this).attr('id');
-	});
-
-	$(document).mousedown(function (e) {
-		if ($('.propertyScrubber').hasClass('show') && !$(e.target).is('.propertyScrubber, .propertyScrubber *')) {
-			$('.propertyScrubber').removeClass('show');
-		}
 	});
 
 
