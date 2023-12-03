@@ -5,9 +5,7 @@ import { doc } from "../../../SetUp.js";
 import { svg, element } from "../SVG.js";
 import { select } from "../../Selection.js";
 
-var resize = function (initial, type) {
-	type = svg.type;
-	initial = svg.initial;
+var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	var selection = $('.selection')[0].getBoundingClientRect();
 	var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
 	var bottomHandle = pressed.handle.includes('bottom'); // Check if a handle on the bottom is being pressed
@@ -21,7 +19,7 @@ var resize = function (initial, type) {
 	var ratioX = Math.abs(initial.width / initial.height);
 	var ratioY = Math.abs(initial.height / initial.width);
 	// Set the cache area for easily generating new element attribues
-	var leftX = initial.x;
+	var leftX = initial.x; 
 	var rightX = initial.right;
 	var topY = initial.y;
 	var bottomY = initial.bottom;
@@ -83,32 +81,6 @@ var resize = function (initial, type) {
 
 	cache.ele.attr(attr);
 	select.area();
-
-	// The alt key is used to apply a transformation on the element
-	if (pressed.altKey) { // alt is the same as Option key on Mac
-		if (bottomHandle) {
-			var heightDiff = cache.stop[1] - (cache.origSelectArea.y + cache.origSelectArea.height);
-			if (heightDiff == 0) {
-				heightDiff = 1;
-			}
-
-			svg.newScale[1] = selection.height / initial.preScaleH / doc.zoom;
-		}
-
-		if (rightHandle) {
-			var widthDiff = cache.stop[0] - (cache.origSelectArea.x + cache.origSelectArea.width);
-
-			if (widthDiff == 0) {
-				widthDiff = 1;
-			}
-
-			svg.newScale[0] = selection.width / initial.preScaleW / doc.zoom;
-		}
-		cache.ele.attr({
-			'transform': 'scale(' + svg.newScale[0] + ',' + svg.newScale[1] + ') ' +
-				'translate(' + 0 + ',' + 0 + ')'
-		});
-	}
 }
 
 export { resize }
