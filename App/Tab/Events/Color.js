@@ -350,11 +350,20 @@ $(document).keydown(function (e) {
 		}
 		ui.cursorFeedback();
 	}
+	if (cache.resizingModule) {
+		switch (cache.resizingModule) {
+			case 'bottom':
+				var increaseWidth = cache.stop[1] - cache.start[1];
+
+		}
+	}
 }).mouseup(function (e) {
 	if (cache.dragColor) {
 		ui.sendColor();
 	}
 	cache.dragColor = false;
+
+	cache.resizingModule = false;
 })
 
 

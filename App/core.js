@@ -10,6 +10,7 @@ import * as SelectionEvents from './CanvasElements/SelectionEvents.js';
 import * as Events from './CanvasElements/Events.js'; // No Objects exported there are event functions
 
 import { tool } from './Tab/Tool.js'
+import * as ToolEvents from './Tab/Events/Tool.js';
 import { colors } from './Tab/Color.js';
 import * as ColorEvents from './Tab/Events/Color.js';
 import { property } from './Tab/Property.js';
@@ -69,13 +70,7 @@ $(document).ready(function () {
 				}
 			}
 		}
-		if (cache.resizingModule) {
-			switch (cache.resizingModule) {
-				case 'bottom':
-					var increaseWidth = cache.stop[1] - cache.start[1];
-
-			}
-		}
+		
 	}).mouseup(function (e) {
 		cache.swipe = false;
 		if (cache.dragTab) {
@@ -89,7 +84,6 @@ $(document).ready(function () {
 		if ($('.propertyScrubber').hasClass('show')) {
 			//cache.start = [e.clientX,e.clientY];
 		}
-		cache.resizingModule = false;
 		//$('.layers div').removeClass('drop-above drop-below drop-group');
 	}).keydown(function (e) {
 		if ($('.propertyScrubber').hasClass('show')) {
@@ -154,11 +148,6 @@ $(document).ready(function () {
 
 	//** From this point, onward is non-crucial functionality or jQuery events (not as important to test) */
 	// TODO: add the the below functions to their corresponding modules
-
-	$('.shapes').on('click', 'div', function (e) {
-		$('[aria-label="fill"]').removeAttr('disabled');
-		tool.type = $(this).attr('id');
-	});
 
 
 
