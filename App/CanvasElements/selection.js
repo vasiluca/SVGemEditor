@@ -9,7 +9,7 @@ var select = {
 			width: cache.stop[0] > cache.start[0] ? cache.stop[0] - cache.start[0] : cache.start[0] - cache.stop[0],
 			height: cache.stop[1] > cache.start[1] ? cache.stop[1] - cache.start[1] : cache.start[1] - cache.stop[1]
 		}
-		if (ele != undefined) {
+		if (ele) { // This checks that ele is NOT undefined or null
 			area = {
 				x: ele[0].getBoundingClientRect().x,
 				y: ele[0].getBoundingClientRect().y,
