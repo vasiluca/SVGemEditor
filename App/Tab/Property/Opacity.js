@@ -1,6 +1,6 @@
-import { cache } from '../Cache.js';
+import { cache } from '../../Cache.js';
 
-import { tool } from './Tool.js';
+import { tool } from '../Tool.js';
 
 import { property } from '../../Tab/Property.js';
 

@@ -15,6 +15,8 @@ import { colors } from './Tab/Color.js';
 import * as ColorEvents from './Tab/Events/Color.js';
 import { property } from './Tab/Property.js';
 import * as PropertyEvents from './Tab/Events/Property.js';
+	import { Opacityproperty } from './Tab/Property/Opacity.js';
+	import * as OpacityEvents from './Tab/Property/OpacityEvents.js';
 
 import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
 import { layers } from './Tab/Layer.js';
