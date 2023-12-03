@@ -10,6 +10,5 @@ function Export(data, filename, type) {
         document.body.appendChild(a);
         a.click();
     }
-
 }
 export {Export}
