@@ -18,10 +18,11 @@ import * as PropertyEvents from './Tab/Events/Property.js';
 	import { Opacityproperty } from './Tab/Property/Opacity.js';
 	import * as OpacityEvents from './Tab/Property/OpacityEvents.js';
 
-import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
 import { layers } from './Tab/Layer.js';
 import * as LayerEvents from './Tab/Events/Layer.js';
-import { Export } from './Tab/Export.js';
+import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
+	import { Export } from './Tab/Export.js';
+	import * as ExportEvents from './Tab/Action/ExportEvents.js';
 
 $(document).ready(function () {
 	$('#editor').mousemove(function (e) {
