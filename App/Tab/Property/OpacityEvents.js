@@ -1,8 +1,16 @@
+import { cache } from "../../Cache.js";
+
 import { Opacityproperty } from "./Opacity.js";
 
 $('[aria-label="opacity"]').mousedown(function() {
+	cache.btnAction = 'opacity';
 	console.log("opacity pressed");
-}).mousemove(function(e) {
-	// e.clientX //= users x Mouse Position
-	// e.clientY //= users y Mouse Position
+})
+
+$(document).mousemove(function(e) {
+	if (cache.btnAction == 'opacity') {
+		Opacityproperty.setOpacity();
+	}
+}).mouseup(function() {
+	cache.btnAction = '';
 })

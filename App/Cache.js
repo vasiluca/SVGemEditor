@@ -34,6 +34,7 @@ var cache = {
 	get hoverEle() {
 		return $('#' + this.hovering);
 	},
+	btnAction: '', // will store the current button property being changed
 	selectedElements: [],
 	dragTab: false,
 	mapKeysTo: 'selection'
