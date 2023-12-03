@@ -24,8 +24,6 @@ var resize = function (initial, type) {
 	var topY = initial.y;
 	var bottomY = initial.bottom;
 
-	// var initialW = cache.ele[0].getBou;
-
 	if (leftHandle) {
 		selectW = rightX - cache.stop[0];
 		if (selectW <= 0) selectW = 0;
