@@ -5,5 +5,5 @@ import { select } from "./Selection.js";
 
 function runtest(){
     
-    
+    move(cache.ele);
 }
