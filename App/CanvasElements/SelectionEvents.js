@@ -24,7 +24,6 @@ $('#editor, .selection').mousedown(function (e) {
 			pressed.element = true;
 		} else {
 			cache.press = true;
-			ui.resizeHandles(true);
 			select.area();
 		}
 
@@ -34,18 +33,10 @@ $('#editor, .selection').mousedown(function (e) {
 	}
 
 	if (tool.type == 'selection' && !$(e.target).is('.selection, .selection *')) {
-		ui.resizeHandles(false);
+		$('.selection').css('display', 'none');
 	}
 
 }).mouseup(function(e) {
-	if (tool.type == 'selection' && cache.press) {
-		$('.selection').css('display', 'none');
-	} else {
-		$('.selection').css('display', 'block');
-		ui.resizeHandles(true);
-		select.area(cache.ele);
-	}
-
 	if (pressed.handle) {
 		select.area(cache.ele);
 		layers.update();
@@ -55,9 +46,7 @@ $('#editor, .selection').mousedown(function (e) {
 		if ($(e.target).is('#editor *')) {
 			cache.ele = $(e.target).attr('id');
 			select.area(cache.ele);
-			ui.resizeHandles(true);
 			svg.storeAttr();
-			$('.selection').css('display', 'block');
 			tool.stroke = cache.ele.attr('stroke');
 			$('.layers #' + cache.svgID).addClass('selected');
 		}
