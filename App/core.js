@@ -18,7 +18,7 @@ import * as PropertyEvents from './Tab/Events/Property.js';
 	import { Opacityproperty } from './Tab/Property/Opacity.js';
 	import * as OpacityEvents from './Tab/Property/OpacityEvents.js';
 	import { deleteButton } from './Tab/Property/deleteButton.js';
-	import * as OpacityEvents from './Tab/Property/deleteEvent.js';
+	import * as deleteEvent from './Tab/Property/deleteEvent.js';
 
 import { layers } from './Tab/Layer.js';
 import * as LayerEvents from './Tab/Events/Layer.js';
