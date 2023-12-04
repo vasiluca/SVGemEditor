@@ -1,4 +1,4 @@
-import { Export } from "../Export.js";
+import { Export } from "./Export.js";
 import {doc} from "../../SetUp.js";
 
 $('[aria-label="export"]').click(function() {

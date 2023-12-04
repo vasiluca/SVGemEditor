@@ -1,7 +1,7 @@
 ﻿//add and resize function for image files on local computer
 import { tool } from './Tab/Tool.js';
 import { layers } from './Tab/Layer.js';
-import { pressed } from '../Cache.js';
+import { pressed } from '../../Cache.js';
 
 export function handleImageAdd(e, newWidth, newHeight) {
   if (tool.name === 'image' && tool.imageIndex !== -1) {

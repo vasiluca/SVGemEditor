@@ -23,7 +23,7 @@ import * as PropertyEvents from './Tab/Events/Property.js';
 import { layers } from './Tab/Layer.js';
 import * as LayerEvents from './Tab/Events/Layer.js';
 import * as actions from './Tab/Action.js'; // No objects are actually exported frmo Action.js yet
-	import { Export } from './Tab/Export.js';
+	import { Export } from './Tab/Action/Export.js';
 	import * as ExportEvents from './Tab/Action/ExportEvents.js';
 
 
