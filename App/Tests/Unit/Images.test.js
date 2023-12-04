@@ -1,7 +1,7 @@
 ﻿import { addImage} from './Tab/Images.js';
 import { handleResize} from './Tab/Images.js';
 
-// test for the add function
+// Test the add function
 test('should add image to tool.images', () => {
     // Sample values
     const posX = 100;
@@ -19,11 +19,11 @@ test('should add image to tool.images', () => {
     // Call the function
     addImage(posX, posY, height, width, tool);
 
-    expect(tool.images.length).toBe(1); // Check if the number updated
+    expect(tool.images.length).toBe(1); // Check if the 1 image was added
     expect(tool.images[1].result).toBe('sampleImage.jpg'); // Check the added image details
   });
 
-//test for the resize function
+//Test the resize function
 
 test('should resize the image element', () => {
     //Sample values
@@ -38,16 +38,15 @@ test('should resize the image element', () => {
     mockImageElement.setAttribute('id', imageId);
     document.body.appendChild(mockImageElement);
 
-    // Call the function
+    //Call the function
     handleResize(imageId, posX, posY, newWidth, newHeight);
 
-    // Perform assertions or use Jest's expect statements
-    // For example, check if the image element attributes were updated
+    //Check if the attributes matches
     expect(mockImageElement.getAttribute('x')).toBe(`${posX}`);
     expect(mockImageElement.getAttribute('y')).toBe(`${posY}`);
     expect(mockImageElement.getAttribute('width')).toBe(`${newWidth}`);
     expect(mockImageElement.getAttribute('height')).toBe(`${newHeight}`);
 
-    // Clean up: remove the mock image element from the document
+    //Remove the image since no longer needed
     document.body.removeChild(mockImageElement);
   });
