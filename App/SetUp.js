@@ -69,4 +69,38 @@ $(window).resize(function () { // When
 	tabStates.adjustAllPos();
 });
 
+$(document).on('wheel', function (e) {
+	if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
+		if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
+			if (doc.zoom > 1 || doc.size[0] * doc.zoom > $(window).width() || doc.size[1] * doc.zoom > $(window).height()) {
+				doc.zoom -= 0.25;
+				if (doc.zoom > 10) {
+					doc.zoom -= 0.5;
+				}
+			}
+		}
+		if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
+			if (doc.zoom < 20) {
+				doc.zoom += 0.25;
+				if (doc.zoom < 10) {
+					doc.zoom += 0.5;
+				}
+			}
+		}
+		var offsetTop = ($(window).height() / 2 - e.clientY) * doc.zoom;
+		var offsetLeft = ($(window).width() / 2 - e.clientX) * doc.zoom;
+		if (doc.zoom <= 1) {
+			offsetTop = ($(window).height() - doc.size[1] * doc.zoom) / 2;
+			offsetLeft = ($(window).width() - doc.size[0] * doc.zoom) / 2;
+		}
+		$('#editor').css({
+			'transform': 'scale(' + doc.zoom + ')',
+			'top': offsetTop,
+			'left': offsetLeft,
+			'transition': '0s'
+		});
+		select.area(cache.ele);
+	}
+});
+
 export { doc }
