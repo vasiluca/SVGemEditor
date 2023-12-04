@@ -4,7 +4,7 @@ import { cache } from '../../Cache.js';
 
 import { tool } from '../Tool.js';
 
-import { property } from '../../Tab/Property.js';
+import { property } from '../Property.js';
 
 var deleteButton = {
     initialize: function () {
