@@ -18,5 +18,6 @@ function runtest(){
         if (initialPosition.x === newPosition.x && initialPosition.y === newPosition.y) {
             throw new Error("The selected item is not moved properly");
 
-    }
+        }
+    });
 }
