@@ -13,6 +13,7 @@ import { Line } from '../Elements/Element/Line.js';
 import { Circle } from '../Elements/Element/Circle.js';
 import { Ellipse } from '../Elements/Element/Ellipse.js';
 import { Rectangle } from '../Elements/Element/Rectangle.js';
+import { Text } from '../Elements/Element/Text.js';
 
 import { resize } from './Transform/Resize.js';
 import { move } from './Transform/Move.js';
@@ -27,7 +28,8 @@ var element = {
 	line: Line,
 	circle: Circle,
 	ellipse: Ellipse,
-	rect: Rectangle
+	rect: Rectangle,
+	text: Text
 }
 
 var translateX = 0;
