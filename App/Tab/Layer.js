@@ -4,6 +4,8 @@ import { cache } from '../Cache.js';
 
 import { colors } from './Color.js';
 
+import { deleteButton } from './Property/deleteButton.js';
+
 var preview; // including the variable outside the layers object seems to help in preventing glitches when dragging layers
 var layers = {
 	all: [],
@@ -59,6 +61,15 @@ var layers = {
 		}
 	}
 	},
+
+	deleteSelected: function () {
+        // Call deleteButton's handleDelete method
+        deleteButton.handleDelete();
+
+        // Update layers after deletion
+        this.update();
+    },
+	
 	moveUp: function(top) {
 	if (top) {
 		cache.ele.detach().appendTo('#editor');
