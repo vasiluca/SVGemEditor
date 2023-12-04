@@ -34,6 +34,7 @@ var cache = {
 	get hoverEle() {
 		return $('#' + this.hovering);
 	},
+	btnAction: '', // will store the current button property being changed
 	selectedElements: [],
 	dragTab: false,
 	mapKeysTo: 'selection'
@@ -93,10 +94,12 @@ $(document).contextmenu(function (e) {
 				}
 				break;
 			case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
+			case 46: // Delete key (Windows)
 				if (cache.ele) cache.ele.remove();
 				layers.update();
 				$('.selection').css('display', 'none');
 				break;
+
 			case 9:
 				pressed.tabKey = true;
 				break;

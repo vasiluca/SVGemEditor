@@ -10,14 +10,12 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 	select.area(true);*/
 }).on('mousedown', 'div', function (e) {
 	if (e.which == 1) { // Right Click
-		ui.resizeHandles(true);
 		cache.start = [e.clientX, e.clientY];
 		layers.select = true;
 		layers.selectedLayer = false;
 		layers.current = $(this);
-		$('.selection').css('display', 'block');
-		//cache.ele = $(this).attr('id');
-		//select.area(cache.ele);
+		cache.ele = $(this).attr('id');
+		select.area(cache.ele);
 	}
 }).on('mouseup', 'div', function (e) {
 	if (e.which == 1) {

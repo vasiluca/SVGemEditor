@@ -80,7 +80,7 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	var attr = element[type].createAttr();
 
 	cache.ele.attr(attr);
-	select.area();
+	select.area(cache.ele);
 }
 
 export { resize }

@@ -11,3 +11,4 @@ function Export(data, filename, type) {
         a.click();
     }
 }
+export {Export}
