@@ -4,6 +4,9 @@ import { cache, pressed } from "../Cache.js";
 
 import { select } from "./Selection.js";
 
+import { newSVG } from "../../CanvasElements/Modify/newSVG.js";
+import { editSVG } from "../../CanvasElements/Modify/editSVG.js";
+
 function runtest(){
     
     test("Selection and Resize Test", () => {
