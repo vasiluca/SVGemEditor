@@ -91,19 +91,35 @@ h1 {
     line-height: 30px
 }
 
-.splash .start {
+.startActions * {
     text-align: center;
     width: 150px;
     margin: 10px auto;
     line-height: 30px;
-    background: cornflowerblue;
     color: white;
     border-radius: 4px;
     cursor: pointer
 }
 
-.splash .start:hover,
-.splash .start:active {
+.startActions .start {
+    background: cornflowerblue;
+}
+
+.startActions .import {
+    background: rgb(46, 102, 148);
+}
+.splash.hide .import {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+}
+
+input#file-selector {
+    display: none
+}
+
+.startActions .start:hover,
+.startActions div:active {
     width: 200px
 }
 

@@ -1,6 +1,10 @@
 // This includes all the canvas [document] set up settings
+import { cache } from './Cache.js';
+
+import { select } from './CanvasElements/Selection.js';
 
 import { tabStates } from './Tabs.js';
+
 import * as test from './Tests/Unit/document.test.js';
 
 // these are the textboxes which automatically are set to contain the current window height and width by default

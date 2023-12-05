@@ -28,6 +28,8 @@ import * as actions from './Tab/Action.js'; // No objects are actually exported 
 
 import * as ImageEvents from './Tab/Tool/ImageEvents.js';
 
+import * as FileImport from './FileImport.js';
+
 
 deleteButton.initialize();
 

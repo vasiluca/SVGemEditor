@@ -1,3 +1,6 @@
+import { pressed } from "../../Cache.js";
+
+import { layers } from "../Layer.js";
 import { tool } from "../Tool.js";
 // import * as ImageImport from './ImageImport.js';
 
