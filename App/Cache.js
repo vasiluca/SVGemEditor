@@ -62,7 +62,7 @@ $(document).contextmenu(function (e) {
 
 	if (!$('.color input.user').is(':focus')) { // check that the user isn't actively typing in a color in the color tab
 		if ($('.svg-contain').hasClass('show')) {
-			e.preventDefault();
+			// e.preventDefault();
 		}
 		switch (e.which) {
 			case 9: // Tab key is pressed

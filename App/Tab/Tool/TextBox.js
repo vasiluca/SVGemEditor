@@ -31,6 +31,10 @@ export function createTextbox(event) {
         textbox.style.left = pos[0] + 'px';
         textbox.style.top = pos[1] + 'px';
         textbox.style.border = '1px solid black';
+        textbox.style.height = '20px';
+        textbox.style.padding = '5px';
+        textbox.style.fontSize = '15px';
+
         //enables the textbox to move around
         textbox.setAttribute('draggable', true);
         textbox.setAttribute('class', 'drag');

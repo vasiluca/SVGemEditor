@@ -14,7 +14,8 @@ class Text extends Element {
 	static createAttr() {
 		var attr = {
 			'x': cache.start[0],
-			'y': cache.start[1]
+			'y': cache.start[1],
+			'contenteditable': true
 		};
 
 		if (cache.stop[0] != cache.start[0]) {
@@ -26,6 +27,8 @@ class Text extends Element {
 
 			attr['textLength'] = cache.stop[0] - cache.start[0];
 		}
+
+		// cache.ele.html('My Text');
 
 		// TextBox.createTextbox();
 
