@@ -1,6 +1,7 @@
 /* delete label */
 
 import { cache } from "../../Cache.js";
+import { layers } from "../Layer.js";
 import { deleteButton } from "./DeleteButton.js"; 
 
 $('[aria-label="delete"]').mousedown(function() {
@@ -15,3 +16,9 @@ $(document).mousemove(function(e) {
 }).mouseup(function() {
     cache.btnAction = '';
 });
+
+$('[aria-label="delete"]').click(function() {
+    if (cache.ele) cache.ele.remove();
+    layers.update();
+    $('.selection').css('display', 'none');
+})
