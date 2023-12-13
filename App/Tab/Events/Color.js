@@ -104,7 +104,7 @@ $('.color input.user').keyup(function (e) {
 //  }
 //});
 $('.swatches').on('click', 'span', function () {
-	if (!$(this).hasClass('empty-space')) {
+	if (!$(this).hasClass('empty-space') && cache.ele) {
 		var color = $(this).css('backgroundColor');
 		$('.col').css({
 			'background-color': color,
