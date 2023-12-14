@@ -1,9 +1,10 @@
 
-import { cache, pressed } from "../../../Cache.js";
+import { cache, drag, pressed } from "../../../Cache.js";
 
 import { doc } from "../../../SetUp.js";
 
 import { svg } from "../SVG.js";
+import { editSVG } from "../editSVG.js";
 
 var move = function(initial, type) {
 	var translateX = cache.stop[0] - cache.start[0];
@@ -65,33 +66,24 @@ var move = function(initial, type) {
 		cache.dragDir = false;
 	}
 
-	switch (type) {
-		case 'line':
-			cache.ele.attr({
-				'x1': (svg.line.x1 + translateX),
-				'x2': (svg.line.x2 + translateX),
-				'y1': (svg.line.y1 + translateY),
-				'y2': (svg.line.y2 + translateY)
-			});
-			break;
-		case 'rect':
-			cache.ele.attr({
-				'x': svg.rect.x + translateX,
-				'y': svg.rect.y + translateY
-			});
-			break;
-		case 'ellipse':
-			cache.ele.attr({
-				'cx': svg.ellipse.cx + translateX,
-				'cy': svg.ellipse.cy + translateY
-			});
-			break;
-		case 'circle':
-			cache.ele.attr({
-				'cx': svg.circle.cx + translateX,
-				'cy': svg.circle.cy + translateY
-			});
+	drag.start = [initial.x + translateX, initial.y + translateY];
+	drag.end = [initial.right + translateX, initial.bottom + translateY];
+
+	if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
+		if (svg.line.x1 > svg.line.x2) {
+			var temp = drag.start[0];
+			drag.start[0] = drag.end[0];
+			drag.end[0] = temp;
+		}
+		if (svg.line.y1 > svg.line.y2) {
+			var temp = drag.start[1];
+			drag.start[1] = drag.end[1];
+			drag.end[1] = temp;
+		}
 	}
+
+	editSVG.update(type);
+
 	svg.previewMove();
 }
 

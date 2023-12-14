@@ -34,6 +34,11 @@ var cache = {
 	mapKeysTo: 'selection'
 }
 
+var drag = {
+	start: [],
+	end: []
+}
+
 var pressed = {
 	handle: false, // this refers to the blue handlebars that can resize a selected element
 	shiftKey: false,
@@ -139,4 +144,4 @@ $(document).contextmenu(function (e) {
 	}
 })
 
-export { cache, pressed };
+export { cache, drag, pressed };

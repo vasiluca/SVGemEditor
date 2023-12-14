@@ -1,4 +1,4 @@
-import { Element } from '../Element.js';
+import { Element, drag } from '../Element.js';
 
 import { cache, pressed } from '../../../Cache.js';
 
@@ -9,12 +9,12 @@ class Ellipse extends Element {
 	}
 
 	static createAttr() {
-		var cx = cache.start[0];
-		var cy = cache.start[1];
-		var rx = Math.abs(cache.stop[0] - cache.start[0]);
-		var xDiff = cache.stop[0] - cache.start[0];
-		var ry = Math.abs(cache.stop[1] - cache.start[1]);
-		var yDiff = cache.stop[1] - cache.start[1];
+		var cx = drag.start[0];
+		var cy = drag.start[1];
+		var rx = Math.abs(drag.end[0] - drag.start[0]);
+		var xDiff = drag.end[0] - drag.start[0];
+		var ry = Math.abs(drag.end[1] - drag.start[1]);
+		var yDiff = drag.end[1] - drag.start[1];
 
 		if (pressed.shiftKey) {
 			ry = rx; // both radiuses will be the same when shiftKey is pressed
@@ -28,8 +28,8 @@ class Ellipse extends Element {
 		}
 
 		if (pressed.cmdKey) {
-			cx = cache.start[0];
-			cy = cache.start[1];
+			cx = drag.start[0];
+			cy = drag.start[1];
 		} else {
 			if (xDiff > 0) {
 				rx /= 2;

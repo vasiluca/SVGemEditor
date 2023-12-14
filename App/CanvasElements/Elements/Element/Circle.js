@@ -1,4 +1,4 @@
-import { Element } from '../Element.js';
+import { Element, drag } from '../Element.js';
 
 import { cache } from '../../../Cache.js';
 
@@ -13,11 +13,11 @@ class Circle extends Element {
 	}
 
 	static createAttr() {
-		var radius = Math.sqrt(Math.pow(cache.stop[0] - cache.start[0], 2) + Math.pow(cache.stop[1] - cache.start[1], 2));
+		var radius = Math.sqrt(Math.pow(drag.end[0] - drag.start[0], 2) + Math.pow(drag.end[1] - drag.start[1], 2));
 		
 		return {
-			'cx': cache.start[0],
-			'cy': cache.start[1],
+			'cx': drag.start[0],
+			'cy': drag.start[1],
 			'r': radius
 		}
 	}

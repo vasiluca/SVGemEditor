@@ -1,4 +1,4 @@
-import { cache, pressed } from "../../../Cache.js";
+import { cache, drag, pressed } from "../../../Cache.js";
 
 import { doc } from "../../../SetUp.js";
 
@@ -30,14 +30,14 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	}
 
 	if (leftHandle) {
-		selectW = rightX - cache.stop[0];
+		selectW = rightX - drag.end[0];
 		if (selectW <= 0) selectW = 0;
 
 		leftX = rightX - selectW;
 	}
 
 	if (rightHandle) {
-		selectW = cache.stop[0] - leftX;
+		selectW = drag.end[0] - leftX;
 		if (selectW <= 0) selectW = 0;
 
 		rightX = leftX + selectW;
@@ -45,35 +45,35 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 
 
 	if (topHandle) {
-		selectH = bottomY - cache.stop[1];
+		selectH = bottomY - drag.end[1];
 		if (selectH <= 0) selectH = 0;
 
 		topY = bottomY - selectH;
 	}
 
 	if (bottomHandle) {
-		selectH = cache.stop[1] - topY;
+		selectH = drag.end[1] - topY;
 		if (selectH <= 0) selectH = 0;
 
 		bottomY = topY + selectH;
 	}
 
-	cache.start[0] = leftX;
-	cache.stop[0] = rightX;
+	drag.start[0] = leftX;
+	drag.end[0] = rightX;
 
-	cache.start[1] = topY;
-	cache.stop[1] = bottomY;
+	drag.start[1] = topY;
+	drag.end[1] = bottomY;
 
 	if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
 		if (svg.line.x1 > svg.line.x2) {
-			var temp = cache.start[0];
-			cache.start[0] = cache.stop[0];
-			cache.stop[0] = temp;
+			var temp = drag.start[0];
+			drag.start[0] = drag.end[0];
+			drag.end[0] = temp;
 		}
 		if (svg.line.y1 > svg.line.y2) {
-			var temp = cache.start[1];
-			cache.start[1] = cache.stop[1];
-			cache.stop[1] = temp;
+			var temp = drag.start[1];
+			drag.start[1] = drag.end[1];
+			drag.end[1] = temp;
 		}
 	}
 

@@ -1,4 +1,4 @@
-import { Element } from '../Element.js';
+import { Element, drag } from '../Element.js';
 
 import { cache, pressed } from '../../../Cache.js';
 
@@ -9,10 +9,10 @@ class Rectangle extends Element {
 	}
 
 	static createAttr() {
-		var width = Math.abs(cache.stop[0] - cache.start[0]);
-		var height = Math.abs(cache.stop[1] - cache.start[1]);
-		var x = cache.start[0];
-		var y = cache.start[1];
+		var width = Math.abs(drag.end[0] - drag.start[0]);
+		var height = Math.abs(drag.end[1] - drag.start[1]);
+		var x = drag.start[0];
+		var y = drag.start[1];
 
 		if (pressed.shiftKey) {
 			height = width;
@@ -26,8 +26,8 @@ class Rectangle extends Element {
 		}
 
 		// this accounts for if the user is drawing the Rectangle from bottom to top, or right to left
-		var widthDiff = cache.stop[0] - cache.start[0];
-		var heightDiff = cache.stop[1] - cache.start[1];
+		var widthDiff = drag.end[0] - drag.start[0];
+		var heightDiff = drag.end[1] - drag.start[1];
 		widthDiff < 0 ? x = x - width : x = x;
 		heightDiff < 0 ? y = y - height : y = y;
 		

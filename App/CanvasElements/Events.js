@@ -1,4 +1,4 @@
-import { cache, pressed } from '../Cache.js';
+import { cache, drag, pressed } from '../Cache.js';
 
 import { select } from './Selection.js';
 
@@ -22,6 +22,7 @@ $(document).mousedown(function(e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
 	cache.stop = [e.clientX,e.clientY];
+  drag.end = [e.clientX, e.clientY];
 
     if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
       newSVG.creating = false;

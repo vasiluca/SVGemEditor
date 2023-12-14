@@ -1,4 +1,4 @@
-import { Element } from '../Element.js';
+import { Element, drag } from '../Element.js';
 
 import { cache } from '../../../Cache.js';
 import { newSVG } from '../../Modify/newSVG.js';
@@ -16,10 +16,10 @@ class Line extends Element {
 
 	static createAttr() {
 		return {
-			'x1': cache.start[0],
-			'y1': cache.start[1],
-			'x2': cache.stop[0],
-			'y2': cache.stop[1]
+			'x1': drag.start[0],
+			'y1': drag.start[1],
+			'x2': drag.end[0],
+			'y2': drag.end[1]
 		}
 	}
 

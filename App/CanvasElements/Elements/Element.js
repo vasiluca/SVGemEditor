@@ -1,3 +1,5 @@
+import { drag } from "../../Cache.js";
+
 //** This will be extended by all SVG Element Types */
 /**
  * This Class and Sub-classes will contain properties of an
@@ -69,4 +71,4 @@ class Element {
 	}
 }
 
-export { Element }
+export { Element, drag }
