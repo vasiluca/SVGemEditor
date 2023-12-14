@@ -55,7 +55,9 @@ $(document).contextmenu(function (e) {
 
 	if (!$('.color input.user').is(':focus')) { // check that the user isn't actively typing in a color in the color tab
 		if ($('.svg-contain').hasClass('show')) {
-			e.preventDefault();
+			if (cache.ele[0].tagName != 'text' || e.which == 9) { // Don't prevent key defaults when typing, BUT prevent the Tab Key from causing unwanted jumps in the page
+				e.preventDefault();
+			}
 		}
 		switch (e.which) {
 			case 9: // Tab key is pressed
@@ -71,8 +73,10 @@ $(document).contextmenu(function (e) {
 				pressed.altKey = true;
 				break;
 			case 32: // Spacebar is pressed
-				tool.type = 'drag';
-				pressed.spaceBar = true;
+				if (cache.ele[0].tagName != 'text') { // if text is being edited, don't trigger spaceBar
+					tool.type = 'drag';
+					pressed.spaceBar = true;
+				}
 				break;
 			case 91: // Command key is presssed on mac
 			case 93:
@@ -88,7 +92,7 @@ $(document).contextmenu(function (e) {
 				break;
 			case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
 			case 46: // Delete key (Windows)
-				if (cache.ele && !$('#GetText').is(':focus')) cache.ele.remove();
+				if (cache.ele && cache.ele[0].tagName != 'text') cache.ele.remove();
 				layers.update();
 				$('.selection').css('display', 'none');
 				break;
