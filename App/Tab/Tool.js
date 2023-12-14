@@ -29,7 +29,7 @@ var tool = {
 			ui.hideTools('selection');
 			ui.cursor('copy');
 		}
-		if (kind == 'drag' && !pressed.spaceBar) {
+		if (kind == 'drag') {
 			this.toolType = 'selection';
 			ui.hideTools(true);
 			ui.cursor('drag');

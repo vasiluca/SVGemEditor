@@ -9,16 +9,10 @@ import { tool } from './Tab/Tool.js';
 import { layers } from './Tab/Layer.js';
 
 var cache = {
-	size: [],
 	start: [],
 	stop: [],
 	press: false,
-	zoom: 0,
-	zoomed: false,
-	pos: function (x, y) {
-		return [x - $('#editor')[0].getBoundingClientRect().left, y - $('#editor')[0].getBoundingClientRect().top];
-	},
-	svgID: 0,
+	svgID: 0, // this stores the currently select SVG ID
 	set ele(val) {
 		this.svgID = val;
 	},
@@ -38,7 +32,6 @@ var cache = {
 	selectedElements: [],
 	dragTab: false,
 	mapKeysTo: 'selection'
-	// moveAmount: 2
 }
 
 var pressed = {
@@ -62,11 +55,11 @@ $(document).contextmenu(function (e) {
 
 	if (!$('.color input.user').is(':focus')) { // check that the user isn't actively typing in a color in the color tab
 		if ($('.svg-contain').hasClass('show')) {
-			// e.preventDefault();
+			e.preventDefault();
 		}
 		switch (e.which) {
 			case 9: // Tab key is pressed
-				//$('.warn').toggleClass('show');
+				$('.warn').toggleClass('show');
 				break;
 			case 16: // shift key pressed
 				pressed.shiftKey = true;
@@ -77,10 +70,10 @@ $(document).contextmenu(function (e) {
 			case 18: // alt key (or option key on mac) is pressed
 				pressed.altKey = true;
 				break;
-			/*case 32: // Spacebar is pressed
-			  tool.type = 'drag';
-			  pressed.spaceBar = true;
-			  break;*/
+			case 32: // Spacebar is pressed
+				tool.type = 'drag';
+				pressed.spaceBar = true;
+				break;
 			case 91: // Command key is presssed on mac
 			case 93:
 				pressed.cmdKey = true;
