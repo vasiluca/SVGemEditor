@@ -1,9 +1,12 @@
+import { select } from '../../Selection.js';
+
 import { Element } from '../Element.js';
 
 import { cache } from '../../../Cache.js';
 import { newSVG } from '../../Modify/newSVG.js';
 
-import * as TextBox from '../../../Tab/Tool/TextBox.js';
+// import * as TextBox from '../../../Tab/Tool/TextBox.js';
+import { TextContent } from '../../../Tab/Tool/TextBoxEvents.js'
 
 class Text extends Element {
 	constructor() {
@@ -15,7 +18,10 @@ class Text extends Element {
 		var attr = {
 			'x': cache.start[0],
 			'y': cache.start[1],
-			'contenteditable': true
+			// 'contenteditable': 'plaintext-only',
+			'font-size': '22px',
+			'paint-order': 'stroke' // This will prevent stroke/outline from covering the actual text [fill]
+			
 		};
 
 		if (cache.stop[0] != cache.start[0]) {
@@ -23,14 +29,15 @@ class Text extends Element {
 				var temp = cache.start[0];
 				cache.start[0] = cache.stop[0];
 				cache.stop[0] = temp;
-			} 
+			}
 
 			attr['textLength'] = cache.stop[0] - cache.start[0];
 		}
 
-		// cache.ele.html('My Text');
-
-		// TextBox.createTextbox();
+		if (cache.ele.html() == '') { // if the element HTML is non-existent, show New Text
+			cache.ele.html('&nbsp; New Text &nbsp;');
+			cache.ele.attr('data-temp', 'true');  // indicate the text is placeholder in this text element, to be overridden
+		}
 
 		return attr;
 	}

@@ -95,7 +95,7 @@ $(document).contextmenu(function (e) {
 				break;
 			case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
 			case 46: // Delete key (Windows)
-				if (cache.ele) cache.ele.remove();
+				if (cache.ele && !$('#GetText').is(':focus')) cache.ele.remove();
 				layers.update();
 				$('.selection').css('display', 'none');
 				break;

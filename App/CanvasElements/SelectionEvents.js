@@ -9,7 +9,6 @@ import { select } from "./Selection.js";
 import { tool } from "../Tab/Tool.js";
 import { layers } from "../Tab/Layer.js";
 
-
 $('#editor, .selection').mousedown(function (e) {
 	if (e.which == 1) {
 		cache.start = [e.clientX, e.clientY];
@@ -36,12 +35,6 @@ $('#editor, .selection').mousedown(function (e) {
 		$('.selection').css('display', 'none');
 	}
 
-}).mouseup(function(e) {
-	if (pressed.handle) {
-		select.area(cache.ele);
-		layers.update();
-	}
-}).click(function (e) {
 	if (tool.type == 'selection') {
 		if ($(e.target).is('#editor *')) {
 			cache.ele = $(e.target).attr('id');
@@ -51,4 +44,9 @@ $('#editor, .selection').mousedown(function (e) {
 			$('.layers #' + cache.svgID).addClass('selected');
 		}
 	}
-});
+}).mouseup(function(e) {
+	if (pressed.handle) {
+		select.area(cache.ele);
+		layers.update();
+	}
+})

@@ -41,6 +41,11 @@ $(document).mousedown(function(e) {
 });
 
 $(document).mouseup(function() {
+  // this enables the user to create a text element on a single click, even when they did not drag it
+  if (newSVG.creating && tool.type == 'text') {
+    newSVG.create(tool.type);
+    editSVG.update(tool.type);
+  }
   newSVG.creating = false; // Prevent the user from creating an element after they Click and then Mousemove
   select.area(cache.ele);
   
