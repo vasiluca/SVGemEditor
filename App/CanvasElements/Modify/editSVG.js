@@ -9,16 +9,35 @@ import { element } from './SVG.js'; // Includes simple key-object pair for each 
 
 var editSVG = {
 	update(type) {
-		if (pressed.shiftKey && !pressed.selectionArea) {
-			drag.end[1] = cache.start[1];
-			if (cache.stop[1] < cache.start[1]) {
-				drag.end[1] -= Math.abs(cache.stop[0] - cache.start[0]);
-			} else {
-				drag.end[1] += Math.abs(cache.stop[0] - cache.start[0]);
-			}
-		}
-		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
+		// Unless an element is dragged (pressed), calculate new size when resizing
+		if (!pressed.element) {
+			var xDiff = cache.stop[0] - cache.start[0];
+			var yDiff = cache.stop[1] - cache.start[1];
+			
 
+			if (pressed.shiftKey) {
+				if (cache.stop[1] < cache.start[1]) {
+					drag.end[1] = cache.start[1] - Math.abs(xDiff);
+				} else {
+					drag.end[1] = cache.start[1] + Math.abs(xDiff);
+				}
+				// re-calculate xDiff and yDiff to account for shifKey
+				xDiff = drag.end[0] - cache.start[0];
+				yDiff = drag.end[1] - cache.start[1];
+			}
+			
+			if (pressed.cmdKey) {
+				drag.start[0] = cache.start[0] - xDiff;
+				drag.start[1] = cache.start[1] - yDiff;
+			} else { // have to reset drag.start back to its original start position
+				drag.start[0] = cache.start[0];
+				drag.start[1] = cache.start[1];
+			}
+
+		}
+
+		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
+		
 		// after the element was created, we will also want to update certain attributes related to its property
 		if (type != 'text') { // Text should have no stroke border by default
 			attr['stroke-width'] = tool.strokeWidth;

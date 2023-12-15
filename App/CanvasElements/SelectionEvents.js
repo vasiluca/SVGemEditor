@@ -42,6 +42,7 @@ $('#editor, .selection').mousedown(function (e) {
 			select.area(cache.ele);
 			svg.storeAttr();
 			tool.stroke = cache.ele.attr('stroke');
+			tool.fill = cache.ele.attr('fill');
 			$('.layers #' + cache.svgID).addClass('selected');
 		}
 	}

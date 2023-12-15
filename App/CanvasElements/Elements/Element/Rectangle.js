@@ -14,10 +14,6 @@ class Rectangle extends Element {
 		var x = drag.start[0];
 		var y = drag.start[1];
 
-		if (pressed.shiftKey) {
-			height = width;
-		}
-
 		if (height <= 0) {
 			height = 0.1;
 		}
@@ -30,23 +26,6 @@ class Rectangle extends Element {
 		var heightDiff = drag.end[1] - drag.start[1];
 		widthDiff < 0 ? x = x - width : x = x;
 		heightDiff < 0 ? y = y - height : y = y;
-		
-		if (pressed.cmdKey) {
-			if (widthDiff > 0) {
-				x -= width;
-				width *= 2;
-			}
-			if (heightDiff > 0) {
-				y -= height;
-				height *= 2;
-			}
-			if (widthDiff < 0) {
-				width *= 2;
-			}
-			if (heightDiff < 0) {
-				height *= 2;
-			}
-		}
 
 		return {
 			'x': x,
