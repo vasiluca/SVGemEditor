@@ -40,7 +40,9 @@ var drag = {
 }
 
 var pressed = {
-	handle: false, // this refers to the blue handlebars that can resize a selected element
+	selectionArea: false, // This stores whether the user is mousing down on the selection area (i.e. for moving/dragging an element)
+	handle: false, // This refers to the blue handlebars that can resize a selected element
+
 	shiftKey: false,
 	ctrlKey: false,
 	altKey: false,

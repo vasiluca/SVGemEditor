@@ -53,4 +53,5 @@ $(document).mouseup(function() {
   cache.press = false;
   pressed.handle = false;
   pressed.element = false;
+  pressed.selectionArea = false;
 });

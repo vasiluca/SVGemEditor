@@ -119,6 +119,7 @@ var svg = {
 		this.newScale = scale;
 	},
 	previewMove: function () {
+		pressed.selectionArea = true;
 		var x1 = (this.initial.x - $('#editor').offset().left + this.initial.width / 2) / doc.zoom;
 		var y1 = (this.initial.y - $('#editor').offset().top + this.initial.height / 2) / doc.zoom;
 		var x2 = (cache.ele[0].getBoundingClientRect().left - $('#editor').offset().left + cache.ele[0].getBoundingClientRect().width / 2) / doc.zoom;
