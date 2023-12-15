@@ -11,8 +11,6 @@ import { layers } from "../Tab/Layer.js";
 
 $('#editor, .selection').mousedown(function (e) {
 	if (e.which == 1) {
-		cache.start = [e.clientX, e.clientY];
-		drag.start = [e.clientX, e.clientY];
 		if (!$(e.target).is('.selection *') && tool.type != 'selection') {
 			$('.selection').css('display', 'none');
 			cache.press = true;
