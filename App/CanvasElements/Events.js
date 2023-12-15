@@ -32,15 +32,18 @@ $(document).mousedown(function (e) {
 
 		newSVG.create(tool.type);
 	}
-	if (cache.press && tool.type != 'selection') {
-		editSVG.update(tool.type);
-	}
+	
+	if (cache.ele) {
+		if (cache.press && tool.type != 'selection') {
+			editSVG.update(tool.type);
+		}
 
-	if (pressed.handle) {
-		svg.resize();
-	}
-	if (pressed.element) {
-		svg.move();
+		if (pressed.handle) {
+			svg.resize();
+		}
+		if (pressed.element) {
+			svg.move();
+		}
 	}
 });
 

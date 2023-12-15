@@ -10,6 +10,7 @@ import { tool } from "../Tab/Tool.js";
 import { layers } from "../Tab/Layer.js";
 
 $('#editor, .selection').mousedown(function (e) {
+	cache.mapKeysTo = 'canvas';
 	if (e.which == 1) {
 		if (!$(e.target).is('.selection *') && tool.type != 'selection') {
 			$('.selection').css('display', 'none');
@@ -45,8 +46,8 @@ $('#editor, .selection').mousedown(function (e) {
 		}
 	}
 }).mouseup(function(e) {
-	if (pressed.handle) {
+
 		select.area(cache.ele);
 		layers.update();
-	}
+
 })

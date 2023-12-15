@@ -62,7 +62,7 @@ $(document).contextmenu(function (e) {
 
 	if (!$('.color input.user').is(':focus')) { // check that the user isn't actively typing in a color in the color tab
 		if ($('.svg-contain').hasClass('show')) {
-			if (cache.ele[0].tagName != 'text' || e.which == 9) { // Don't prevent key defaults when typing, BUT prevent the Tab Key from causing unwanted jumps in the page
+			if (cache.ele && cache.ele[0].tagName != 'text' || e.which == 9) { // Don't prevent key defaults when typing, BUT prevent the Tab Key from causing unwanted jumps in the page
 				e.preventDefault();
 			}
 		}
@@ -99,7 +99,10 @@ $(document).contextmenu(function (e) {
 				break;
 			case 8: // Backspace key (Windows) or Delete key (MacOS) pressed
 			case 46: // Delete key (Windows)
-				if (cache.ele && cache.ele[0].tagName != 'text') cache.ele.remove();
+				if (cache.mapKeysTo == 'canvas' && cache.ele && cache.ele[0].tagName != 'text') {
+					cache.ele.remove();
+					cache.svgID--;
+				}
 				layers.update();
 				$('.selection').css('display', 'none');
 				break;
