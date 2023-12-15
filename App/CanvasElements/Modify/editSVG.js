@@ -35,7 +35,10 @@ var editSVG = {
 			}
 
 		}
-
+		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
+		cache.ele.attr(attr);
+	},
+	attrDefaults(type) {
 		let attr = element[type].createAttr(); // this will set the proper attributes based on the element type being created
 		
 		// after the element was created, we will also want to update certain attributes related to its property
@@ -50,6 +53,7 @@ var editSVG = {
 		}
 
 		cache.ele.attr(attr);
+
 	}
     
 }

@@ -24,5 +24,5 @@ $(document).mouseup(function (e) {
 	if (pressed.spaceBar) {
 		ui.cursor('grab');
 	}
-	layers.update();
+	// layers.update(); // commented out this line for causing errors
 });

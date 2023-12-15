@@ -5,6 +5,7 @@ import { tool } from '../../Tab/Tool.js';
 
 import { test } from '../../Tests/Unit/createEle.test.js';
 import { element } from './SVG.js';
+import { editSVG } from './editSVG.js';
 
 var newSVG = {
 	// TODO: In the future will need to get the highest ID elements in an opened existing SVG to set numID to
@@ -24,11 +25,12 @@ var newSVG = {
 		$('#editor').html($('#editor').html() + '<' + type + ' id=' + id + '/>');
 		this.id = '#' + id;
 		cache.ele = id;
+		
+		editSVG.attrDefaults(type);
 
 		//** run the test on the specific type of element created, make sure attributes valid */
 		test[type]; 
 	}
-	
 }
 
 export { newSVG };
