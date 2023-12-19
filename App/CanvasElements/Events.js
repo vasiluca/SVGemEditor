@@ -54,9 +54,9 @@ $(document).mouseup(function () {
 			newSVG.create(tool.type);
 			editSVG.update(tool.type);
 		}
-		newSVG.creating = false; // Prevent the user from creating an element after they Click and then Mousemove
+		newSVG.creating = false; // Prevent the user from creating an element after they Click and finish Mousemove
 	}
-	select.area(cache.ele); // If no element is selected then no element will be selected
+	select.area(cache.ele); // will auto-hide Selection Area when no element is selected (cache.ele would be false)
 	
 	
 });

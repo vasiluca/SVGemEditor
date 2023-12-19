@@ -47,7 +47,7 @@ var tool = {
 	strokeOpacity: 1,
 	fillOpacity: 1,
 	paintOrder: 'fill',
-	fill: 'black',
+	fill: 'dimgrey',
 	presets: [],
 	strokeDashOffset: 0,
 	strokeDashArray: 0,

@@ -18,7 +18,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		select.area(cache.ele);
 	}
 }).on('mouseup', 'div', function (e) {
-	if (e.which == 1) {
+	if (e.which == 1) { // 1 for e.which Indicates a LEFT click, e.which 2 - not used here - indicates middle mousewheel click
 		if (layers.reorder) {
 			layers.drop($(this));
 		} else if (!layers.selecting) {
@@ -36,7 +36,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		}
 		$('.draggingLayer').remove();
 		$('.layers div').removeClass('drop-above drop-below drop-group');
-	} else if (e.which == 3) {
+	} else if (e.which == 3) { // 3 for e.which Indicates a right click
 		$(this).toggleClass('hidden');
 		if ($(this).css('display')) {
 			$(this).css('display', '');

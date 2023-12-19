@@ -6,7 +6,6 @@ import { deleteButton } from "./DeleteButton.js";
 
 $('[aria-label="delete"]').mousedown(function() {
     cache.btnAction = 'delete';
-    console.log("delete pressed");
 });
 
 $(document).mousemove(function(e) {

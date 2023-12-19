@@ -52,7 +52,7 @@ $('#editor, .selection').mousedown(function (e) {
 	}
 }).mouseup(function(e) {
 	if (!cache.ele && cache.press) {
-		select.area(false); console.log('area should be false');
+		select.area(false);
 	}
 	layers.update();
 	cache.press = false;
