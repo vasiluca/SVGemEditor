@@ -3,6 +3,7 @@ import { cache, drag, pressed } from "../Cache.js";
 
 import { ui } from "../UI.js";
 
+import { newSVG } from "./Modify/newSVG.js";
 import { svg } from "./Modify/SVG.js";
 import { select } from "./Selection.js";
 
@@ -11,10 +12,10 @@ import { layers } from "../Tab/Layer.js";
 
 $('#editor, .selection').mousedown(function (e) {
 	cache.mapKeysTo = 'canvas';
-	if (e.which == 1) {
+	if (e.which == 1) { // Check for LEFT click, since mousedown triggers when right clicking as wells
+		cache.press = true;
 		if (!$(e.target).is('.selection *') && tool.type != 'selection') {
 			$('.selection').css('display', 'none');
-			cache.press = true;
 		} else if ($(e.target).is('.selection *')) {
 			if (cache.ele) svg.storeAttr();
 			pressed.handle = $(e.target).attr('class');
@@ -22,8 +23,8 @@ $('#editor, .selection').mousedown(function (e) {
 			if (cache.ele) svg.storeAttr();
 			pressed.element = true;
 		} else {
-			cache.press = true;
-			select.area();
+			// select.area();
+			cache.svgID = -1;
 		}
 
 		if (tool.name == 'drag') {
@@ -38,16 +39,23 @@ $('#editor, .selection').mousedown(function (e) {
 	if (tool.type == 'selection') {
 		if ($(e.target).is('#editor *')) {
 			cache.ele = $(e.target).attr('id');
-			select.area(cache.ele);
+			// select.area(cache.ele);
 			svg.storeAttr();
 			tool.stroke = cache.ele.attr('stroke');
 			tool.fill = cache.ele.attr('fill');
 			$('.layers #' + cache.svgID).addClass('selected');
 		}
 	}
+}).mousemove(function() {
+	if (!cache.ele && cache.press) {
+		select.area();
+	}
 }).mouseup(function(e) {
-
-		select.area(cache.ele);
-		layers.update();
-
+	if (!cache.ele && cache.press) {
+		select.area(false); console.log('area should be false');
+	}
+	layers.update();
+	cache.press = false;
+	pressed.handle = false;
+	pressed.element = false;
 })

@@ -22,7 +22,6 @@ var TextContent = {
 $(document).on('mouseup',  function() {
 	if (cache.ele) {
 		var type = cache.ele[0].tagName; // [0] makes sure it can be accessed by jQuery, usually
-		console.log(type);
 		if (type == 'text') {
 			$('#GetText').val(cache.ele.html());
 			$('#GetText').focus();
@@ -33,7 +32,6 @@ $(document).on('mouseup',  function() {
 		$('#GetText').focus();
 	}
 }).on('mousemove', function() {
-	select.area(cache.ele);
 	if (tool.type == 'text') {
 		cache.mapKeysTo = 'text';
 	}

@@ -21,6 +21,8 @@ var cache = {
 
 		if (element.length > 0) // this will check that an element exists matching that ID when queried [with jQuery]
 			return element;
+
+		return false; // return False when no element matching ID was found
 	},
 	set hoverEle(val) {
 		this.hovering = val;
@@ -92,7 +94,7 @@ $(document).contextmenu(function (e) {
 			case 27: // Escape key is pressed
 				if (tool.type == 'selection') {
 					$('.selection').css('display', 'none');
-					//cache.ele = false;
+					cache.svgID = -1; // ID of -1 indicates no element selected, cache.ele = -1 does the same thing
 				} else {
 					tool.type = 'selection';
 				}
