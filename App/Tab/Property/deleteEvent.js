@@ -9,9 +9,9 @@ $('[aria-label="delete"]').mousedown(function() {
 });
 
 $(document).mousemove(function(e) {
-    if (cache.btnAction === 'delete') {
-        deleteButton.handleDelete();
-    }
+    // if (cache.btnAction === 'delete') {
+    //     deleteButton.handleDelete();
+    // }
 }).mouseup(function() {
     cache.btnAction = '';
 });

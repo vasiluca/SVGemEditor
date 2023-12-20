@@ -8,9 +8,9 @@ $('[aria-label="opacity"]').mousedown(function() {
 })
 
 $(document).mousemove(function(e) {
-	if (cache.btnAction == 'opacity') {
-		Opacityproperty.setOpacity();
-	}
+	// if (cache.btnAction == 'opacity') {
+	// 	Opacityproperty.setOpacity();
+	// }
 }).mouseup(function() {
 	cache.btnAction = '';
 })
