@@ -13,8 +13,8 @@ import { layers } from "../Tab/Layer.js";
 $('#editor, .selection').mousedown(function (e) {
 	cache.mapKeysTo = 'canvas';
 	if (e.which == 1) { // Check for LEFT click, since mousedown triggers when right clicking as wells
-		cache.press = true;
 		if (!$(e.target).is('.selection *') && tool.type != 'selection') {
+			cache.press = true;
 			$('.selection').css('display', 'none');
 		} else if ($(e.target).is('.selection *')) {
 			if (cache.ele) svg.storeAttr();
