@@ -4,6 +4,7 @@ import { doc } from "../../../SetUp.js";
 
 import { svg, element } from "../SVG.js";
 import { select } from "../../Selection.js";
+import { editSVG } from "../editSVG.js";
 
 var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	var selection = $('.selection')[0].getBoundingClientRect();
@@ -24,47 +25,68 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	var topY = initial.y;
 	var bottomY = initial.bottom;
 
+	// calculate the original width and height before changes
+	var width = rightX - leftX; 
+	var height = bottomY - topY;
+
+	var ratio = [1,1]; // this will store the ratio of the element for shift Key Press
+
+	var axis = '';
+
 	if (pressed.shiftKey) {
 		translateX *= ratioX;
 		translateY *= ratioY;
 	}
 
-	if (leftHandle) {
-		selectW = rightX - drag.end[0];
-		if (selectW <= 0) selectW = 0;
-
-		leftX = rightX - selectW;
-	}
 
 	if (rightHandle) {
-		selectW = drag.end[0] - leftX;
-		if (selectW <= 0) selectW = 0;
-
-		rightX = leftX + selectW;
+		rightX = drag.end[0];
+		axis += 'x';
 	}
-
-
-	if (topHandle) {
-		selectH = bottomY - drag.end[1];
-		if (selectH <= 0) selectH = 0;
-
-		topY = bottomY - selectH;
-	}
-
 	if (bottomHandle) {
-		selectH = drag.end[1] - topY;
-		if (selectH <= 0) selectH = 0;
-
-		bottomY = topY + selectH;
+		bottomY = drag.end[1];
+		axis += 'y';
 	}
 
-	drag.start[0] = leftX;
-	drag.end[0] = rightX;
 
-	drag.start[1] = topY;
-	drag.end[1] = bottomY;
+	if (leftHandle) {
+		leftX = drag.end[0];
+		axis += 'left';
+	}
+	if (topHandle) {
+		topY = drag.end[1];
+		axis += 'top';
+	}
 
-	if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
+	drag.start = [leftX, topY];
+	drag.end = [rightX, bottomY];
+
+
+	if (pressed.shiftKey || pressed.cmdKey) {
+		if (leftHandle) {
+			drag.end[0] = leftX;
+			drag.start[0] = rightX;
+		}
+		if (topHandle) {
+			drag.end[1] = topY;
+			drag.start[1] = bottomY;
+		}
+	}
+
+	if (pressed.shiftKey) {
+		ratio = [ratioX, ratioY];
+
+		if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
+			var slope = svg.line.y1/svg.line.y2; 
+			if (slope < 1) {
+				
+			} else {
+
+			}
+		}
+	}
+
+	if (type == 'line') {
 		if (svg.line.x1 > svg.line.x2) {
 			var temp = drag.start[0];
 			drag.start[0] = drag.end[0];
@@ -76,10 +98,22 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 			drag.end[1] = temp;
 		}
 	}
+	
+	cache.start = drag.start;
+	cache.stop = drag.end;
+	// need to re-center the cache.start to point to element center rather than top-left
+	if (pressed.cmdKey) {
+		if (axis.includes('x')) cache.start[0] += width / 2;
+		if (axis.includes('y')) cache.start[1] += height / 2;
+		if (axis.includes('left')) cache.start[0] -= width / 2;
+		if (axis.includes('top')) cache.start[1] -= height / 2;
+	}
 
-	var attr = element[type].createAttr();
 
-	cache.ele.attr(attr);
+	editSVG.update(type, axis, ratio);
+	// var attr = element[type].createAttr();
+
+	// cache.ele.attr(attr);
 	select.area(cache.ele);
 }
 

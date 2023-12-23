@@ -8,18 +8,22 @@ import { tool } from '../../Tab/Tool.js';
 import { element } from './SVG.js'; // Includes simple key-object pair for each element name
 
 var editSVG = {
-	update(type) {
+	update(type, axis, ratio) {
 		// Unless an element is dragged (pressed), calculate new size when resizing
 		if (!pressed.element) {
+			if (!ratio) ratio = [1,1]; // set equal ratio for element if none provided (for element creation)
+			if (!axis) axis = 'xy'; // assume element creation when no axis is provided
+
 			var xDiff = cache.stop[0] - cache.start[0];
 			var yDiff = cache.stop[1] - cache.start[1];
-			
 
 			if (pressed.shiftKey) {
 				if (cache.stop[1] < cache.start[1]) {
-					drag.end[1] = cache.start[1] - Math.abs(xDiff);
+					drag.end[1] = cache.start[1] - Math.abs(xDiff)*ratio[1];
+					// if (axis.includes('top')) drag.end[1] = cache.stop[1] - Math.abs(yDiff) * ratio[1];
 				} else {
-					drag.end[1] = cache.start[1] + Math.abs(xDiff);
+					drag.end[1] = cache.start[1] + Math.abs(xDiff)*ratio[1];
+					// if (axis.includes('top')) drag.end[1] = cache.stop[1] - Math.abs(yDiff) * ratio[1];
 				}
 				// re-calculate xDiff and yDiff to account for shifKey
 				xDiff = drag.end[0] - cache.start[0];
@@ -27,8 +31,12 @@ var editSVG = {
 			}
 			
 			if (pressed.cmdKey) {
-				drag.start[0] = cache.start[0] - xDiff;
-				drag.start[1] = cache.start[1] - yDiff;
+				if (axis.includes('x')) drag.start[0] = cache.start[0] - xDiff;
+				if (axis.includes('y')) drag.start[1] = cache.start[1] - yDiff;
+				if (axis.includes('left')) drag.start[0] = cache.start[0] - xDiff;
+				if (axis.includes('top')) drag.start[1] = cache.start[1] - yDiff;
+				// if (axis.includes('left')) drag.end[0] = cache.stop[0] + xDiff;
+				// if (axis.includes('top')) drag.end[1] = cache.stop[1] + yDiff;
 			} else { // have to reset drag.start back to its original start position
 				drag.start[0] = cache.start[0];
 				drag.start[1] = cache.start[1];
