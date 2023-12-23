@@ -12,6 +12,9 @@ import { layers } from "../Tab/Layer.js";
 
 $('#editor, .selection').mousedown(function (e) {
 	cache.mapKeysTo = 'canvas';
+	cache.mousedown = true;
+	
+	if (pressed.altKey) {cache.press = true;} // let the user create a new element copy above current while pressing resize handle
 	if (e.which == 1) { // Check for LEFT click, since mousedown triggers when right clicking as wells
 		if (!$(e.target).is('.selection *') && tool.type != 'selection') {
 			cache.press = true;
@@ -46,8 +49,10 @@ $('#editor, .selection').mousedown(function (e) {
 			$('.layers #' + cache.svgID).addClass('selected');
 		}
 	}
-}).mousemove(function() {
-	if (!cache.ele && cache.press) {
+})
+
+$(document).mousemove(function() {
+	if (!cache.ele && cache.mousedown) {
 		select.area();
 	}
 }).mouseup(function(e) {
@@ -55,6 +60,8 @@ $('#editor, .selection').mousedown(function (e) {
 		select.area(false);
 	}
 	layers.update();
+
+	cache.mousedown = false;
 	cache.press = false;
 	pressed.handle = false;
 	pressed.element = false;
