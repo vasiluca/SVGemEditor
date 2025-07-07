@@ -1,4 +1,5 @@
 import { cache, drag, pressed, svgAction } from '../Cache.js';
+import { doc } from '../SetUp.js';
 
 import { select } from './Selection.js';
 
@@ -15,10 +16,15 @@ import { layers } from '../Tab/Layer.js';
  * The UI is considered everything that does not have to do with the direct manipulation of the SVG
  * Document Canvas, but instead intends to reflect state or status changes to the user
  */
+//TODO: Move zooming function to Events.js file
+const editor = document.querySelector('#editor');
+$(document).on('wheel', function() {
+	cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y }; // getBoundingClientRect works on global viewport as opposed getBBox() which works with SVG container only
+})
 
 $(document).mousedown(function (e) {
-	cache.start = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
-	drag.start = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
+	cache.start = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+	drag.start = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
 
 	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
 		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
@@ -26,8 +32,8 @@ $(document).mousedown(function (e) {
 }).mousemove(function (e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
-	cache.stop = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
-	drag.end = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
+	cache.stop = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+	drag.end = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
 	cache.cursor = [e.clientX, e.clientY];
 
 	if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
@@ -59,10 +65,6 @@ $(document).mouseup(function () {
 			editSVG.update(tool.type);
 		}
 		newSVG.creating = false; // Prevent the user from creating an element after they Click and finish Mousemove
-	}
-	if (svgAction.created) {
-		layers.update();
-		svgAction.created = false;
 	}
 	
 	select.area(cache.ele); // will auto-hide Selection Area when no element is selected (cache.ele would be false)

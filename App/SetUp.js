@@ -91,19 +91,22 @@ $(document).on('wheel', function (e) {
 				}
 			}
 		}
-		var offsetTop = ($(window).height() / 2 - e.clientY) * doc.zoom;
-		var offsetLeft = ($(window).width() / 2 - e.clientX) * doc.zoom;
-		if (doc.zoom <= 1) {
-			offsetTop = ($(window).height() - doc.size[1] * doc.zoom) / 2;
-			offsetLeft = ($(window).width() - doc.size[0] * doc.zoom) / 2;
+		if (!cache.mousedown) {
+			var offsetTop = ($(window).height() / 2 - e.clientY) * doc.zoom;
+			var offsetLeft = ($(window).width() / 2 - e.clientX) * doc.zoom;
+			if (doc.zoom <= 1) {
+				offsetTop = ($(window).height() - doc.size[1] * doc.zoom) / 2;
+				offsetLeft = ($(window).width() - doc.size[0] * doc.zoom) / 2;
+			}
+			$('#editor').css({
+				'transform': 'scale(' + doc.zoom + ')',
+				'top': offsetTop,
+				'left': offsetLeft,
+				'transition': 'all 0s'
+				// 'transition': 'all 0.15s ease'
+			});
+			select.area(cache.ele);
 		}
-		$('#editor').css({
-			'transform': 'scale(' + doc.zoom + ')',
-			'top': offsetTop,
-			'left': offsetLeft,
-			'transition': '0s'
-		});
-		select.area(cache.ele);
 	}
 });
 

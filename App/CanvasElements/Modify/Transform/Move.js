@@ -9,9 +9,9 @@ import { editSVG } from "../editSVG.js";
 var move = function(initial, type) {
 	var translateX = cache.stop[0] - cache.start[0];
 	var translateY = cache.stop[1] - cache.start[1];
-	
-	translateX = translateX/initial.scale[0]/doc.zoom;
-	translateY = translateY/initial.scale[1]/doc.zoom;
+	// TODO: Have to address scaling transformations in the future (for resizing as well)
+	// translateX = translateX/initial.scale[0];
+	// translateY = translateY/initial.scale[1];
 
 	var transXabs = Math.abs(translateX);
 	var transYabs = Math.abs(translateY);
@@ -68,6 +68,9 @@ var move = function(initial, type) {
 
 	drag.start = [initial.x + translateX, initial.y + translateY];
 	drag.end = [initial.right + translateX, initial.bottom + translateY];
+	// The below drag approaches are only applicable if using getBoundingClientRect() - NOT recommended, as we have to counteract transformations, versus getBBox() which currently ignores them
+	// drag.start = [(initial.x + translateX * doc.zoom - cache.canvas.x) / doc.zoom, (initial.y + translateY * doc.zoom - cache.canvas.y) / doc.zoom];
+	// drag.end = [(initial.right + translateX * doc.zoom - cache.canvas.x) / doc.zoom, (initial.bottom + translateY * doc.zoom - cache.canvas.y) / doc.zoom];
 
 	if (type == 'line') { // for some shapes it does matter whether they are drawn left-top to right-bottom or left-bottom to right-top
 		if (svg.line.x1 > svg.line.x2) {

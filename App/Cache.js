@@ -9,6 +9,10 @@ import { tool } from './Tab/Tool.js';
 import { layers } from './Tab/Layer.js';
 
 var cache = { // 'canvas' refers to the #editor SVG container element
+	canvas: {
+		x: 0,
+		y: 0
+	},
 	cursor: [0, 0],
 	start: [],
 	stop: [],

@@ -104,13 +104,15 @@ var svg = {
 				}
 			}
 		}
+		const coord = [cache.ele[0].getBBox().x, cache.ele[0].getBBox().y];
+		const dimension = [cache.ele[0].getBBox().width, cache.ele[0].getBBox().height];
 		this.initial = { // Stores x, y, etc. values so that it can be accessed later to calculate transformations
-			x: cache.ele[0].getBoundingClientRect().left,
-			y: cache.ele[0].getBoundingClientRect().top,
-			width: cache.ele[0].getBoundingClientRect().width,
-			height: cache.ele[0].getBoundingClientRect().height,
-			right: cache.ele[0].getBoundingClientRect().right,
-			bottom: cache.ele[0].getBoundingClientRect().bottom,
+			x: coord[0],
+			y: coord[1],
+			width: dimension[0],
+			height: dimension[1],
+			right: coord[0] + dimension[0],
+			bottom: coord[1] + dimension[1],
 			scale: scale,
 			rotate: rotate,
 			preScaleH: Math.abs(cache.origSelectArea.height - cache.origSelectArea.height / scale[1]),
@@ -119,11 +121,14 @@ var svg = {
 		this.newScale = scale;
 	},
 	previewMove: function () {
-		var x1 = (this.initial.x - $('#editor').offset().left + this.initial.width / 2) / doc.zoom;
-		var y1 = (this.initial.y - $('#editor').offset().top + this.initial.height / 2) / doc.zoom;
-		var x2 = (cache.ele[0].getBoundingClientRect().left - $('#editor').offset().left + cache.ele[0].getBoundingClientRect().width / 2) / doc.zoom;
-		var y2 = (cache.ele[0].getBoundingClientRect().top - $('#editor').offset().top + cache.ele[0].getBoundingClientRect().height / 2) / doc.zoom;
+		var x1 = this.initial.x + this.initial.width/2;
+		var y1 = this.initial.y + this.initial.height/2;
+		var x2 = cache.ele[0].getBBox().x + cache.ele[0].getBBox().width/2;
+		var y2 = cache.ele[0].getBBox().y + cache.ele[0].getBBox().height/2;
 		if (pressed.cmdKey || pressed.shiftKey) {
+			var viewportX = cache.origSelectArea.x + cache.origSelectArea.width / 2;
+			var viewportY = cache.origSelectArea.y + cache.origSelectArea.height / 2;
+
 			if (!$('.draggingPreview').length) {
 				$('#editor').html($('#editor').html() + '<line class="draggingPreview" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="rgba(255,255,255,0.75)" stroke-width="' + (3 / doc.zoom) + '"></line>');
 				$('#editor').html($('#editor').html() + '<line class="draggingPreview2" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="orange" stroke-width="' + (1 / doc.zoom) + '"></line>');
@@ -141,18 +146,18 @@ var svg = {
 				var left = $('.draggingPreview2')[0].getBoundingClientRect().left + $('.draggingPreview2')[0].getBoundingClientRect().width / 2;
 				var top = $('.draggingPreview2')[0].getBoundingClientRect().top + $('.draggingPreview2')[0].getBoundingClientRect().height / 2;
 				$('.numberPreview').text(distance);
-				if (distance < 50 / (doc.zoom)) {
+				if (distance < 50 / doc.zoom) {
 					if (y1 < y2) {
-						top = y1 - 10 / doc.zoom;
+						top = viewportY - 15;
 					}
 					if (y1 > y2) {
-						top = y1 + 10 / doc.zoom;
+						top = viewportY + 15;
 					}
 					if (x1 < x2) {
-						left = x1 - 15 / doc.zoom;
+						left = viewportX - 20;
 					}
 					if (x1 > x2) {
-						left = x1 + 15 / doc.zoom;
+						left = viewportX + 20;
 					}
 				}
 				$('.numberPreview').css({
