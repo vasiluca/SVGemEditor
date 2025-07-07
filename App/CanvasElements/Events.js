@@ -1,4 +1,4 @@
-import { cache, drag, pressed } from '../Cache.js';
+import { cache, drag, pressed, svgAction } from '../Cache.js';
 
 import { select } from './Selection.js';
 
@@ -8,6 +8,8 @@ import { newSVG } from './Modify/newSVG.js';
 
 import { tool } from '../Tab/Tool.js';
 
+import { layers } from '../Tab/Layer.js';
+
 //** The idea is to separate out the user events, and UI state changes, from the rest of the code  */
 /**
  * The UI is considered everything that does not have to do with the direct manipulation of the SVG
@@ -15,8 +17,8 @@ import { tool } from '../Tab/Tool.js';
  */
 
 $(document).mousedown(function (e) {
-	cache.start = [e.clientX, e.clientY];
-	drag.start = [e.clientX, e.clientY];
+	cache.start = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
+	drag.start = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
 
 	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
 		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
@@ -24,11 +26,13 @@ $(document).mousedown(function (e) {
 }).mousemove(function (e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
-	cache.stop = [e.clientX, e.clientY];
-	drag.end = [e.clientX, e.clientY];
+	cache.stop = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
+	drag.end = [e.clientX - $('#editor').offset().left, e.clientY - $('#editor').offset().top];
+	cache.cursor = [e.clientX, e.clientY];
 
 	if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
 		newSVG.creating = false;
+		svgAction.created = true;
 
 		newSVG.create(tool.type);
 	}
@@ -56,6 +60,11 @@ $(document).mouseup(function () {
 		}
 		newSVG.creating = false; // Prevent the user from creating an element after they Click and finish Mousemove
 	}
+	if (svgAction.created) {
+		layers.update();
+		svgAction.created = false;
+	}
+	
 	select.area(cache.ele); // will auto-hide Selection Area when no element is selected (cache.ele would be false)
 	
 	

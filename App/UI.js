@@ -208,18 +208,18 @@ var ui = {
 			$('.category .material-icons').removeClass('validDrop');
 		}, 500);
 	},
-	showDropArea: function (layer) {
-		if (cache.stop[1] < layer.offset().top + 12) {
+	showDropArea: function (layer, e) {
+		if (cache.cursor[1] < layer.offset().top + 12) {
 			$('.layers div').removeClass('drop-below drop-group');
 			if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
 				layer.addClass('drop-above');
 			}
-		} else if (cache.stop[1] > layer.offset().top + layer.outerHeight() - 12) {
+		} else if (cache.cursor[1] > layer.offset().top + layer.outerHeight() - 12) {
 			$('.layers div').removeClass('drop-above drop-group');
 			if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
 				layer.addClass('drop-below');
 			}
-		} else if (cache.stop[1] >= layer.offset().top + 12 && cache.stop[1] <= layer.offset().top + layer.outerHeight() - 12) {
+		} else if (cache.cursor[1] >= layer.offset().top + 12 && cache.cursor[1] <= layer.offset().top + layer.outerHeight() - 12) {
 			$('.layers div').removeClass('drop-above drop-below');
 			layer.addClass('drop-group');
 		} else {
@@ -229,16 +229,16 @@ var ui = {
 			layers.current.clone().appendTo('.tools').addClass('draggingLayer');
 		} else {
 			$('.draggingLayer').css({
-				'left': cache.stop[0] - layer.outerWidth() / 2
+				'left': cache.cursor[0] - layer.outerWidth() / 2
 			});
 
 			if ($('.draggingLayer').hasClass('layerAboveCursor')) {
 				$('.draggingLayer').css({
-					'top': cache.stop[1] - layer.outerHeight()
+					'top': cache.cursor[1] - layer.outerHeight()
 				});
 			} else {
 				$('.draggingLayer').css({
-					'top': cache.stop[1]
+					'top': cache.cursor[1]
 				})
 			}
 		}

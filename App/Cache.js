@@ -8,7 +8,8 @@ import { tool } from './Tab/Tool.js';
 
 import { layers } from './Tab/Layer.js';
 
-var cache = {
+var cache = { // 'canvas' refers to the #editor SVG container element
+	cursor: [0, 0],
 	start: [],
 	stop: [],
 	press: false,
@@ -50,6 +51,10 @@ var pressed = {
 	altKey: false,
 	cmdKey: false,
 	tabKey: false
+}
+
+var svgAction = {
+	created: false
 }
 
 $(window).blur(function () { // this ensures that when the user switches windows, all keypress states are reset
@@ -151,4 +156,4 @@ $(document).contextmenu(function (e) {
 	}
 })
 
-export { cache, drag, pressed };
+export { cache, drag, pressed, svgAction };

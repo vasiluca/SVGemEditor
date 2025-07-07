@@ -1,13 +1,18 @@
 
-import { cache } from "./Cache.js";
+import { cache, drag } from "./Cache.js";
 import { tabStates } from "./Tabs.js";
 import { util } from "./Tabs.js";
 
+let tabPos = [0,0];
+let mouseStart = [0,0];
+
 $(document).mousemove(function (e) {
+	const xDiff = e.clientX - mouseStart[0];
+	const yDiff = e.clientY - mouseStart[1];
 	if (cache.dragTab == true) {
 		tabStates.focused.css({
-			'left': e.clientX - cache.start[0],
-			'top': e.clientY - cache.start[1],
+			'left': tabPos[0] + xDiff,
+			'top': tabPos[1] + yDiff,
 			'bottom': 'auto',
 			'right': 'auto'
 		});
@@ -15,9 +20,10 @@ $(document).mousemove(function (e) {
 });
 
 $('.draggable').mousedown(function (e) {
+	mouseStart = [e.clientX, e.clientY];
 	if ($(e.target).is('.drag, .drag *') && e.which == 1) {
 		cache.dragTab = true;
-		cache.start = [e.clientX - $(this).offset().left, e.clientY - $(this).offset().top];
+		tabPos = [$(this).offset().left, $(this).offset().top];
 	}
 	else if ($(e.target).is('.drag, .drag *') && e.which == 3) {
 		$(this).attr('data-resetPos', true);
