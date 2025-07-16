@@ -13,10 +13,23 @@ $(document).mouseup(function(e) {
 		layers.selectedLayer = false;
 	}
 
-	if ($(e.target).is('#editor *') && !svgAction.created) {
-		if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
-		document.querySelector('.layers .all > div#' + CSS.escape(cache.svgID)).classList.add('selected');
+	if (cache.mapKeysTo == 'canvas') {
+		if (svgAction.created) {
+			layers.update();
+			svgAction.created = false;
+		} else {
+			if ($(e.target).is('#editor *')) {
+				if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
+				console.log(cache.svgID);
+				let selectLayer = document.querySelector('.layers .all > div#' + CSS.escape(cache.svgID));
+				if (cache.svgID && selectLayer)
+					selectLayer.classList.add('selected');
+			} else if ($(e.target).is('#editor')) {
+				$('.layers .selected').removeClass('selected');
+			}
+		}
 	}
+	
 	
 	layers.reorder = false;
 	layers.pressed = false;

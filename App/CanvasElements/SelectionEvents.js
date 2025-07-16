@@ -44,6 +44,13 @@ $('#editor, .selection').mousedown(function (e) {
 	if (tool.type == 'selection') {
 		if ($(e.target).is('#editor *')) {
 			cache.ele = $(e.target).attr('id');
+			// create an ID for the selected element if none exists:
+			// TODO: Consider avoiding automatic ID creation for imported elements when possible to reduce SVG clutter
+			if (!cache.ele) {
+				newSVG.numID += 1;
+				cache.ele = newSVG.numID;
+				$(e.target).attr('id', newSVG.numID);
+			};
 			// select.area(cache.ele);
 			svg.storeAttr();
 			tool.stroke = cache.ele.attr('stroke');

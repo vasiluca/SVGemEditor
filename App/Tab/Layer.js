@@ -1,6 +1,7 @@
 /** This contains all functions pertaining to the Layers Tab */
 
 import { cache } from '../Cache.js';
+import { newSVG } from '../CanvasElements/Modify/newSVG.js';
 
 import { colors } from './Color.js';
 
@@ -24,9 +25,14 @@ var layers = {
 			}
 			var fillColor, strokeColor, stroke, target;
 			if (data.id) { // Always check that an ID exists (also - previewMove() is appending to the original SVG canvas to show the moving being locked by shift or CMD key)
+				let idNum = Number.parseInt(data.id); idNum = Number.isNaN(idNum) ? -1 : idNum;
+				if (idNum >= newSVG.numID) {
+					newSVG.numID = idNum+1; // This ensures that imported files have proper element numbering
+				}
+
 				if (data.type == 'circle' || data.type == 'ellipse' || data.type == 'rect' ||
 					data.type == 'line' || data.type == 'path' || data.type == 'polygon' || data.type == 'g') {
-					var ele = $('#' + data.id);
+					var ele = $('#editor #' + data.id);
 					var stroke = ele.attr('stroke-width');
 					stroke = stroke ? Number.parseFloat(stroke) : 0;
 					var width = ele[0].getBBox().width + stroke / 2 * 2;
@@ -83,6 +89,9 @@ var layers = {
 		// console.log(cache.svgID);
 		// console.log($('.layers .all div#' + cache.svgID).outerHTML);
 		// $('.layers .all div#' + cache.svgID).addClass('selected');
+		if ($('.draggable.layers')[0].getBoundingClientRect().height > $(document).height() - 100) {
+			$('.draggable.layers .all').css('max-height', $(document).height() - 100);
+		}
 	},
 
 	deleteSelected: function () {

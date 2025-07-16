@@ -222,6 +222,7 @@ var tabStates = {
 	},
 	tabsPos: [], // Saved tab positions for later use (when resetting tab positions)
 	setTabs: function (action /*Parameter should be "set", "all", or $(this)*/) {
+		let maxOffset = [];
 		var that = this;
 		if (action == 'set') {
 			$('.draggable').each(function () {
@@ -229,11 +230,19 @@ var tabStates = {
 			})
 		} else if (action == 'all') { // reset ALL tab positions to default
 			$.each(that.tabsPos, function (index, value) {
-				$('.draggable').eq(index).css({ 'left': value[0], 'top': value[1] });
+				maxOffset[0] = $(window).width() - $('.draggable').eq(index).width() - 10;
+				maxOffset[1] = $(window).height() - $('.draggable').eq(index).height() - 10;
+				const left = Math.min(value[0], maxOffset[0]);
+				const top = Math.min(value[1], maxOffset[1])
+				$('.draggable').eq(index).css({ 'left': left, 'top': top });
 			});
 		} else {
 			var index = action.index('.draggable');
-			$('.draggable').eq(index).css({ 'left': this.tabsPos[index][0], 'top': this.tabsPos[index][1] });
+			maxOffset[0] = $(window).width() - $('.draggable').eq(index).width() - 10;
+			maxOffset[1] = $(window).height() - $('.draggable').eq(index).height() - 10;
+			const left = Math.min(this.tabsPos[index][0], maxOffset[0]);
+			const top = Math.min(this.tabsPos[index][1], maxOffset[1])
+			$('.draggable').eq(index).css({ 'left': left, 'top':  top });
 		}
 	},
 	adjustContents: function () {
@@ -243,14 +252,22 @@ var tabStates = {
 		var height = this.focused.height();
 		var width = this.focused.width();
 		var box = this.focused;
+		let resizeMargin = 0;
 		if (tab) {
 			height = tab.height();
 			width = tab.width();
 			box = tab;
-			$('.draggable').css('transition', 'all 0s');
+			console.log(width);
+			$('.draggable').css({
+				'transition': 'all 0s'
+			});
+			resizeMargin = 30;
 		} else {
 			$('.draggable').css('transition', '');
 		}
+		let minOffset = [], maxOffset = [];
+		const index = box.index('.draggable');
+
 		var winH = $(window).height();
 		var winW = $(window).width();
 		if (cache.dragTab == true || tab) {
@@ -283,12 +300,18 @@ var tabStates = {
 				}
 			}
 
-			if (box.offset().top < 20) {
+			if (box.offset().top < 20 + resizeMargin) {
 				if (box.hasClass('verti')) {
 					box.children('.drag').remove();
 					box.append('<span class="material-icons drag">drag_handle</span>');
 				}
 				if (-20 < box.offset().top) {
+					if (!tab) {
+						minOffset[1] = 10;
+						this.tabsPos[index][1] = minOffset[1]; // reset the default position for snap to window
+
+						this.tabsPos[index][0] = Math.max(10, box.offset().left); // set the custom x-value if greater than 10
+					}
 					box.css('top', 10);
 				}
 				if (box.offset().top < 20 - height) {
@@ -311,18 +334,28 @@ var tabStates = {
 			} else {
 				box.removeClass('orientHorizontal');
 			}
-			if (box.offset().left + width > winW - 20) {
+			if (box.offset().left + width > winW - 20 - resizeMargin) {
+				
+				
+
 				if (box.hasClass('horiz')) {
 					box.children('.drag').remove();
 					box.prepend('<span class="material-icons drag">drag_handle</span>');
 				}
 				if (box.offset().left + width < winW + 20) {
+					if (!tab) {
+						maxOffset[0] = $(window).width() - $('.draggable').eq(index).width() - 10;
+						this.tabsPos[index][0] = maxOffset[0]; // reset the default position for snap to window
+
+						if (!minOffset[1]) this.tabsPos[index][1] = box.offset().top;
+					}
 					box.css({
 						'left': winW - 10 - width
 					});
 				}
 			}
-			if (box.offset().left < 20) {
+			if (box.offset().left < 20 + resizeMargin) {
+
 				if (box.hasClass('horiz')) {
 					box.children('.drag').remove();
 					if (box.hasClass('color')) {
@@ -332,6 +365,12 @@ var tabStates = {
 					}
 				}
 				if (box.offset().left > -20) {
+					if (!tab) {
+						minOffset[0] = 10;
+						this.tabsPos[index][0] = minOffset[0]; // reset the default position for snap to window
+
+						if (!minOffset[1]) this.tabsPos[index][1] = box.offset().top;
+					}
 					box.css({
 						'left': 10
 					});
@@ -356,18 +395,68 @@ var tabStates = {
 			} else {
 				box.removeClass('orientVertical');
 			}
-			if (box.offset().top + height > winH - 20) {
+			if (box.offset().top + height > winH - 20 - resizeMargin) {
+				
+				
+
 				if (box.hasClass('verti')) {
 					box.children('.drag').remove();
 					box.prepend('<span class="material-icons drag">drag_handle</span>');
 				}
 				if (box.offset().top + height < winH + 20) {
+					if (!tab) {
+						maxOffset[1] = $(window).height() - $('.draggable').eq(index).height() - 10;
+						this.tabsPos[index][1] = maxOffset[1]; // reset the default position for snap to window
+
+						if (!maxOffset[0] && !minOffset[0]) this.tabsPos[index][0] = box.offset().left;
+					}
+
 					box.css({
 						'top': winH - height - 10
 					});
 				}
 				box.addClass('orientHorizontal');
 			}
+
+			let margin = 80;
+			let scroll = 'scroll';
+			if (box.is('.color, .layers')) {
+				if (box.is('.color')) {
+					this.color.height = box.height();
+					margin = 20;
+				}
+				
+				
+				if (box.is('.layers')) {
+					box = $('.layers .all');
+					margin = 40;
+				} else
+					scroll = '';
+			}
+
+			if (box.height() > $(document).height() - margin) {
+				box.css({
+					'max-height': $(document).height() - margin,
+					'overflow-y': scroll
+				})
+			} else if (box.height() < $(document).height() - margin - 50) {
+				box.css({
+					'max-height': '',
+					'overflow-y': ''
+				})
+			}
+			if (box.width() > $(document).width() - margin) {
+				box.css({
+					'max-width': $(document).width() - margin,
+					'overflow-x': scroll
+				})
+			} else if (box.width() < $(document).width() - margin - 50) {
+				box.css({
+					'max-width': '',
+					'overflow-x': ''
+				})
+			}
+			
 			cache.dragTab = false;
 		}
 		if (cache.dragTab == 'resetTools' && $(e.target).is('.drag')) {
@@ -376,11 +465,34 @@ var tabStates = {
 				'left': 10
 			});
 			$('.color').css({
-				'top': $(document).height() - $('.color').height() - 10,
+				'top': $(document).height() - this.height - 50,
 				'left': 10
 			});
 			cache.dragTab = false;
 		}
+		if (tab) {
+			box.css({
+				'right': 'auto',
+				'bottom': 'auto'
+			})
+		}
+		// if (box.hasClass('verti')) {
+		// 	if (box.children('.drag').offset().top < 20) {
+		// 		box.children('.drag').remove();
+		// 		box.append('<span class="material-icons drag">drag_handle</span>');
+		// 	} else if (box.children('.drag').offset().top > winH - 20) {
+		// 		box.children('.drag').remove();
+		// 		box.prepend('<span class="material-icons drag">drag_handle</span>');
+		// 	}
+		// } else if (box.hasClass('horiz')) {
+		// 	if (box.children('.drag').offset().left < 20) {
+		// 		box.children('.drag').remove();
+		// 		box.append('<span class="material-icons drag">drag_handle</span>');
+		// 	} else if (box.children('.drag').offset().left > winW - 20) {
+		// 		box.children('.drag').remove();
+		// 		box.prepend('<span class="material-icons drag">drag_handle</span>');
+		// 	}
+		// }
 	},
 	adjustAllPos: function () {
 		$.each(this.index, function (index, value) {

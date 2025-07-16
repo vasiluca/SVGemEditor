@@ -22,7 +22,7 @@ var cache = { // 'canvas' refers to the #editor SVG container element
 		this.svgID = val;
 	},
 	get ele() {
-		var element = $('#editor #' + this.svgID);
+		var element = $('#editor #' + CSS.escape(this.svgID));
 
 		if (element.length > 0) // this will check that an element exists matching that ID when queried [with jQuery]
 			return element;

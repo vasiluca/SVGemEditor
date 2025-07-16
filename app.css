@@ -308,7 +308,8 @@ input#file-selector {
     position: absolute;
     z-index: 50;
     background-color: white;
-    opacity: 0.8
+    opacity: 0.8;
+    pointer-events: none;
 }
 
 .tools.hide {
@@ -335,7 +336,7 @@ input#file-selector {
     box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.4);
     background: white;
     white-space: nowrap;
-    transition: all 0.25s ease
+    transition: all 0.25s ease;
 }
 
 .tools .draggable .drag {
@@ -1244,13 +1245,16 @@ input#file-selector {
 }
 
 .tools .draggable.actions [aria-label='more']:active~.expand {
-    transition: all 0.15s ease
+    transition: all 0.15s ease;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -ms-transition: all 0.15s ease;
 }
 
 .tools .draggable.layers {
     top: 10px;
     right: 10px;
-    width: 50px
+    width: 50px;
 }
 
 .tools .draggable.layers::after {
@@ -1262,12 +1266,13 @@ input#file-selector {
     display: block;
     font-size: 18px;
     font-family: 'Open Sans Condensed', sans-serif;
-    z-index: -1
+    z-index: -1;
 }
 
 .tools .draggable.layers .all {
     min-height: 150px;
-    overflow: hidden
+    overflow-y: scroll;
+    max-height: inherit;
 }
 
 .tools .draggable.layers .all div {

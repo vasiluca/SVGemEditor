@@ -42,6 +42,8 @@ $('.properties div').click(function () {
 		$(this).addClass('fill');
 	}
 }).mousedown(function () {
+	cache.mapKeysTo = 'property';
+
 	cache.swipe = true;
 	property.scrubberTo = $(this);
 	cache.btnArea = {

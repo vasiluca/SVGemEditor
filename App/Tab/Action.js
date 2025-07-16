@@ -1,5 +1,5 @@
 /** This contains all functions pertaining to the Actions Tab */
-
+import { cache } from '../Cache.js';
 import { layers } from './Layer.js';
 
 $('.actions div').click(function(e) {
@@ -22,4 +22,6 @@ $('.actions div').click(function(e) {
 		layers.moveBack(true);
 		break;
 	}
+}).mousedown(function() {
+	cache.mapKeysTo = 'action';
 });

@@ -24,10 +24,31 @@ $('.draggable').mousedown(function (e) {
 	if ($(e.target).is('.drag, .drag *') && e.which == 1) {
 		cache.dragTab = true;
 		tabPos = [$(this).offset().left, $(this).offset().top];
-	}
-	else if ($(e.target).is('.drag, .drag *') && e.which == 3) {
+	} else if ($(e.target).is('.drag, .drag *') && e.which == 3) {
 		$(this).attr('data-resetPos', true);
 	}
+	// This adjusts the drag handle for cases when the window is resized
+	if (!$(this).is('.color')) {
+		let box = $(this);
+		if (box.hasClass('verti')) {
+			if (box.children('.drag').offset().top < 20) {
+				box.children('.drag').remove();
+				box.append('<span class="material-icons drag">drag_handle</span>');
+			} else if (box.children('.drag').offset().top > $(window).height() - 20) {
+				box.children('.drag').remove();
+				box.prepend('<span class="material-icons drag">drag_handle</span>');
+			}
+		} else if (box.hasClass('horiz')) {
+			if (box.children('.drag').offset().left < 20) {
+				box.children('.drag').remove();
+				box.append('<span class="material-icons drag">drag_handle</span>');
+			} else if (box.children('.drag').offset().left > $(window).width() - 20) {
+				box.children('.drag').remove();
+				box.prepend('<span class="material-icons drag">drag_handle</span>');
+			}
+		}
+	}
+	
 	tabStates.indexUp($(this));
 }).mouseup(function (e) {
 	if ($(this).attr('data-resetPos') == 'true' && $(e.target).is('.drag, .drag *')) {
