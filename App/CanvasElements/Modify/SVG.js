@@ -14,6 +14,8 @@ import { Circle } from '../Elements/Element/Circle.js';
 import { Ellipse } from '../Elements/Element/Ellipse.js';
 import { Rectangle } from '../Elements/Element/Rectangle.js';
 import { Text } from '../Elements/Element/Text.js';
+import { Group } from '../Elements/Element/Group.js';
+import { Path } from '../Elements/Element/Path.js';
 
 import { resize } from './Transform/Resize.js';
 import { move } from './Transform/Move.js';
@@ -29,7 +31,9 @@ var element = {
 	circle: Circle,
 	ellipse: Ellipse,
 	rect: Rectangle,
-	text: Text
+	text: Text,
+	g: Group,
+	path: Path
 }
 
 var translateX = 0;
@@ -55,6 +59,7 @@ var svg = {
 			height: $('.selection')[0].getBoundingClientRect().height
 		}
 		this.type = cache.ele[0].outerHTML.split(' ')[0].replace('<', '');
+		if (!this.type) return;
 		switch (this.type) { // Stores element-specific data for later manipulation
 			case 'line':
 				this.line = {
@@ -86,6 +91,8 @@ var svg = {
 					cy: parseFloat(cache.ele.attr('cy')),
 					r: parseFloat(cache.ele.attr('rx'))
 				}
+				break;
+			case 'g':
 				break;
 		}
 
