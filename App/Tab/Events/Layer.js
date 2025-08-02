@@ -1,4 +1,5 @@
 import { cache, pressed, svgAction } from "../../Cache.js";
+import { newSVG } from "../../CanvasElements/Modify/newSVG.js";
 import { select } from "../../CanvasElements/Selection.js";
 
 import { ui } from "../../UI.js";
@@ -34,12 +35,52 @@ $(document).mouseup(function(e) {
 	layers.reorder = false;
 	layers.pressed = false;
 	$('.draggingLayer').remove();
+	$('.layers .all').css('cursor', '');
 });
+
+// expects this as argument
+function ensureID(self) { // create an identifier for the canvas element if one does not correspond to the layers tab
+	if (!$(self).attr('id')) {
+		$(self).attr('id', newSVG.numID);
+
+		const parent = self.parentElement;
+		let index = $(parent).children().length - 1 - $(self).index();
+		// const numChildren = ;
+
+		let found;
+		if ($(parent).is('section')) {
+			const groupID = '[data-svgem="' + parent.getAttribute('id') + '"]';
+			// console.log(groupID);
+			// console.log($('#editor').find(groupID));
+			found = $('#editor').find(groupID).children().eq(index);
+			// console.log(found);
+		} else {
+			found = $('#editor').children().eq(index);
+			const children = found.children();
+			if (found[0].tagName.toLowerCase === 'g' && children.length === 1) {
+				found = children.eq(0);
+			}
+			console.log('not section');
+		}
+		found.attr('id', newSVG.numID);
+		// cache.ele = newSVG.numID;
+
+		select.area();
+
+		newSVG.numID += 1;
+	}
+	
+}
 
 $('.layers .all').on('mouseenter', 'div', function (e) {
 	/*cache.ele = $(e.target).attr('id');
 	select.area(true);*/
 }).on('mousedown', 'div', function (e) {
+	e.stopPropagation();
+	cache.mapKeysTo = 'layers';
+
+	ensureID(this);
+
 	if (e.which == 1) { // Right Click
 		cache.start = [e.clientX, e.clientY];
 		layers.pressed = true;
@@ -47,28 +88,46 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		layers.current = $(this);
 		cache.ele = $(this).attr('id');
 
+		const children = $(this).find('svg > g').eq(0);
+		const child = children.find('g > *');
+		if (child.children().length === 1)  {
+			child.eq(0)
+
+			cache.ele = child.attr('id');
+		}
+
 		select.area(cache.ele);
 	}
 }).on('mouseup', 'div', function (e) {
+	e.stopPropagation(); // this is here to prevent the parent group from getting triggered when the event bubbles up in the hierarhcy
 	if (e.which == 1) { // 1 for e.which Indicates a LEFT click, e.which 2 - not used here - indicates middle mousewheel click
+		let target = this;
+		
 		if (layers.pressed && !pressed.cmdKey) {
 			if (layers.reorder) {
-				layers.drop($(this));
+				ensureID(this); // ensure the mouse-up element has an ID
+				
+				// if ($(e.target).is('.group > section > div')) {
+				// 	target = this.parentElement.parentElement;
+				// 	console.log(target);
+				// }
+				layers.drop($(target));
+				$('.layers .all').css('cursor', '');
 			} else if (layers.selectedLayer && !layers.multiSelect) {
 				
-				var selected = $(this).hasClass('selected');
+				var selected = $(target).hasClass('selected');
 				if (!pressed.shiftKey) $('.layers .all div').removeClass('selected');
 				// if (pressed.shiftKey) {
 					if (selected && pressed.shiftKey) {
-						$(this).removeClass('selected');
+						$(target).removeClass('selected');
 					} else {
-						$(this).addClass('selected');
+						$(target).addClass('selected');
 					}
 				// }
 					// $('.layers div').removeClass('selected');
 					
 			} else {
-				$(this).addClass('selected');
+				$(target).addClass('selected');
 			}
 
 			$('.draggingLayer').remove();
@@ -78,7 +137,6 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		if (!layers.multiSelect && !pressed.shiftKey) {
 			// layers.selectedLayer = false;
 		}
-
 	} else if (e.which == 3) { // 3 for e.which Indicates a right click
 		$(this).toggleClass('hidden');
 		if (pressed.shiftKey) {
@@ -110,7 +168,10 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 	layers.reorder = false;
 
 	layers.pressed = false;
-}).on('mouseleave', 'div', function () {
+	layers.multiSelect = false;
+	layers.selectedLayer = false;
+}).on('mouseleave', 'div', function (e) {
+	// e.stopPropagation();
 	if (layers.pressed) {
 		if (layers.reorder) {
 			$('.layers div').removeClass('drop-above drop-below drop-group');
@@ -125,23 +186,30 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		}
 	}
 	
-}).on('mouseenter', 'div', function () {
+}).on('mouseenter', 'div', function (e) {
+	e.stopPropagation();
 	if (layers.pressed) {
 		if (layers.multiSelect) {
 			$(this).addClass('selected');
 		} else if (!pressed.shiftKey) {
 			layers.reorder = true;
-			ui.showDropArea($(this));
+			// ui.showDropArea($(this), e);
 		}
 	}
 	
-}).on('mousemove', 'div', function () {
+}).on('mousemove', 'div', function (e) {
+	// console.log(cache.cursor);
+	e.stopPropagation();
+	cache.cursor = [e.clientX, e.clientY]; // compensate for the bubbling being prevented to the document
 	if (layers.reorder) {
-		ui.showDropArea($(this));
+		// e.stopPropagation();
+		ui.showDropArea($(this), e);
 	}
 }).mouseleave(function () {
 	if (!layers.reorder) {
 		layers.pressed = false;
 	}
 	
+}).on('scroll', function(e) {
+	layers.scroll = this.scrollTop;
 })

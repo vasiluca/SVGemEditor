@@ -305,11 +305,16 @@ input#file-selector {
 
 .tools .draggingLayer {
     transform: scale(0.6);
-    position: absolute;
+    position: fixed;
     z-index: 50;
     background-color: white;
     opacity: 0.8;
     pointer-events: none;
+    height: 50px; /* This prevents scale trasnformation offsetting multi-layers */
+    overflow: visible;
+}
+.tools .draggingLayer * {
+    background-color: rgba(255,255,255,1);
 }
 
 .tools.hide {
@@ -1277,6 +1282,7 @@ input#file-selector {
 
 .tools .draggable.layers .all div {
     position: relative;
+    /* z-index: 50; */
     height: 50px;
     width: 50px;
     background-color: white;
@@ -1284,7 +1290,112 @@ input#file-selector {
     line-height: 50px
 }
 
-.tools .draggable.layers .all div.hidden::before {
+.tools .draggable.layers .all div.group {
+    position: relative;
+    height: auto;
+    text-align: center;
+    line-height: initial;
+    /* box-shadow: 0 0 0 1px #fff inset, 0 0 0 2px white inset, 0 0 0 3px blue inset, 0 0 0 4px white inset; */
+    z-index: 75;
+    padding: 12px 0;
+}
+
+.tools .draggable.layers .all div.group::before {
+    /* ::after is already used to show the drop areas. */
+    content: '';
+    position: absolute;
+    z-index: 85;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    display: block;
+    /* box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px #fff inset; */
+    box-shadow: 0 0 0 1px blue inset, 0 0 0 2px #fff inset;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.tools .draggable.layers .all div.group:hover::before {
+    /* ::after is already used to show the drop areas. */
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    box-shadow: 0 0 0 1px #fff inset, 0 0 0 3px blue inset, 0 0 0 3px white inset;
+    pointer-events: none;
+    opacity: 1;
+
+}
+
+.tools .draggable.layers .all div.group div.group::before {
+    /* this applies to nested group elements */
+    /* ::after is already used to show the drop areas. */
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    box-shadow: 0 0 0 1px blue inset, 0 0 0 2px blue inset;
+    /* box-shadow: 0 0 0 0px blue inset, 0 0 0 1px blue inset, 0 0 0 2px white inset; */
+    pointer-events: none;
+}
+
+.tools .draggable.layers .all div.group:hover div.group::before {
+    /* this applies to nested group elements */
+    /* ::after is already used to show the drop areas. */
+    box-shadow: 0 0 0 1px blue inset, 0 0 0 2px blue inset;
+    pointer-events: none;
+}
+
+
+.tools .draggable.layers .all div.selected.group::before {
+    /* ::after is already used to show the drop areas. */
+    right: 1px;
+    left: 1px;
+    top: 1px;
+    bottom: 1px;
+    box-shadow: 0 0 0 1px #fff inset, 0 0 0 2px blue inset;
+    /* display: none; */
+}
+
+.tools .draggable.layers .all div.group div {
+    background-color: rgba(255, 255, 255, 0)
+}
+
+.tools .draggable.layers .all div.group div:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.tools .draggable.layers .all div.group section {
+    background-color: rgba(255, 255, 255, 0);
+
+}
+
+.tools .draggable.layers .all div.group section:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.tools .draggable.layers .all div.group.selected section:hover {
+    background-color: transparent;
+}
+
+.tools .draggable.layers .all div.group section:hover>div {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.tools .draggable.layers .all div.group.selected section:hover>div {
+    /* background-color: rgba(255, 255, 255, 0.75); */
+    /* box-shadow: 0 0 0 10px black; */
+    /* background-image: linear-gradient(to right, transparent 3px, rgba(0, 0, 0, 0.25) 3px, rgba(0, 0, 0, 0.25) 47px, transparent 50px); */
+}
+
+.tools .draggable.layers .all div.group section:hover div:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.tools .draggable.layers .all div.hidden::after {
+    /* was ::before, changed because before is used to outline the layer group */
+    /* Was ::before*/
     content: 'visibility_off';
     font-family: 'Material Icons';
     display: block;
@@ -1293,13 +1404,33 @@ input#file-selector {
     right: 0;
     font-size: 20px;
     color: black;
-    height: 50px;
-    width: 50px;
+    /* height: 50px; */
+    /* width: 50px; */
+    top: 0;
+    left: 0;
     text-align: right;
     line-height: 80px;
     background-image: linear-gradient(to top left, rgba(255, 255, 255, 0.75) 25%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0.25) 100%);
-    z-index: 2;
+    z-index: 75;
     text-shadow: 0 0 1px white
+}
+
+.tools .draggable.layers .all div.selected.hidden::after {
+    /* was ::before */
+    bottom: 5px;
+    right: 5px;
+    /* height: 40px; */
+    /* width: 40px; */
+    left: 5px;
+    top: 5px;
+    /* padding-right: -5px; */
+    line-height: 70px
+}
+
+/* Reset for the drop area to show up properly */
+.tools .draggable.layers .all div[class*="drop-"]::after {
+    background-image: none;
+    /* left: auto; right: auto; bottom: auto; top: auto; */
 }
 
 .tools .draggable.layers .all div:hover {
@@ -1308,7 +1439,8 @@ input#file-selector {
 
 .tools .draggable.layers .all div.drop-above,
 .tools .draggable.layers .all div.drop-below {
-    z-index: 4
+    z-index: 85;
+    /* Ensure that the drop indicator shows up in front of all other div elements including div.hidden z-index: 75 */
 }
 
 .tools .draggable.layers .all div.drop-above::after,
@@ -1320,7 +1452,7 @@ input#file-selector {
     height: 14px;
     background-color: rgba(100, 149, 237, 0.6);
     box-shadow: 0 0 0 1px #fff inset, 0 0 0 2px blue inset, 0 0 0 3px #fff inset;
-    z-index: 4
+    z-index: 85;
 }
 
 @keyframes darken-color-drop {
@@ -1337,12 +1469,16 @@ input#file-selector {
     }
 }
 
-.tools .draggable.layers .all div.drop-above::after {
-    top: -7px
+html body .tools .draggable.layers .all div.drop-above::after {
+    top: -7px !important;
+    bottom: initial !important;
+    pointer-events: none;
 }
 
-.tools .draggable.layers .all div.drop-below::after {
-    bottom: -7px
+html body .tools .draggable.layers .all div.drop-below::after {
+    top: initial !important;
+    bottom: -7px !important;
+    pointer-events: none;
 }
 
 .tools .draggable.layers .all div.drop-group::after {
@@ -1356,7 +1492,13 @@ input#file-selector {
     background-color: rgba(100, 149, 237, 0.6);
     box-shadow: 0 0 0 1px white inset, 0 0 0 2px blue inset, 0 0 0 3px #fff inset;
     border-radius: 4px;
-    animation: fade-in 0.3s ease
+    animation: fade-in 0.3s ease;
+    pointer-events: none;
+}
+
+.tools .draggable.layers .all div.group.drop-above::after,
+.tools .draggable.layers .all div.group.drop-below::after {
+    background-color: rgba(0, 0, 255, 0.85) !important;
 }
 
 @keyframes fade-in {
@@ -1385,21 +1527,15 @@ input#file-selector {
     top: 9px;
     right: 9px;
     bottom: 9px;
-    left: 9px
+    left: 9px;
 }
 
 .tools .draggable.layers .all div.selected.drop-below::after,
 .tools .draggable.layers .all div.selected.drop-above::after {
-    background-color: rgba(0, 0, 255, 0.6)
-}
-
-.tools .draggable.layers .all div.selected.hidden::before {
-    bottom: 5px;
-    right: 5px;
-    height: 40px;
-    width: 40px;
-    padding-right: -5px;
-    line-height: 70px
+    background-color: rgba(0, 0, 255, 0.6);
+    /* The below ensures the drop indicator shows up properly for elements which are both selected and hidden simultanesouly (we must override .hidden::after)*/
+    left: 0;
+    right: 0;
 }
 
 .tools .draggable.actions [aria-label='more']:hover~.expand,

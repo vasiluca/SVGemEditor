@@ -209,16 +209,35 @@ var ui = {
 		}, 500);
 	},
 	showDropArea: function (layer, e) {
+
+		if (layers.current.has(layer).length) { // Do not allow a group to be moved into itself
+			$('.layers .all').css('cursor', 'no-drop');
+			return;
+		} else {
+			$('.layers .all').css('cursor', 'grabbing');
+		}
+		
+		if (layer.is(layers.current)) { // do not allow an element to group itself
+			$('.draggingLayer').remove();
+			$('.layers .all').css('cursor', 'move');
+			return;
+		} 
+		// else if (layer.is('.group > section > div')) { // (This code was necessary when e.stopPropagation() was not used)
+		// 	if (layer.parent().parent().attr('id') === layers.current.attr('id')) {
+		// 		return; // prevent the layers.current group being dragged from being added in on itself
+		// 	}
+		// }
+		// console.log('showDropArea');
 		if (cache.cursor[1] < layer.offset().top + 12) {
 			$('.layers div').removeClass('drop-below drop-group');
-			if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
+			// if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
 				layer.addClass('drop-above');
-			}
+			// }
 		} else if (cache.cursor[1] > layer.offset().top + layer.outerHeight() - 12) {
 			$('.layers div').removeClass('drop-above drop-group');
-			if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
+			// if (!($('.layers .selected').length >= 1 && layers.current.hasClass('selected') && layer.hasClass('selected'))) {
 				layer.addClass('drop-below');
-			}
+			// }
 		} else if (cache.cursor[1] >= layer.offset().top + 12 && cache.cursor[1] <= layer.offset().top + layer.outerHeight() - 12) {
 			$('.layers div').removeClass('drop-above drop-below');
 			layer.addClass('drop-group');
@@ -229,12 +248,12 @@ var ui = {
 			layers.current.clone().appendTo('.tools').addClass('draggingLayer');
 		} else {
 			$('.draggingLayer').css({
-				'left': cache.cursor[0] - layer.outerWidth() / 2
+				'left': cache.cursor[0] - layer.outerWidth()
 			});
 
 			if ($('.draggingLayer').hasClass('layerAboveCursor')) {
 				$('.draggingLayer').css({
-					'top': cache.cursor[1] - layer.outerHeight()
+					'top': cache.cursor[1]
 				});
 			} else {
 				$('.draggingLayer').css({

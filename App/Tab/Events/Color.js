@@ -103,7 +103,20 @@ $('.color input.user').keyup(function (e) {
 //
 //  }
 //});
+
+
 $('.swatches').on('click', 'span', function () {
+	function ensureChild(property, color) {
+		if (cache.ele[0].tagName.toLowerCase() === 'g') {
+			const children = cache.ele.children();
+			if (children.length === 1) {
+				const child = children.eq(0);
+				child.attr(property, color);
+				// if (child.css(property.colorTo))
+				// 	child.css(property.colorTo, '');
+			}
+		}
+	}
 	if (!$(this).hasClass('empty-space') && cache.ele) {
 		var color = $(this).css('backgroundColor');
 		$('.col').css({
@@ -113,7 +126,10 @@ $('.swatches').on('click', 'span', function () {
 		$('.color input.user').val($(this).attr('data-color').toUpperCase());
 		if (property.colorTo != 'gradient') { // Check that the color is not a gradient, if it is don't change icon color
 			tool[property.colorTo] = color;
+
 			cache.ele.attr(property.colorTo, color);
+			ensureChild(property.colorTo, color);
+
 			if (cache.ele.css(property.colorTo)) {
 				cache.ele.css(property.colorTo, '');
 			}
