@@ -12,6 +12,9 @@ import { layers } from "../Tab/Layer.js";
 
 // TODO: Include canvas support for multiple element selections
 
+let editorPos;
+let mouseStart;
+let windowPress;
 $('#editor, .selection').mousedown(function (e) {
 	cache.mapKeysTo = 'canvas';
 	cache.mousedown = true;
@@ -27,9 +30,9 @@ $('#editor, .selection').mousedown(function (e) {
 		} else if ($(e.target).is('.selection')) {
 			if (cache.ele) svg.storeAttr();
 			pressed.element = true;
-		} else {
+		} else if (tool.name === 'selection') {
 			// select.area();
-			cache.svgID = -1;
+			cache.ele = -1;
 		}
 
 		if (tool.name == 'drag') {
@@ -37,11 +40,11 @@ $('#editor, .selection').mousedown(function (e) {
 		}
 	}
 
-	if (tool.type == 'selection' && !$(e.target).is('.selection, .selection *')) {
+	if (tool.type === 'selection' && !$(e.target).is('.selection, .selection *')) {
 		$('.selection').css('display', 'none');
 	}
 
-	if (tool.type == 'selection') {
+	if (tool.name === 'selection') {
 		if ($(e.target).is('#editor *')) {
 			cache.ele = $(e.target).attr('id');
 			// create an ID for the selected element if none exists:
@@ -60,10 +63,32 @@ $('#editor, .selection').mousedown(function (e) {
 	}
 })
 
-$(document).mousemove(function() {
-	if (!cache.ele && cache.mousedown) {
-		select.area();
+$(document).mousemove(function(e) {
+	if (tool.name === 'drag' && windowPress) {
+		// reset the checks used for element dragging and resizing, to prevent them after space up
+		pressed.element = false;
+		pressed.handle = false;
+		// cache.press = false; // prevent de-selection of currently selected elements
+
+		// we cannot actually use cache.canvas.x/y because it is specifically for the SVG elements being drawn  
+		$('svg#editor').css({
+			'transition': 'all 0s ease',        
+			'left': editorPos[0] + (e.clientX - mouseStart[0]),
+			'top': editorPos[1] + (e.clientY - mouseStart[1])
+
+		})
 	}
+	if (!pressed.spaceBar) {
+		mouseStart = [e.clientX, e.clientY]; // this will update starting mouse position until the moment the user pressed the spacebar to drag
+	}
+	// if (!cache.ele && cache.mousedown) {
+	// 	select.area();
+	// }
+}).mousedown(function(e) {
+	windowPress = true;
+
+	editorPos = [Number.parseFloat($('#editor').css('left')), Number.parseFloat($('#editor').css('top'))]; 
+	mouseStart = [e.clientX, e.clientY];
 }).mouseup(function(e) {
 	if (e.which == 1) { // on LEFT click only
 		if (!cache.ele && cache.press) {
@@ -77,8 +102,10 @@ $(document).mousemove(function() {
 		pressed.handle = false;
 	}
 
+	windowPress = false;
+	
 	cache.mousedown = false;
 	cache.press = false;
 	pressed.element = false;
-	// $('.layers #' + cache.svgID).addClass('selected');
+	// $('.layers .all #' + cache.svgID).addClass('selected');
 })

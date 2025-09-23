@@ -5,6 +5,7 @@ import { select } from "../../CanvasElements/Selection.js";
 import { ui } from "../../UI.js";
 
 import { layers } from "../Layer.js";
+import { tool } from "../Tool.js";
 
 $(document).mouseup(function(e) {
 	if (e.which == 1) {
@@ -21,11 +22,11 @@ $(document).mouseup(function(e) {
 		} else {
 			if ($(e.target).is('#editor *')) {
 				if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
-				console.log(cache.svgID);
+				// console.log(cache.svgID);
 				let selectLayer = document.querySelector('.layers .all > div#' + CSS.escape(cache.svgID));
 				if (cache.svgID && selectLayer)
 					selectLayer.classList.add('selected');
-			} else if ($(e.target).is('#editor')) {
+			} else if (tool.name === 'selection' && $(e.target).is('#editor')) {
 				$('.layers .selected').removeClass('selected');
 			}
 		}

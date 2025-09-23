@@ -16,6 +16,7 @@ import { layers } from '../Tab/Layer.js';
  * The UI is considered everything that does not have to do with the direct manipulation of the SVG
  * Document Canvas, but instead intends to reflect state or status changes to the user
  */
+
 //TODO: Move zooming function to Events.js file
 const editor = document.querySelector('#editor');
 $(document).on('wheel', function() {
@@ -23,8 +24,12 @@ $(document).on('wheel', function() {
 })
 
 $(document).mousedown(function (e) {
-	cache.start = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
-	drag.start = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+	cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y }; // this helps ensure that after zooming the canvas coordinates are updated appropriately
+
+	const viewBox = cache.viewBox;
+	const viewScale = cache.viewScale;
+	cache.start = [(e.clientX - cache.canvas.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - cache.canvas.y) / viewScale[1] / doc.zoom + viewBox[1]];
+	drag.start = [(e.clientX - cache.canvas.x) /viewScale[0] / doc.zoom + viewBox[0], (e.clientY - cache.canvas.y) / viewScale[1] / doc.zoom + viewBox[1]];
 
 	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
 		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
@@ -32,8 +37,10 @@ $(document).mousedown(function (e) {
 }).mousemove(function (e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
-	cache.stop = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
-	drag.end = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+	const viewBox = cache.viewBox;
+	const viewScale = cache.viewScale;
+	cache.stop = [(e.clientX - cache.canvas.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - cache.canvas.y) / viewScale[1] / doc.zoom + viewBox[1]];
+	drag.end = [(e.clientX - cache.canvas.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - cache.canvas.y) / viewScale[1] / doc.zoom + viewBox[1]];
 	cache.cursor = [e.clientX, e.clientY];
 
 	if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
@@ -48,11 +55,13 @@ $(document).mousedown(function (e) {
 			editSVG.update(tool.type);
 		}
 
-		if (pressed.handle) {
-			svg.resize();
-		}
-		if (pressed.element) {
-			svg.move();
+		if (tool.name !== 'drag') {
+			if (pressed.handle) {
+				svg.resize();
+			}
+			if (pressed.element) {
+				svg.move();
+			}
 		}
 	}
 });

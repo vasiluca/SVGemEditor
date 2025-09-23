@@ -7,12 +7,15 @@
 import { tool } from './Tab/Tool.js';
 
 import { layers } from './Tab/Layer.js';
+import { select } from './CanvasElements/Selection.js';
 
 var cache = { // 'canvas' refers to the #editor SVG container element
 	canvas: {
 		x: 0,
 		y: 0
 	},
+	viewBox: [0, 0, 0, 0],
+	viewScale: [1, 1],
 	cursor: [0, 0],
 	start: [],
 	stop: [],
@@ -67,6 +70,7 @@ $(window).blur(function () { // this ensures that when the user switches windows
 	}
 });
 
+let prevTool;
 $(document).contextmenu(function (e) {
 	e.preventDefault();
 }).keydown(function (e) {
@@ -91,7 +95,8 @@ $(document).contextmenu(function (e) {
 				pressed.altKey = true;
 				break;
 			case 32: // Spacebar is pressed
-				if (cache.ele[0].tagName != 'text') { // if text is being edited, don't trigger spaceBar
+				if (!(cache.ele && cache.ele[0].tagName == 'text')) { // if text is being edited, don't trigger spaceBar
+					prevTool = "" + tool.type;
 					tool.type = 'drag';
 					pressed.spaceBar = true;
 				}
@@ -148,7 +153,10 @@ $(document).contextmenu(function (e) {
 			break;
 		case 32: // Spacebar is lifted
 			pressed.spaceBar = false;
-			tool.type = 'selection';
+			tool.type = prevTool;
+			select.area(cache.ele);
+			$('svg#editor').css('transition', 'all 0.15s ease');
+
 			break;
 		case 91: // Command key is lifted on mac
 		case 93:

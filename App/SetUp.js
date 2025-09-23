@@ -1,5 +1,5 @@
 // This includes all the canvas [document] set up settings
-import { cache } from './Cache.js';
+import { cache, pressed } from './Cache.js';
 
 import { select } from './CanvasElements/Selection.js';
 
@@ -24,6 +24,7 @@ $('.splash .settings').click(function () {
 
 var doc = {
 	size: [800, 800],
+	origPos: [0, 0],
 	viewBox: function () {
 		$('#editor').attr({
 			'viewBox': '0 0 ' + this.size[0] + ' ' + this.size[1],
@@ -73,40 +74,122 @@ $(window).resize(function () { // When
 	tabStates.adjustAllPos();
 });
 
+let timeout = false;
+let interval;
+let prevZoom = 1;
+let dim = [0, 0];
+let prevPos = [0, 0];
+const editor = document.querySelector('#editor');
+let origin;
+const zoomSpeed = 0.05;
+const maxZoom = 20;
+
+
 $(document).on('wheel', function (e) {
+	
+	cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
+	dim = [editor.getBoundingClientRect().width, editor.getBoundingClientRect().height];
+
+	// let origin = [doc.size[0] / 2, doc.size[1] / 2]; // by default the origin is at the center, until we scale up the canvas
 	if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
 		if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
-			if (doc.zoom > 1 || doc.size[0] * doc.zoom > $(window).width() || doc.size[1] * doc.zoom > $(window).height()) {
-				doc.zoom -= 0.25;
+			if (doc.zoom >= 0 || doc.size[0] * doc.zoom > $(window).width() || doc.size[1] * doc.zoom > $(window).height()) {
+				if (doc.zoom <= 1) {
+					doc.zoom -= zoomSpeed;
+				} else
+					doc.zoom -= 0.25;
+
+				if (pressed.cmdKey) {
+					doc.zoom -= zoomSpeed * 5;
+				}
+
 				if (doc.zoom > 10) {
 					doc.zoom -= 0.5;
 				}
+
+				prevZoom = doc.zoom;
 			}
 		}
 		if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
-			if (doc.zoom < 20) {
-				doc.zoom += 0.25;
-				if (doc.zoom < 10) {
-					doc.zoom += 0.5;
+			// we will only change the origin when zooming in, because otherwise it becomes disorienting
+
+			if (doc.zoom < maxZoom) {
+				// doc.zoom += zoomSpeed * (maxZoom / (maxZoom-doc.zoom));
+				doc.zoom += zoomSpeed;
+				if (pressed.cmdKey) {
+					doc.zoom += zoomSpeed*5;
 				}
+				// if (doc.zoom < 10) {
+				// 	doc.zoom += 0.5;
+				// }
 			}
+			if (prevZoom < 1 && doc.zoom > 1) {
+				doc.zoom = 1;
+				prevZoom = 1;
+			}
+
+			if (prevZoom < doc.zoom) { // we will only update the origin once we've zoomed out before zooming in again
+				origin = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+				// origin = [e.clientX - doc.origPos[0], e.clientY - doc.origPos[1]];
+			}
+			
+
 		}
+		// the left and top CSS properties are always applied after transformations
 		if (!cache.mousedown) {
-			var offsetTop = ($(window).height() / 2 - e.clientY) * doc.zoom;
-			var offsetLeft = ($(window).width() / 2 - e.clientX) * doc.zoom;
+			var offsetTop = ($(window).height() / 2 - (e.clientY - doc.origPos[1]));
+			var offsetLeft = ($(window).width() / 2 - (e.clientX - doc.origPos[0]));
+			// var offsetTop = ($(window).height() / 2 - (e.clientY - cache.canvas.y)/doc.zoom);
+			// var offsetLeft = ($(window).width() / 2 - (e.clientX - cache.canvas.x)/doc.zoom);
+
 			if (doc.zoom <= 1) {
-				offsetTop = ($(window).height() - doc.size[1] * doc.zoom) / 2;
-				offsetLeft = ($(window).width() - doc.size[0] * doc.zoom) / 2;
+				offsetTop = ($(window).height() / 2 - doc.size[1]/2);
+				offsetLeft = ($(window).width() / 2 - doc.size[0]/2);
+				origin = [doc.size[0] / 2, doc.size[1] / 2];
 			}
+
+			if (origin[0] < 0)
+				origin[0] = 0;
+			if (origin[1] < 0) 
+				origin[1] = 0;
+
+			if (origin[0] > doc.size[0])
+				origin[0] = doc.size[0]
+			if (origin[1] > doc.size[1])
+				origin[1] = doc.size[1]
+
+			if (doc.zoom < 0)
+				doc.zoom = 0;
+
+			// we need to include transform-origin, because while 50% 50% (center) is default, a (scaled) viewBox attribute will impact the origin
+			// transform-origin is established relative to the viewBox coordinate system once it is established
 			$('#editor').css({
 				'transform': 'scale(' + doc.zoom + ')',
 				'top': offsetTop,
 				'left': offsetLeft,
-				'transition': 'all 0s'
-				// 'transition': 'all 0.15s ease'
+				// 'transform-box': 'border-box', // transform-box makes transform-origin relative to the element's own parent bounding box (rather than internal coordinate viewBox for children elements)
+				'transform-origin': origin[0] + 'px ' + origin[1] + 'px',
+				// 'transition': 'all 0s ease'
 			});
 			select.area(cache.ele);
 		}
+		
+		if (!timeout) {
+			timeout = true;
+
+			interval = setInterval(function () {
+				select.area(cache.ele);
+				// cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
+			}, 160);
+
+			setTimeout(function() {
+				clearInterval(interval);
+				select.area(cache.ele);
+				timeout = false;
+			}, 500)
+		}
+		
+		
 	}
 });
 
