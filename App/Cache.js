@@ -95,7 +95,7 @@ $(document).contextmenu(function (e) {
 				pressed.altKey = true;
 				break;
 			case 32: // Spacebar is pressed
-				if (!(cache.ele && cache.ele[0].tagName == 'text')) { // if text is being edited, don't trigger spaceBar
+				if (cache.mapKeysTo !== 'color' && !(cache.ele && cache.ele[0].tagName == 'text')) { // if text is being edited, don't trigger spaceBar
 					prevTool = "" + tool.type;
 					tool.type = 'drag';
 					pressed.spaceBar = true;

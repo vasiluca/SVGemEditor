@@ -40,6 +40,7 @@ function checkID(id) {
 
 function prop(el, name) { // will check the rendered property of an element
 	// console.log(this);
+	if (!el[0]) return;
 	let val = window.getComputedStyle(el[0]).getPropertyValue(name);
 	if (!val || val === 'rgba(0, 0, 0, 0)' || val === 'transparent') {
 		return '';
@@ -90,7 +91,7 @@ var layers = {
 		}
 			
 		
-		colors.picker = [];
+		if (!child) colors.picker = []; // we will only reset the picker stored colors if all the layers are looped through again starting from the top
 		for (var i = element.children().length-1; i >= 0; i--) { // This loops through all of the SVG layers and renders them in the layers tab
 			// TODO: Add a check for display: none, in which case the display property will be removed and replaced with a 'visibility: hidden' property
 			var data = {
@@ -123,7 +124,7 @@ var layers = {
 				
 
 				if (data.type == 'circle' || data.type == 'ellipse' || data.type == 'rect' ||
-					data.type == 'line' || data.type == 'path' || data.type == 'polygon' || data.type == 'g') {
+					data.type == 'line' || data.type == 'path' || data.type == 'polygon' || data.type == 'g' || data.type == 'text') {
 					let div;
 					// if (!(data.type == 'g' && ele.children().length === 1 && ele.children().eq(0).children().length === 0)) { // avoid including a single element twice
 						
@@ -207,8 +208,10 @@ var layers = {
 						transY = childTrans[1];
 					}
 
-					strokeColor ? colors.push('picker', strokeColor) : null;
-					fillColor ? colors.push('picker', fillColor) : null;
+					fillColor = window.getComputedStyle(ele[0]).getPropertyValue('fill').replace(/\s*,\s*/g, ',');
+					strokeColor = window.getComputedStyle(ele[0]).getPropertyValue('stroke').replace(/\s*,\s*/g, ',');
+					CSS.supports('background', strokeColor) ? colors.push('picker', strokeColor) : null;
+					CSS.supports('background', fillColor) ? colors.push('picker', fillColor) : null;
 
 					$(preview).attr({
 						// 'transform': (parentTrans ? parentTrans : '') + ' translate(' + transX + ',' + transY + ')'

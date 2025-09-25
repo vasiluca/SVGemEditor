@@ -22,10 +22,11 @@ var colors = { // This object contains data for the color draggable component
 	},
 	animating: false,
 	updateRows: function () {
-		this.rows = $('.swatches').hasClass('smallColors') ? $('.swatches span').length / this.columns / 2 - (this.columns - 1) : $('.swatches span').length / this.columns - (this.columns - 1);
+		const rows = $('.swatches').hasClass('smallColors') ? $('.swatches span').length / this.columns / 2 - (this.columns - 1) : $('.swatches span').length / this.columns - (this.columns - 1);
+		this.rows = Math.round(rows) + 1;
 	},
 	action: function (action, ele, force) {
-		if (!ele.hasClass('empty-space')) {
+		if (!ele || !ele.hasClass('empty-space')) {
 			var color = ele.attr('data-color');
 			var colNum = $('.swatches span').index(ele);
 			var location;
@@ -48,9 +49,12 @@ var colors = { // This object contains data for the color draggable component
 					this.animate(ele, 'palette');
 				}
 			} else {
-				if (action == 'save') {
-					this.push('recent', color);
+				if (!CSS.supports('background', color)) {
+					color = window.getComputedStyle(ele[0]).getPropertyValue('background-color');
+					
 				}
+				color = color.replace(/\s*,\s*/g, ',');
+				
 				this.push(location, color);
 				this.animate(ele, location);
 			}
@@ -73,6 +77,8 @@ var colors = { // This object contains data for the color draggable component
 					if (scrolled < -this.rows) {
 						scrolled += -scrolled - this.rows;
 					}
+					if (scrolled > 0)
+						scrolled = 0;
 				} else if (dir == 'shiftSpace') {
 					scrolled += 6;
 					if (scrolled > 0) {
@@ -126,13 +132,21 @@ var colors = { // This object contains data for the color draggable component
 		if (!array) {
 			array = this.tab;
 		}
+		console.log('array', array);
 		this.searching = false;
-		this.updateRows();
+		
 		$('.swatches').html('');
+		console.log(this[array]);
 		for (var i = 0; i < this[array].length; i++) {
 			this.append(this[array][i]);
 		}
-		$('.swatches').css('margin-top', this.scrolled[array] * 32);
+		this.updateRows();
+		
+		let scrollAmt = this.scrolled[array] ? this.scrolled[array] : 0;
+		// if (scrollAmt*32 <= $('.swatches').height() - 32) {
+		// 	this.scrolled[array] = 0;
+		// }
+		$('.swatches').css('margin-top', scrollAmt * 32);
 		this.tab = array;
 		$('.infoPanel .tabName').html(this.tab.toUpperCase());
 	},
@@ -147,13 +161,14 @@ var colors = { // This object contains data for the color draggable component
 	},
 	cached: [],
 	search: function (color) {
-		this.scrolled[this.tab] = 0;
-		color = color.toUpperCase().trim().split(',');
+		color = color.toUpperCase().trim().replace(/\s*,\s*/g, ',').split(/[, ]/g);
+		
 		this.searching = true;
 		$('.infoPanel').removeClass('show');
 		$('.swatches').html('');
 		for (var i = 0; i < this[this.tab].length; i++) {
 			for (var j = 0; j < color.length; j++) {
+				if (color.length > 1 && color[j].trim() === '') continue;
 				if (this[this.tab][i].indexOf(color[j]) !== -1) {
 					this.append(this[this.tab][i]);
 				}
@@ -172,6 +187,11 @@ var colors = { // This object contains data for the color draggable component
 			this.draw();
 			tool[property.colorTo] = color;
 		}
+		
+		if (color[0] === '') // reset scroll position to previous when search field is cleared
+			$('.swatches').css('margin-top', this.scrolled[this.tab] * 32);
+		else
+			$('.swatches').css('margin-top', 0);
 	},
 	categories: $('.colorCat'),
 	schemes: $('.schemes'),

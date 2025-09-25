@@ -119,6 +119,7 @@ $('.swatches').on('click', 'span', function () {
 	}
 	if (!$(this).hasClass('empty-space') && cache.ele) {
 		var color = $(this).css('backgroundColor');
+		color = color.replace(/\s*,\s*/g, ',');
 		$('.col').css({
 			'background-color': color,
 			'color': color
@@ -143,6 +144,11 @@ $('.swatches').on('click', 'span', function () {
 		$('.swatches span').removeClass('selectionCursor');
 		$(this).addClass('selectionCursor');
 		tabStates.color.selectSwatch();
+
+		let fillColor = window.getComputedStyle(cache.ele[0]).getPropertyValue('fill').replace(/\s*,\s*/g, ',');
+		let strokeColor = window.getComputedStyle(cache.ele[0]).getPropertyValue('stroke').replace(/\s*,\s*/g, ',');
+		CSS.supports('background', strokeColor) ? colors.push('picker', strokeColor) : null;
+		CSS.supports('background', fillColor) ? colors.push('picker', fillColor) : null;
 	}
 	//cache.ele.attr()
 }).on('contextmenu', 'span', function (e) {
@@ -166,7 +172,7 @@ $('.swatches').on('click', 'span', function () {
 	if (!$(this).hasClass('empty-space')) {
 		cache.start = [$(this).offset().left, $(this).offset().top];
 		var name = $(this).attr('data-color'); // attr returns the actual exact value stored in an attribute
-		var rgb = $(this).css('backgroundColor'); // getting the background color using CSS automatically returns an RGB value whether or not it was specified that way in the attribute
+		var rgb = $(this).css('backgroundColor').replace(/\s*,\s*/g, ','); // getting the background color using CSS automatically returns an RGB value whether or not it was specified that way in the attribute
 		var hex = util.rgb2hex(rgb);
 		var hsl = util.rgb2hsl(rgb);
 		if (colors.showRGB) {
@@ -233,7 +239,7 @@ $('.infoPanel').click(function () {
 });
 
 $(document).keydown(function (e) {
-	if (cache.mapKeysTo == 'colors' && !$('.color input.user').is(':focus')) {
+	if (cache.mapKeysTo == 'color' && !$('.color input.user').is(':focus')) {
 		var nextIndex;
 		var name;
 		switch (e.which) {
@@ -271,10 +277,15 @@ $(document).keydown(function (e) {
 				}
 				break;
 			case 32: // Spacebar is pressed
-				if (pressed.shiftKey) {
-					colors.scroll('shiftSpace');
-				} else {
-					colors.scroll('space');
+				if (tool.name !== 'drag') {
+					if (pressed.shiftKey) {
+						colors.scroll('shiftSpace');
+					} else {
+						if (!$('.color').hasClass('expand'))
+							tabStates.color.expand(true);
+						else
+							colors.scroll('space');
+					}
 				}
 				break;
 			case 16: // Shift key is pressed
@@ -384,7 +395,7 @@ $(document).keydown(function (e) {
 
 
 $('.color').mouseover(function () {
-	cache.mapKeysTo = 'colors';
+	cache.mapKeysTo = 'color';
 }).mouseout(function () {
 
 }).mousedown('.drag-bar', function (e) {
@@ -510,4 +521,6 @@ $('.category span').click(function () {
 
 colors.draw();
 
-ui.colorListPreview(); 
+$(document).ready(function() {
+	ui.colorListPreview();
+})

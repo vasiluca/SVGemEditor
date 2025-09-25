@@ -10,6 +10,8 @@ import { tool } from './Tab/Tool.js';
 import { layers } from './Tab/Layer.js';
 import { property } from './Tab/Property.js';
 
+import { collections } from './Tab/Color/ColorSchemes.js';
+
 var ui = {
 	cursor: function (type) {
 		$('#editor').css('cursor', type);
@@ -276,10 +278,11 @@ var ui = {
 
 		} else {
 			$('.schemes ul li').prepend('<div class="colorsPreview"></div><div class="colorsPreviewScroll"></div>');
-			$('.schemes ul li').on('each', function () {
+			$('.schemes ul li').each(function () {
 				var scheme = $(this).attr('data-scheme');
-				var array = colors.collections[scheme].colors;
-				var empty = colors.collections[scheme].empty;
+				if (!scheme) return;
+				var array = collections[scheme].colors;
+				var empty = collections[scheme].empty;
 				var skipOver = Math.floor((array.length - empty) / 49);
 				skipOver == 0 ? skipOver = 1 : null;
 				for (var i = 0; i < array.length; i++) {
