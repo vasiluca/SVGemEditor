@@ -93,7 +93,7 @@ $(document).on('wheel', function (e) {
 	// let origin = [doc.size[0] / 2, doc.size[1] / 2]; // by default the origin is at the center, until we scale up the canvas
 	if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
 		if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
-			if (doc.zoom >= 0 || doc.size[0] * doc.zoom > $(window).width() || doc.size[1] * doc.zoom > $(window).height()) {
+			if (doc.zoom >= 0) {
 				if (doc.zoom <= 1) {
 					doc.zoom -= zoomSpeed;
 				} else
@@ -107,8 +107,14 @@ $(document).on('wheel', function (e) {
 					doc.zoom -= 0.5;
 				}
 
-				prevZoom = doc.zoom;
+				// snap to scale(1) if the previous zoom was greater than zero, but current is less than 1
+				if (prevZoom > 1 && doc.zoom < 1) {
+					doc.zoom = 1;
+					prevZoom = 1;
+				}
+
 			}
+			prevZoom = doc.zoom;
 		}
 		if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
 			// we will only change the origin when zooming in, because otherwise it becomes disorienting
@@ -123,6 +129,8 @@ $(document).on('wheel', function (e) {
 				// 	doc.zoom += 0.5;
 				// }
 			}
+
+			// snap to scale(1) if the previous zoom was less than zero, but current is greater than 1
 			if (prevZoom < 1 && doc.zoom > 1) {
 				doc.zoom = 1;
 				prevZoom = 1;
@@ -133,7 +141,7 @@ $(document).on('wheel', function (e) {
 				// origin = [e.clientX - doc.origPos[0], e.clientY - doc.origPos[1]];
 			}
 			
-
+			prevZoom = doc.zoom;
 		}
 		// the left and top CSS properties are always applied after transformations
 		if (!cache.mousedown) {

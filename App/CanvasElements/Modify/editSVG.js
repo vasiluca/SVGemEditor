@@ -43,6 +43,10 @@ var editSVG = {
 			}
 
 		}
+
+		if (!element[this.type])
+			this.type = 'genericElement';
+
 		let attr = element[type] ? element[type].createAttr() : {}; // this will set the proper attributes based on the element type being created
 		cache.ele.attr(attr);
 	},

@@ -1,4 +1,5 @@
 import { pressed } from "../../Cache.js";
+import { ui } from "../../UI.js";
 
 import { layers } from "../Layer.js";
 import { tool } from "../Tool.js";
@@ -11,11 +12,12 @@ $(document).mouseup(function (e) {
 			var posX = e.clientX - selection.width / 2;
 			var posY = e.clientY - selection.height / 2;
 			// was previously selection.height and selection.width for height and width
-			var element = '<image xlink:href="' + selection.result + '" height="' + 500 + '" width="auto" x="' + posX + '" y="' + posY + '"/>';
+			var element = '<image xlink:href="' + selection.result + '" height="' + 400 + '" x="' + posX + '" y="' + posY + '"/>';
 			$('#editor').html($('#editor').html() + element);
 			if (!pressed.ctrlKey && tool.imageIndex > -1) {
 				tool.imageIndex--;
 			}
+			layers.update();
 		}
 		if (tool.imageIndex == -1) {
 			tool.type = 'selection';

@@ -20,10 +20,33 @@ var newSVG = {
 			id = this.numID;
 			this.numID++; // increment id for the next time it is accessed
 		}
-		// the below code simply append to the HTML Document
-		$('#editor').html($('#editor').html() + '<' + type + ' id=' + id + '/>');
-		cache.ele = id;
 		
+		// the below code simply append to the HTML Document
+		if (cache.ele) {
+			let parent = cache.ele[0].parentElement;
+			const svgNS = "http://www.w3.org/2000/svg";
+			const el = document.createElementNS(svgNS, type);
+			el.setAttribute('id', id);
+
+			if (cache.ele[0].tagName.toLowerCase() !== 'g') { // insert before existing selected elements, but those with are not a group (there we want to insert within)
+				if (parent.tagName.toLowerCase() === 'g' && parent.childElementCount === 1) // do not draw to a group that does not show up as a group already (i.e. a <g> with a single child element)
+					parent = parent.parentElement;
+
+				// if the second parameter of insertBefore is null, then the element will simply be inserted at the end of the parent element
+				parent.insertBefore(el, cache.ele[0].nextElementSibling); // insert the new element just after where the last selected element was (by accessing its next sibling)
+			} else if (cache.ele[0].tagName.toLowerCase() === 'g') {
+				if (cache.ele.children().length > 1) {
+					cache.ele.html(cache.ele.html() + '<' + type + ' id=' + id + '/>');
+				} else {
+					// if the current element is a group with a single child (does not show up as group in layers tab), then we insert the element like with a regular non-group element
+					parent.insertBefore(el, cache.ele[0].nextElementSibling); // insert element before the next sibling of the current selected element
+				}
+
+			} 
+		} else
+			$('#editor').html($('#editor').html() + '<' + type + ' id=' + id + '/>');
+
+		cache.ele = id;
 		editSVG.attrDefaults(type);
 
 		//** run the test on the specific type of element created, make sure attributes valid */

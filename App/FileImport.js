@@ -96,6 +96,8 @@ function onFileLoad(event) {
 
 	centerCanvas();
 
+	$('svg#editor').css('transition', 'all 0.15s ease'); // smooth zooming
+
 	// $('#editor').attr('preserveAspectRatios', 'xMidYMid meet');
 	// $('#editor').attr('overflow', 'hidden');
 

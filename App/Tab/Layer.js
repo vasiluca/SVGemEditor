@@ -2,6 +2,7 @@
 
 import { cache } from '../Cache.js';
 import { newSVG } from '../CanvasElements/Modify/newSVG.js';
+import { svg, getSVGTransform } from '../CanvasElements/Modify/SVG.js';
 import { doc } from '../SetUp.js';
 
 import { colors } from './Color.js';
@@ -48,26 +49,29 @@ function prop(el, name) { // will check the rendered property of an element
 	return val;
 }
 
-//* This function accounts for parent transformation while getCoord only accounts for single element transformation
+//* This function accounts for parent transformation through parentTrans and current element transform while getCoord only accounts for current element transformation
 function getCoordAbsolute(ele, parentTrans) {
-	const transform = ele.attr('transform');
-	if (transform && transform.trim().includes('translate')) {
-		const translate = transform.match(/translate\s*\(\s*([^,\s]+)(?:\s*,\s*([^)]+))?\s*\)/); // match translate attr regardless where it is included
-		var moveX = parseFloat(translate[1]);
-		var moveY = parseFloat(translate[2] || 0);
-		if (parentTrans) {
-			parentTrans[0] += moveX;
-			parentTrans[1] += moveY;
-		} else
-			parentTrans = [moveX, moveY];
+	// NOTE: no longer using parentTrans (currently coordinates are being added up separately between each parent and child - TODO: refactor)
+	// const trans = getSVGTransform(ele[0], true); // this accounts for parent transformations
+	// console.log(trans);
+	// return [trans.x , trans.y ];
 
-		// parentTrans = parentTrans += ` translate(${transX},${transY})`;
+	// NOTE: For every element (group) with a transform, we return its entire transformed position since each group is in its own <svg> tag in the layers tab
+	// We only track the transforms on the group elements which have them, since we are also using get coord to track child element transforms
+	// We need the coordinates of the transformed ancestors, since each child as a layer lacks any of the parent contexts
+	// const transform = ele.attr('transform') || ele.css('transform');
+	let transform = getSVGTransform(ele[0]);
+	if (transform.x || transform.y) {
+		transform = getSVGTransform(ele[0], true);
+		let moveX = transform.x;
+		let moveY = transform.y;
+		parentTrans = [moveX, moveY];
 	}
 
 	return parentTrans;
 }
 
-var preview; // including the variable outside the layers object seems to help in preventing glitches when dragging layers
+var preview; // including the variable outside the layers object seems to help in preventing glitches when moving layers
 var layers = {
 	groups: {},
 	group: 0, // keeps track of number of group sections
@@ -124,7 +128,7 @@ var layers = {
 				
 
 				if (data.type == 'circle' || data.type == 'ellipse' || data.type == 'rect' ||
-					data.type == 'line' || data.type == 'path' || data.type == 'polygon' || data.type == 'g' || data.type == 'text') {
+					data.type == 'line' || data.type == 'path' || data.type == 'polyline' || data.type == 'polygon' || data.type == 'g' || data.type == 'text' || data.type == 'image') {
 					let div;
 					// if (!(data.type == 'g' && ele.children().length === 1 && ele.children().eq(0).children().length === 0)) { // avoid including a single element twice
 						
@@ -313,6 +317,8 @@ var layers = {
 	this.update();
 	},
 	drop: function(layer) {
+	svg.prevParent = $('#editor #' + layers.current.attr('id'))[0].parentElement; // we need this to check if the user moved an element up the DOM tree, in which case a different transformation calculation must be done
+	
 	if (layers.current.hasClass('selected') && $('.layers .selected').length > 1) {
 		if (!layer.hasClass('selected')) {
 			if (layer.hasClass('drop-above')) {
@@ -331,16 +337,67 @@ var layers = {
 		}
 
 	} else if (layers.current.attr('id') != layer.attr('id')) {
+		const moving = $('#editor #' + layers.current.attr('id'))[0];
+		const refHover = $('#editor #' + layer.attr('id'))[0];
+
+		const parentGroup = refHover.parentElement;
+		const prevGroup = moving.parentElement;
 		if (layer.hasClass('drop-above')) {
 			layers.current.detach().insertBefore(layer);
 			$('#editor #' + layers.current.attr('id')).detach().insertAfter($('#editor #' + layer.attr('id')));
+
 		} else if (layer.hasClass('drop-below')) {
 			layers.current.detach().insertAfter(layer); // insertAfter on this line and below are different because layers are show bottom to top in layers preview
+
 			$('#editor #' + layers.current.attr('id')).detach().insertBefore($('#editor #' + layer.attr('id')));
 		} else if (layer.hasClass('drop-group')) {
+			let svgDoc = document.getElementById('editor');
+			let group;
+			if (refHover.tagName.toLowerCase() !== 'g' && moving.tagName.toLowerCase() !== 'g') { // prevent creation of un-intended double-groups by checking if the object being moved is not a group
+				// use SVG API instead
+				
+				if (parentGroup) // use the hovering element's parent in order to use inserBefore
+					svgDoc = parentGroup;
 
+				const svgNS = "http://www.w3.org/2000/svg";
+				group = document.createElementNS(svgNS, 'g');
+				
+				group.setAttribute('data-svgem', layers.group); // sets the new group to the available group number
+				
+				svgDoc.insertBefore(group, refHover); // insert group before refHover (layer[0]) being hovered
+				group.prepend(moving);
+				group.prepend(refHover);
+			} else if (refHover.tagName.toLowerCase() === 'g') {
+				group = refHover; // in this case use the <g> as a parent to insert into
+				
+				group.prepend(moving);
+				if (!group.getAttribute('data-svgem')) {
+					group.setAttribute('data-svgem', layers.group); // set an available group number
+				}
+			} else if (moving.tagName.toLowerCase() === 'g' && moving.childElementCount === 1) { // there may groups with single elements, which should do not show up as group in the GUI interface
+				if (parentGroup)
+					svgDoc = parentGroup;
+
+				group = moving; // in this case use the <g> as a parent to insert into
+
+				svgDoc.insertBefore(group, refHover); // position the group just before where the hovered element is at
+
+				group.prepend(refHover); // now actually move the hoveres element into the group
+
+				if (!group.getAttribute('data-svgem')) {
+					group.setAttribute('data-svgem', layers.group); // set an available group number
+				}
+			}
+		}
+
+		if (prevGroup.tagName.toLowerCase() === 'g' && prevGroup.childElementCount === 0) {
+			prevGroup.remove(); // prevent empty <g> tags from accumulating
+		}
+		if (prevGroup.childElementCount === 1) {
+			prevGroup.removeAttribute('data-svgem');
 		}
 	}
+	if (!layer.hasClass('drop-group') ) svg.updateAttributes();
 	// layers.update ensures that elements without their own fill or stroke, inherit their parent <g> element colors in the layers tab
 	layers.update(); // TODO: this can be made more efficient by detecting the group element into which an element was droppped and/or detecting if the preview fill/stroke is actually different from the parent color in the different group
 	//if ()

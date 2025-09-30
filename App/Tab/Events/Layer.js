@@ -174,6 +174,9 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 }).on('mouseleave', 'div', function (e) {
 	// e.stopPropagation();
 	if (layers.pressed) {
+		if (!pressed.shiftKey && !layers.multiSelect) {
+			layers.reorder = true;
+		}
 		if (layers.reorder) {
 			$('.layers div').removeClass('drop-above drop-below drop-group');
 		} else if (layers.selectedLayer) {

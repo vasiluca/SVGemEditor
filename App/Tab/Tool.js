@@ -3,7 +3,7 @@
 import { ui } from '../UI.js';
 
 var tool = {
-	toolType: 'line',
+	toolType: 'rect',
 	name: false,
 	prevName: false,
 	set type(kind) {

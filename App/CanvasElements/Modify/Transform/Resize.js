@@ -7,6 +7,9 @@ import { select } from "../../Selection.js";
 import { editSVG } from "../editSVG.js";
 
 var resize = function (initial, type) { initial = svg.initial; type = svg.type;
+	// svg.updateAttributes();
+	cache.resizing = true;
+
 	var selection = $('.selection')[0].getBoundingClientRect();
 	var rightHandle = pressed.handle.includes('right'); // Check if a handle on the right is being pressed
 	var bottomHandle = pressed.handle.includes('bottom'); // Check if a handle on the bottom is being pressed

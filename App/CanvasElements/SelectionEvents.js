@@ -50,9 +50,10 @@ $('#editor, .selection').mousedown(function (e) {
 			// create an ID for the selected element if none exists:
 			// TODO: Consider avoiding automatic ID creation for imported elements when possible to reduce SVG clutter
 			if (!cache.ele) {
-				newSVG.numID += 1;
+				
 				cache.ele = newSVG.numID;
 				$(e.target).attr('id', newSVG.numID);
+				newSVG.numID += 1; // per convention we must update the numID before its next use
 			};
 			// select.area(cache.ele);
 			svg.storeAttr();
@@ -85,11 +86,15 @@ $(document).mousemove(function(e) {
 	// 	select.area();
 	// }
 }).mousedown(function(e) {
+	
+
 	windowPress = true;
 
 	editorPos = [Number.parseFloat($('#editor').css('left')), Number.parseFloat($('#editor').css('top'))]; 
 	mouseStart = [e.clientX, e.clientY];
 }).mouseup(function(e) {
+	
+
 	if (e.which == 1) { // on LEFT click only
 		if (!cache.ele && cache.press) {
 			select.area(false);
@@ -107,5 +112,7 @@ $(document).mousemove(function(e) {
 	cache.mousedown = false;
 	cache.press = false;
 	pressed.element = false;
+	
+	// svg.updateAttributes();
 	// $('.layers .all #' + cache.svgID).addClass('selected');
 })

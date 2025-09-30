@@ -83,6 +83,7 @@ $(document).contextmenu(function (e) {
 		}
 		switch (e.which) {
 			case 9: // Tab key is pressed
+				pressed.tabKey = true;
 				$('.warn').toggleClass('show');
 				break;
 			case 16: // shift key pressed
@@ -123,9 +124,6 @@ $(document).contextmenu(function (e) {
 				$('.selection').css('display', 'none');
 				break;
 
-			case 9:
-				pressed.tabKey = true;
-				break;
 			case 20: // Caps lock key is pressed
 				if (cache.mapKeysTo == 'color') {
 					if ($('.color .user').is(':focus')) {
@@ -135,6 +133,9 @@ $(document).contextmenu(function (e) {
 					}
 				}
 				break;
+			case 76: // L is pressed, refresh Layers or
+			case 82: // R pressed, used to Refresh the layers tab
+				layers.update();
 		}
 	}
 	if ($(e.target).is('.color *')) {
