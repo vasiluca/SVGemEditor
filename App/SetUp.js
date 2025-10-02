@@ -86,79 +86,79 @@ const maxZoom = 20;
 
 
 $(document).on('wheel', function (e) {
-	
-	cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
-	dim = [editor.getBoundingClientRect().width, editor.getBoundingClientRect().height];
+	if (!cache.mousedown) {
+		cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
+		dim = [editor.getBoundingClientRect().width, editor.getBoundingClientRect().height];
 
-	// let origin = [doc.size[0] / 2, doc.size[1] / 2]; // by default the origin is at the center, until we scale up the canvas
-	if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
-		if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
-			if (doc.zoom >= 0) {
-				if (doc.zoom <= 1) {
-					doc.zoom -= zoomSpeed;
-				} else
-					doc.zoom -= 0.25;
+		// let origin = [doc.size[0] / 2, doc.size[1] / 2]; // by default the origin is at the center, until we scale up the canvas
+		if (!$(e.target).is('.tools *') && !$(e.target).is('.animatable')) {
+			if (e.originalEvent.deltaY > 0) { // scrolling up - zooming out
+				if (doc.zoom >= 0) {
+					if (doc.zoom <= 1) {
+						doc.zoom -= zoomSpeed;
+					} else
+						doc.zoom -= 0.25;
 
-				if (pressed.cmdKey) {
-					doc.zoom -= zoomSpeed * 5;
+					if (pressed.cmdKey) {
+						doc.zoom -= zoomSpeed * 5;
+					}
+
+					if (doc.zoom > 10) {
+						doc.zoom -= 0.5;
+					}
+
+					// snap to scale(1) if the previous zoom was greater than zero, but current is less than 1
+					if (prevZoom > 1 && doc.zoom < 1) {
+						doc.zoom = 1;
+						prevZoom = 1;
+					}
+
+				}
+				prevZoom = doc.zoom;
+			}
+			if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
+				// we will only change the origin when zooming in, because otherwise it becomes disorienting
+
+				if (doc.zoom < maxZoom) {
+					// doc.zoom += zoomSpeed * (maxZoom / (maxZoom-doc.zoom));
+					doc.zoom += zoomSpeed;
+					if (pressed.cmdKey) {
+						doc.zoom += zoomSpeed * 5;
+					}
+					// if (doc.zoom < 10) {
+					// 	doc.zoom += 0.5;
+					// }
 				}
 
-				if (doc.zoom > 10) {
-					doc.zoom -= 0.5;
-				}
-
-				// snap to scale(1) if the previous zoom was greater than zero, but current is less than 1
-				if (prevZoom > 1 && doc.zoom < 1) {
+				// snap to scale(1) if the previous zoom was less than zero, but current is greater than 1
+				if (prevZoom < 1 && doc.zoom > 1) {
 					doc.zoom = 1;
 					prevZoom = 1;
 				}
 
-			}
-			prevZoom = doc.zoom;
-		}
-		if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
-			// we will only change the origin when zooming in, because otherwise it becomes disorienting
-
-			if (doc.zoom < maxZoom) {
-				// doc.zoom += zoomSpeed * (maxZoom / (maxZoom-doc.zoom));
-				doc.zoom += zoomSpeed;
-				if (pressed.cmdKey) {
-					doc.zoom += zoomSpeed*5;
+				if (prevZoom < doc.zoom) { // we will only update the origin once we've zoomed out before zooming in again
+					origin = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
+					// origin = [e.clientX - doc.origPos[0], e.clientY - doc.origPos[1]];
 				}
-				// if (doc.zoom < 10) {
-				// 	doc.zoom += 0.5;
-				// }
-			}
 
-			// snap to scale(1) if the previous zoom was less than zero, but current is greater than 1
-			if (prevZoom < 1 && doc.zoom > 1) {
-				doc.zoom = 1;
-				prevZoom = 1;
+				prevZoom = doc.zoom;
 			}
+			// the left and top CSS properties are always applied after transformations
 
-			if (prevZoom < doc.zoom) { // we will only update the origin once we've zoomed out before zooming in again
-				origin = [(e.clientX - cache.canvas.x) / doc.zoom, (e.clientY - cache.canvas.y) / doc.zoom];
-				// origin = [e.clientX - doc.origPos[0], e.clientY - doc.origPos[1]];
-			}
-			
-			prevZoom = doc.zoom;
-		}
-		// the left and top CSS properties are always applied after transformations
-		if (!cache.mousedown) {
 			var offsetTop = ($(window).height() / 2 - (e.clientY - doc.origPos[1]));
 			var offsetLeft = ($(window).width() / 2 - (e.clientX - doc.origPos[0]));
 			// var offsetTop = ($(window).height() / 2 - (e.clientY - cache.canvas.y)/doc.zoom);
 			// var offsetLeft = ($(window).width() / 2 - (e.clientX - cache.canvas.x)/doc.zoom);
 
 			if (doc.zoom <= 1) {
-				offsetTop = ($(window).height() / 2 - doc.size[1]/2);
-				offsetLeft = ($(window).width() / 2 - doc.size[0]/2);
+				offsetTop = ($(window).height() / 2 - doc.size[1] / 2);
+				offsetLeft = ($(window).width() / 2 - doc.size[0] / 2);
 				origin = [doc.size[0] / 2, doc.size[1] / 2];
 			}
 
 			if (origin[0] < 0)
 				origin[0] = 0;
-			if (origin[1] < 0) 
+			if (origin[1] < 0)
 				origin[1] = 0;
 
 			if (origin[0] > doc.size[0])
@@ -180,25 +180,26 @@ $(document).on('wheel', function (e) {
 				// 'transition': 'all 0s ease'
 			});
 			select.area(cache.ele);
-		}
-		
-		if (!timeout) {
-			timeout = true;
 
-			interval = setInterval(function () {
-				select.area(cache.ele);
-				// cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
-			}, 160);
+			if (!timeout) {
+				timeout = true;
 
-			setTimeout(function() {
-				clearInterval(interval);
-				select.area(cache.ele);
-				timeout = false;
-			}, 500)
+				interval = setInterval(function () {
+					select.area(cache.ele);
+					// cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
+				}, 160);
+
+				setTimeout(function() {
+					clearInterval(interval);
+					select.area(cache.ele);
+					timeout = false;
+				}, 500)
+			}
+
+
 		}
-		
-		
 	}
+	
 });
 
 export { doc }

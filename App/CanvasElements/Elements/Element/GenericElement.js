@@ -13,6 +13,11 @@ class GenericElement extends Element {
 	static createAttr() {
 		var xDiff = drag.end[0] - drag.start[0];
 		var yDiff = drag.end[1] - drag.start[1];
+
+		if (svg.new.translateDiff) {
+			xDiff = svg.new.translateDiff[0];
+			yDiff = svg.new.translateDiff[1];
+		}
 		
 		const origX = svg.initial.translate[0];
 		const origY = svg.initial.translate[1];

@@ -4,7 +4,7 @@
  * - Having an Object which can be referenced to point to the static Object
  */
 
-import { cache, pressed } from '../../Cache.js';
+import { cache, drag, pressed } from '../../Cache.js';
 import { doc } from '../../SetUp.js';
 import { draw } from './Draw.js';
 import { select } from '../Selection.js';
@@ -102,6 +102,7 @@ var translateX = 0;
 var translateY = 0;
 var svg = {
 	initial: {globalTrans: [0,0], translate: [0,0], parentTrans: [0,0], ancestorTransform: false},
+	new: {translateDiff: [0, 0]},
 	numID: 0, // each time a new element is added, the ID is incremented
 	created: false,
 
@@ -118,12 +119,11 @@ var svg = {
 
 		move(this.initial, this.type);
 		select.area(cache.ele);
-		this.previewMove();
 	},  
 
 	storeAttr: function () {
 		this.initial = {globalTrans: [0, 0], translate: [0, 0], parentTrans: [0, 0], ancestorTransform: false}; // we reset the initial if no element is selected
-		if (!cache.ele) return;
+		if (!cache.ele || !cache.ele[0]) return;
 		cache.origSelectArea = {
 			x: $('.selection')[0].getBoundingClientRect().left,
 			y: $('.selection')[0].getBoundingClientRect().top,
@@ -239,11 +239,13 @@ var svg = {
 			'transform': `translate(${newTrans[0]},${newTrans[1]}) ${transform.matrix}`,
 		});
 	},
-	previewMove: function () {
-		var x1 = this.initial.x + this.initial.translate[0] + this.initial.width/2;
-		var y1 = this.initial.y + this.initial.translate[1] + this.initial.height/2;
-		var x2 = cache.ele[0].getBBox().x + this.initial.translate[0] + cache.ele[0].getBBox().width/2;
-		var y2 = cache.ele[0].getBBox().y + this.initial.translate[1] + cache.ele[0].getBBox().height/2;
+	previewMove: function (transX, transY) {
+		var x1 = this.initial.x + this.initial.globalTrans[0] + this.initial.width / 2;
+		var y1 = this.initial.y + this.initial.globalTrans[1] + this.initial.height / 2;
+		
+		let x2 = x1 + transX;
+		let y2 = y1 + transY;
+
 		if (pressed.cmdKey || pressed.shiftKey) {
 			var viewportX = cache.origSelectArea.x + cache.origSelectArea.width / 2;
 			var viewportY = cache.origSelectArea.y + cache.origSelectArea.height / 2;

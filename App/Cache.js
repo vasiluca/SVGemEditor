@@ -135,11 +135,9 @@ $(document).contextmenu(function (e) {
 				break;
 			case 76: // L is pressed, refresh Layers or
 			case 82: // R pressed, used to Refresh the layers tab
-				layers.update();
+				if (cache.mapKeysTo === 'layers' || cache.mapKeysTo === 'canvas')
+					layers.update();
 		}
-	}
-	if ($(e.target).is('.color *')) {
-		$('.color input.user').focus();
 	}
 }).keyup(function (e) {
 	switch (e.which) {

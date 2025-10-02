@@ -19,17 +19,19 @@ $(document).mouseup(function(e) {
 		if (svgAction.created) {
 			layers.update();
 			svgAction.created = false;
-		} else {
-			if ($(e.target).is('#editor *')) {
-				if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
-				// console.log(cache.svgID);
-				let selectLayer = document.querySelector('.layers .all > div#' + CSS.escape(cache.svgID));
-				if (cache.svgID && selectLayer)
-					selectLayer.classList.add('selected');
-			} else if (tool.name === 'selection' && $(e.target).is('#editor')) {
-				$('.layers .selected').removeClass('selected');
-			}
 		}
+		
+		if ($(e.target).is('#editor, #editor *')) {
+			if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
+
+			let selectLayer = document.querySelector('.layers .all div#' + CSS.escape(cache.svgID));
+
+			if (selectLayer)
+				selectLayer.classList.add('selected');
+		} else if (tool.name === 'selection' && $(e.target).is('#editor')) {
+			$('.layers .selected').removeClass('selected');
+		}
+		
 	}
 	
 	
@@ -51,7 +53,6 @@ function ensureID(self) { // create an identifier for the canvas element if one 
 		let found;
 		if ($(parent).is('section')) {
 			const groupID = '[data-svgem="' + parent.getAttribute('id') + '"]';
-			// console.log(groupID);
 			// console.log($('#editor').find(groupID));
 			found = $('#editor').find(groupID).children().eq(index);
 			// console.log(found);
@@ -82,7 +83,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 
 	ensureID(this);
 
-	if (e.which == 1) { // Right Click
+	if (e.which == 1) { // Left Click
 		cache.start = [e.clientX, e.clientY];
 		layers.pressed = true;
 		layers.selectedLayer = true;
@@ -90,17 +91,19 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 		cache.ele = $(this).attr('id');
 
 		const children = $(this).find('svg > g').eq(0);
-		const child = children.find('g > *');
-		if (child.children().length === 1)  {
-			child.eq(0)
+		let child = children.find('g > *');
+		if ($(this).children().length === 1 && child.children().length === 1)  {
+			child = child.eq(0);
 
-			cache.ele = child.attr('id');
+			if (child.attr('id')) 
+				cache.ele = child.attr('id');
 		}
+		console.log(cache.ele);
 
 		select.area(cache.ele);
 	}
 }).on('mouseup', 'div', function (e) {
-	e.stopPropagation(); // this is here to prevent the parent group from getting triggered when the event bubbles up in the hierarhcy
+	if (cache.mapKeysTo === 'layers') e.stopPropagation(); // this is here to prevent the parent group from getting triggered when the event bubbles up in the hierarhcy
 	if (e.which == 1) { // 1 for e.which Indicates a LEFT click, e.which 2 - not used here - indicates middle mousewheel click
 		let target = this;
 		
@@ -191,7 +194,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 	}
 	
 }).on('mouseenter', 'div', function (e) {
-	e.stopPropagation();
+	if (cache.mapKeysTo === 'layers') e.stopPropagation(); // prevent this from propagating up and activating on the parent as well
 	if (layers.pressed) {
 		if (layers.multiSelect) {
 			$(this).addClass('selected');
@@ -203,7 +206,7 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 	
 }).on('mousemove', 'div', function (e) {
 	// console.log(cache.cursor);
-	e.stopPropagation();
+	if (cache.mapKeysTo === 'layers') e.stopPropagation();
 	cache.cursor = [e.clientX, e.clientY]; // compensate for the bubbling being prevented to the document
 	if (layers.reorder) {
 		// e.stopPropagation();

@@ -93,7 +93,7 @@ var ui = {
 				right: btnName.offset().left + btnName.width()
 			}
 		}
-		return (cache.stop[0] > btn.left && cache.stop[0] < btn.right && cache.stop[1] > btn.top && cache.stop[1] < btn.bottom);
+		return (cache.cursor[0] > btn.left && cache.cursor[0] < btn.right && cache.cursor[1] > btn.top && cache.cursor[1] < btn.bottom);
 	},
 	cursorFeedback: function () { // Depending on where the user is dragging the color, it will change styles if it over a droppable area
 		if (tabStates.index[tabStates.index.length - 1] != 'properties' && this.location($('.color'))) {
@@ -159,28 +159,24 @@ var ui = {
 				});
 			} else {
 				$('.colorDragging').css({
-					'left': cache.start[0],
-					'top': cache.start[1]
+					'left': colors.colorSwatchPos[0],
+					'top':  colors.colorSwatchPos[1]
 				}).removeClass('dragging').addClass('scrolling');
 			}
-		} else if (this.location($('.properties'))) {
+		} else if (this.location($('.properties')) && cache.ele) {
 			var strokeBtn = $('[aria-label="stroke"]');
 			if (this.location('stroke') || this.location('fill')) {
 				if (this.location('stroke')) {
-					tool.stroke = cache.dragColor;
-					cache.ele.attr('stroke', cache.dragColor);
-					if (cache.ele.css('stroke')) {
-						cache.ele.css('stroke', '');
-					}
+					property.colorTo = 'stroke';
+					colors.setColor(null, cache.dragColor);
+					
 					$('[aria-label="stroke"]').css('color', cache.dragColor);
 				}
 				if (this.location('fill')) {
+					property.colorTo = 'fill';
+					colors.setColor(null, cache.dragColor);
 					strokeBtn = $('[aria-label="fill"]');
-					tool.fill = cache.dragColor;
-					cache.ele.attr('fill', cache.dragColor);
-					if (cache.ele.css('fill')) {
-						cache.ele.css('fill', '');
-					}
+
 					$('[aria-label="fill"]').css('color', cache.dragColor);
 				}
 				colors.push('recent', cache.dragColor);
@@ -193,16 +189,16 @@ var ui = {
 			} else {
 				tabStates.indexUp($('.color'));
 				$('.colorDragging').css({
-					'left': cache.start[0],
-					'top': cache.start[1]
+					'left': colors.colorSwatchPos[0],
+					'top': colors.colorSwatchPos[1]
 				}).removeClass('dragging').addClass('scrolling');
 			}
 			/*tool[property.colorTo] = $('.colorDragging').css('background-color');
 			cache.ele.attr(property.colorTo,$('.colorDragging').css('background-color'));*/
 		} else {
 			$('.colorDragging').css({
-				'left': cache.start[0],
-				'top': cache.start[1]
+				'left': colors.colorSwatchPos[0],
+				'top': colors.colorSwatchPos[1]
 			}).removeClass('dragging').addClass('scrolling');
 		}
 		setTimeout(function () {

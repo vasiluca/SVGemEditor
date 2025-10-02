@@ -1,4 +1,4 @@
-import { cache, pressed } from "../../Cache.js";
+import { cache, drag, pressed } from "../../Cache.js";
 
 
 import { ui } from "../../UI.js";
@@ -17,6 +17,12 @@ $('.color .col').click(function () {
 });
 
 $('.color input.user').keyup(function (e) {
+	if (cache.mousedown || cache.mapKeysTo !== 'color') { // prevent side-effects that could be caused while dragging over the color module incidentally
+		e.preventDefault();
+		$('.color input.user').blur();
+		return;
+	}
+
 	$('.col').css({
 		'background-color': $(this).val(),
 		'color': $(this).val()
@@ -29,6 +35,9 @@ $('.color input.user').keyup(function (e) {
 		cache.inputRGB = true;
 	}
 
+	if (e.which === 13 && $('.swatches span').length === 0) {
+		colors.draw(colors.tab);
+	}
 
 	/*
 	if (e.which == 8 && cache.inputRGB) { // Backspace key is pressed
@@ -46,6 +55,11 @@ $('.color input.user').keyup(function (e) {
 	cache.colorVal = ['', '', ''];
 	cache.currVal = 0;
 }).keydown(function (e) {
+	if (cache.mousedown || cache.mapKeysTo !== 'color') { // prevent side-effects that could be caused while dragging over the color module incidentally
+		e.preventDefault();
+		$('.color input.user').blur();
+	}
+	
 	if (e.which == 9) {
 		e.preventDefault();
 		if (!colors.currNum) {
@@ -106,51 +120,7 @@ $('.color input.user').keyup(function (e) {
 
 
 $('.swatches').on('click', 'span', function () {
-	function ensureChild(property, color) {
-		if (cache.ele[0].tagName.toLowerCase() === 'g') {
-			const children = cache.ele.children();
-			if (children.length === 1) {
-				const child = children.eq(0);
-				child.attr(property, color);
-				// if (child.css(property.colorTo))
-				// 	child.css(property.colorTo, '');
-			}
-		}
-	}
-	if (!$(this).hasClass('empty-space') && cache.ele) {
-		var color = $(this).css('backgroundColor');
-		color = color.replace(/\s*,\s*/g, ',');
-		$('.col').css({
-			'background-color': color,
-			'color': color
-		});
-		$('.color input.user').val($(this).attr('data-color').toUpperCase());
-		if (property.colorTo != 'gradient') { // Check that the color is not a gradient, if it is don't change icon color
-			tool[property.colorTo] = color;
-
-			cache.ele.attr(property.colorTo, color);
-			ensureChild(property.colorTo, color);
-
-			if (cache.ele.css(property.colorTo)) {
-				cache.ele.css(property.colorTo, '');
-			}
-		}
-		colors.push('recent', color);
-		$('[aria-label="' + property.colorTo + '"]').css('color', color);
-		if (color == $('.color input.user').val().toUpperCase().trim() && $('.swatches span').length == 1) {
-			colors.draw(colors.tab);
-		}
-		layers.update();
-		$('.swatches span').removeClass('selectionCursor');
-		$(this).addClass('selectionCursor');
-		tabStates.color.selectSwatch();
-
-		let fillColor = window.getComputedStyle(cache.ele[0]).getPropertyValue('fill').replace(/\s*,\s*/g, ',');
-		let strokeColor = window.getComputedStyle(cache.ele[0]).getPropertyValue('stroke').replace(/\s*,\s*/g, ',');
-		CSS.supports('background', strokeColor) ? colors.push('picker', strokeColor) : null;
-		CSS.supports('background', fillColor) ? colors.push('picker', fillColor) : null;
-	}
-	//cache.ele.attr()
+	colors.setColor($(this));
 }).on('contextmenu', 'span', function (e) {
 	if (pressed.shiftKey) {
 		$('.swatches .selected').each(function () {
@@ -170,7 +140,7 @@ $('.swatches').on('click', 'span', function () {
 	tabStates.color.info($(this));
 }).on('mousedown', 'span', function (e) {
 	if (!$(this).hasClass('empty-space')) {
-		cache.start = [$(this).offset().left, $(this).offset().top];
+		colors.colorSwatchPos = [$(this).offset().left, $(this).offset().top];
 		var name = $(this).attr('data-color'); // attr returns the actual exact value stored in an attribute
 		var rgb = $(this).css('backgroundColor').replace(/\s*,\s*/g, ','); // getting the background color using CSS automatically returns an RGB value whether or not it was specified that way in the attribute
 		var hex = util.rgb2hex(rgb);
@@ -239,124 +209,132 @@ $('.infoPanel').click(function () {
 });
 
 $(document).keydown(function (e) {
-	if (cache.mapKeysTo == 'color' && !$('.color input.user').is(':focus')) {
-		var nextIndex;
-		var name;
-		switch (e.which) {
-			case 37: // Left arrow key is pressed
-				if (pressed.cmdKey || !$('.swatches .selected')) {
-					tabStates.color.tab('right');
-				} else {
-					tabStates.color.selection('left');
-				}
-				break;
-			case 38: // Up arrow key is pressed
-				if (pressed.cmdKey || !$('.swatches .selected').length) {
-					colors.scroll('up');
-				} else {
-					tabStates.color.selection('up');
-				}
-				break;
-			case 39: // Right arrow key is pressed
-				if (pressed.cmdKey || !$('.swatches .selected').length) {
-					nextIndex = $('.category .select').index() + 1;
-					if (nextIndex <= 4) {
-						$('.category span').removeClass('select');
-						name = $('.category span').eq(nextIndex).addClass('select');
-						colors.draw(name.attr('aria-label'));
-					}
-				} else {
-					tabStates.color.selection('right');
-				}
-				break;
-			case 40: // Bottom key is pressed
-				if (pressed.cmdKey || !$('.swatches .selected').length) {
-					colors.scroll();
-				} else {
-					tabStates.color.selection('down');
-				}
-				break;
-			case 32: // Spacebar is pressed
-				if (tool.name !== 'drag') {
-					if (pressed.shiftKey) {
-						colors.scroll('shiftSpace');
+	if (cache.mapKeysTo == 'color') {
+		if (!$('.color input.user').is(':focus')) {
+			var nextIndex;
+			var name;
+			switch (e.which) {
+				case 37: // Left arrow key is pressed
+					if (pressed.cmdKey || !$('.swatches .selected')) {
+						tabStates.color.tab('right');
 					} else {
-						if (!$('.color').hasClass('expand'))
-							tabStates.color.expand(true);
-						else
-							colors.scroll('space');
+						tabStates.color.selection('left');
 					}
-				}
-				break;
-			case 16: // Shift key is pressed
-				break;
-			case 9: // Tab key is pressed
-				var nextIndex = $('.category .select').index();
-				if (pressed.shiftKey) {
-					nextIndex -= 1;
-				} else {
-					nextIndex += 1;
-				}
-				if (nextIndex < 0) {
-					nextIndex = 4;
-				} else if (nextIndex > 4) {
-					nextIndex = 0;
-				}
-				$('.category span').removeClass('select');
-				name = $('.category span').eq(nextIndex).addClass('select');
-				colors.draw(name.attr('aria-label'));
-				break;
-			case 192:
-				if ($('.swatches .selected').length > 1) {
-					var selected = $('.swatches .selected.selectionCursor').index();
-				} else if ($('.swatches .selectedFade').length >= 1) {
-					var selectedFade = $('.swatches .selected.selectionCursor').index();
-				}
-				$('.swatches .selectionCursor.selected')
-				if (pressed.shiftKey) {
-					$('.swatches .selected:first-child').addClass('selectionCursor');
+					break;
+				case 38: // Up arrow key is pressed
+					if (pressed.cmdKey || !$('.swatches .selected').length) {
+						colors.scroll('up');
+					} else {
+						tabStates.color.selection('up');
+					}
+					break;
+				case 39: // Right arrow key is pressed
+					if (pressed.cmdKey || !$('.swatches .selected').length) {
+						nextIndex = $('.category .select').index() + 1;
+						if (nextIndex <= 4) {
+							$('.category span').removeClass('select');
+							name = $('.category span').eq(nextIndex).addClass('select');
+							colors.draw(name.attr('aria-label'));
+						}
+					} else {
+						tabStates.color.selection('right');
+					}
+					break;
+				case 40: // Bottom key is pressed
+					if (pressed.cmdKey || !$('.swatches .selected').length) {
+						colors.scroll();
+					} else {
+						tabStates.color.selection('down');
+					}
+					break;
+				case 32: // Spacebar is pressed
+					if (tool.name !== 'drag') {
+						if (pressed.shiftKey) {
+							colors.scroll('shiftSpace');
+						} else {
+							if (!$('.color').hasClass('expand'))
+								tabStates.color.expand(true);
+							else
+								colors.scroll('space');
+						}
+					}
+					break;
+				case 16: // Shift key is pressed
+					break;
+				case 9: // Tab key is pressed
+					var nextIndex = $('.category .select').index();
+					if (pressed.shiftKey) {
+						nextIndex -= 1;
+					} else {
+						nextIndex += 1;
+					}
+					if (nextIndex < 0) {
+						nextIndex = 4;
+					} else if (nextIndex > 4) {
+						nextIndex = 0;
+					}
+					$('.category span').removeClass('select');
+					name = $('.category span').eq(nextIndex).addClass('select');
+					colors.draw(name.attr('aria-label'));
+					break;
+				case 192:
+					if ($('.swatches .selected').length > 1) {
+						var selected = $('.swatches .selected.selectionCursor').index();
+					} else if ($('.swatches .selectedFade').length >= 1) {
+						var selectedFade = $('.swatches .selected.selectionCursor').index();
+					}
+					$('.swatches .selectionCursor.selected')
+					if (pressed.shiftKey) {
+						$('.swatches .selected:first-child').addClass('selectionCursor');
 
-				}
-				if ($('.swatches .selected').length > 1) {
+					}
+					if ($('.swatches .selected').length > 1) {
 
-				}
-				break;
-			case 13: // Enter key is pressed
-				tabStates.color.selectSwatch();
-				break;
-			case 83: // S is pressed
-				if (!cache.delayS) {
-					if (pressed.shiftKey) {
-						$('.swatches .selected').each(function () {
-							colors.action('save', $(this), true);
-						});
-					} else {
-						colors.action('save', $('.swatches .selectionCursor'), true);
 					}
-					cache.delayS = true;
-					setTimeout(function () {
-						cache.delayS = false;
-					}, 250);
-				}
-				break;
-			case 84: // T is pressed
-				if (!cache.delayT) {
-					if (pressed.shiftKey) {
-						$('.swatches .selected').each(function () {
-							colors.action('tune', $(this), true);
-						});
-					} else {
-						colors.action('tune', $('.swatches .selectionCursor'), true);
+					break;
+				case 13: // Enter key is pressed
+					tabStates.color.selectSwatch();
+					break;
+				case 83: // S is pressed
+					if (!cache.delayS) {
+						if (pressed.shiftKey) {
+							$('.swatches .selected').each(function () {
+								colors.action('save', $(this), true);
+							});
+						} else {
+							colors.action('save', $('.swatches .selectionCursor'), true);
+						}
+						cache.delayS = true;
+						setTimeout(function () {
+							cache.delayS = false;
+						}, 250);
 					}
-					cache.delayT = true;
-					setTimeout(function () {
-						cache.delayT = false;
-					}, 250);
-				}
-				break;
-			case 8: // Backspace is pressed
-				colors.action(colors.tab, $('.swatches .selectionCursor'), false);
+					break;
+				case 84: // T is pressed
+					if (!cache.delayT) {
+						if (pressed.shiftKey) {
+							$('.swatches .selected').each(function () {
+								colors.action('tune', $(this), true);
+							});
+						} else {
+							colors.action('tune', $('.swatches .selectionCursor'), true);
+						}
+						cache.delayT = true;
+						setTimeout(function () {
+							cache.delayT = false;
+						}, 250);
+					}
+					break;
+				case 8: // Backspace is pressed
+					colors.action(colors.tab, $('.swatches .selectionCursor'), false);
+			}
+		} else {
+			switch(e.which) {
+				case 13: // Enter key pressed
+					colors.setColor(null, $('.color input.user').val());
+			}
 		}
+		
 	}
 }).keyup(function () {
 	tabStates.color.transitionScroll = true;
@@ -395,9 +373,9 @@ $(document).keydown(function (e) {
 
 
 $('.color').mouseover(function () {
+}).on('mousedown', function () {
 	cache.mapKeysTo = 'color';
 }).mouseout(function () {
-
 }).mousedown('.drag-bar', function (e) {
 	//cache.start = [e.clientX,e.clientY];
 	if ($(this).hasClass('horizontal')) {

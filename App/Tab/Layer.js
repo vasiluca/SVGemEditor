@@ -100,7 +100,7 @@ var layers = {
 			// TODO: Add a check for display: none, in which case the display property will be removed and replaced with a 'visibility: hidden' property
 			var data = {
 				html: element.children().eq(i)[0].outerHTML,
-				type: element.children().eq(i)[0].outerHTML.replace('<','').split(' ')[0].toLowerCase(),
+				type: element.children().eq(i)[0].tagName.toLowerCase(),
 				id: element.children().eq(i) ? element.children().eq(i).attr('id') : null,
 				visibility: element.children().eq(i)[0].getAttribute('visibility')
 			}
@@ -294,7 +294,8 @@ var layers = {
 
 	moveUp: function(top) {
 	if (top) {
-		cache.ele.detach().appendTo('#editor');
+		const parent = cache.ele[0].parentElement;
+		parent.appendChild(cache.ele[0]);
 	} else {
 		var index = cache.ele.index();
 		var nextEle = cache.ele.next();
@@ -306,7 +307,8 @@ var layers = {
 	},
 	moveBack: function(bottom) {
 	if (bottom) {
-		cache.ele.detach().prependTo('#editor');
+		const parent = cache.ele[0].parentElement;
+		parent.prepend(cache.ele[0]);
 	} else {
 		var index = cache.ele.index();
 		var prevEle = cache.ele.prev();
@@ -368,6 +370,7 @@ var layers = {
 				group.prepend(moving);
 				group.prepend(refHover);
 			} else if (refHover.tagName.toLowerCase() === 'g') {
+				if (prevGroup === refHover) return; // prevent dropping an element into a group it is already in (even though this should not normally cause issues)
 				group = refHover; // in this case use the <g> as a parent to insert into
 				
 				group.prepend(moving);
@@ -394,10 +397,10 @@ var layers = {
 			prevGroup.remove(); // prevent empty <g> tags from accumulating
 		}
 		if (prevGroup.childElementCount === 1) {
-			prevGroup.removeAttribute('data-svgem');
+			// prevGroup.removeAttribute('data-svgem');
 		}
 	}
-	if (!layer.hasClass('drop-group') ) svg.updateAttributes();
+	svg.updateAttributes();
 	// layers.update ensures that elements without their own fill or stroke, inherit their parent <g> element colors in the layers tab
 	layers.update(); // TODO: this can be made more efficient by detecting the group element into which an element was droppped and/or detecting if the preview fill/stroke is actually different from the parent color in the different group
 	//if ()

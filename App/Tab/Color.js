@@ -5,6 +5,9 @@ import { ui } from '../UI.js';
 import { tabStates } from '../Tabs.js';
 
 import { collections } from './Color/ColorSchemes.js';
+import { tool } from './Tool.js';
+import { property } from './Property.js';
+import { layers } from './Layer.js';
 
 var colors = { // This object contains data for the color draggable component
 	height: $('.swatches').outerHeight(),
@@ -24,6 +27,55 @@ var colors = { // This object contains data for the color draggable component
 	updateRows: function () {
 		const rows = $('.swatches').hasClass('smallColors') ? $('.swatches span').length / this.columns / 2 - (this.columns - 1) : $('.swatches span').length / this.columns - (this.columns - 1);
 		this.rows = Math.round(rows) + 1;
+	},
+	setColor: function(colorEl, color) { // colorEl, if used, is expected to be a jQuery element object
+		function ensureChild(property, color) {
+			if (cache.ele[0].tagName.toLowerCase() === 'g') {
+				const children = cache.ele.children();
+				if (children.length === 1) {
+					const child = children.eq(0);
+					child.attr(property, color);
+					if (child.css(property))
+						child.css(property, '');
+				}
+			}
+		}
+		if (colorEl) {
+			if (colorEl.hasClass('empty-space'))
+				return; // some collections use a transparent color to create spacing, ignore them
+			
+			$('.color input.user').val(colorEl.attr('data-color').toUpperCase());
+			color = colorEl.css('backgroundColor');
+			$('.swatches span').removeClass('selectionCursor');
+			colorEl.addClass('selectionCursor');
+		}
+
+		if (cache.ele) {
+			color = color.replace(/\s*,\s*/g, ',');
+			$('.col').css({
+				'background-color': color,
+				'color': color
+			});
+
+			if (CSS.supports(property.colorTo, color)) {
+				if (property.colorTo != 'gradient') { // Check that the color is not a gradient, if it is don't change icon color
+					tool[property.colorTo] = color;
+
+					cache.ele.attr(property.colorTo, color);
+					ensureChild(property.colorTo, color);
+
+					if (cache.ele.css(property.colorTo)) {
+						cache.ele.css(property.colorTo, '');
+					}
+				}
+				colors.push('recent', color);
+				$('[aria-label="' + property.colorTo + '"]').css('color', color);
+				layers.update();
+
+				tabStates.color.selectSwatch();
+			}
+			
+		}
 	},
 	action: function (action, ele, force) {
 		if (!ele || !ele.hasClass('empty-space')) {
@@ -132,11 +184,9 @@ var colors = { // This object contains data for the color draggable component
 		if (!array) {
 			array = this.tab;
 		}
-		console.log('array', array);
 		this.searching = false;
 		
 		$('.swatches').html('');
-		console.log(this[array]);
 		for (var i = 0; i < this[array].length; i++) {
 			this.append(this[array][i]);
 		}
@@ -162,6 +212,7 @@ var colors = { // This object contains data for the color draggable component
 	cached: [],
 	search: function (color) {
 		color = color.toUpperCase().trim().replace(/\s*,\s*/g, ',').split(/[, ]/g);
+		this.currColor = color[0].trim();
 		
 		this.searching = true;
 		$('.infoPanel').removeClass('show');

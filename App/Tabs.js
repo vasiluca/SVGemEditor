@@ -9,6 +9,8 @@
 import { cache, pressed } from './Cache.js';
 
 import { colors } from './Tab/Color.js';
+import { property } from './Tab/Property.js';
+import { tool } from './Tab/Tool.js';
 
 var tabStates = {
 	focused: undefined,
@@ -43,12 +45,13 @@ var tabStates = {
 			}
 		},
 		tab: function (dir) {
-			index = $('.category .select').index();
+			let name;
+			let index = $('.category .select').index();
 			if (dir == 'left') {
 				index -= 1;
 				if (index >= 0) {
 					$('.category span').removeClass('select');
-					name = $('.category span').eq(nextIndex).addClass('select');
+					name = $('.category span').eq(index).addClass('select');
 					colors.draw(name.attr('aria-label'));
 				} else {
 					index = 4;
@@ -57,7 +60,7 @@ var tabStates = {
 				index += 1;
 				if (index <= 4) {
 					$('.category span').removeClass('select');
-					name = $('.category span').eq(nextIndex).addClass('select');
+					name = $('.category span').eq(index).addClass('select');
 					colors.draw(name.attr('aria-label'));
 				} else {
 					index = 0;
@@ -141,7 +144,7 @@ var tabStates = {
 				hsl < 53 && hsl > 47 ? $('.infocolor').addClass('shadow') : $('.infocolor').removeClass('shadow');
 				$('.infoPanel').addClass('show');
 				if (pressed.shiftKey && !pressed.tabKey) {
-					var color = ele.attr('data-color').toUpperCase();
+					var color = color.attr('data-color').toUpperCase();
 					tool[property.colorTo] = color;
 					cache.ele.css(property.colorTo, color);
 					if (!cache.ele.attr(property.colorTo)) {
@@ -248,7 +251,7 @@ var tabStates = {
 	adjustContents: function () {
 
 	},
-	adjustPos: function (tab) {
+	adjustPos: function (tab, e) {
 		var height = this.focused.height();
 		var width = this.focused.width();
 		var box = this.focused;
@@ -496,7 +499,6 @@ var tabStates = {
 	},
 	adjustAllPos: function () {
 		$.each(this.index, function (index, value) {
-			console.log(value);
 			tabStates.adjustPos($('.' + value));
 		});
 	}

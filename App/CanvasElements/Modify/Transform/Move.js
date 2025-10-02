@@ -10,8 +10,8 @@ var move = function(initial, type) {
 	var translateX = cache.stop[0] - cache.start[0];
 	var translateY = cache.stop[1] - cache.start[1];
 	// TODO: Have to address scaling transformations in the future (for resizing as well)
-	translateX = translateX/initial.scale[0]*cache.viewScale[0];
-	translateY = translateY/initial.scale[1]*cache.viewScale[1];
+	translateX = translateX/initial.scale[0];
+	translateY = translateY/initial.scale[1];
 
 	var transXabs = Math.abs(translateX);
 	var transYabs = Math.abs(translateY);
@@ -66,7 +66,7 @@ var move = function(initial, type) {
 		cache.dragDir = false;
 	}
 
-	if (type !== 'genericElement') {
+	if (type !== 'genericElement') { // generic elements simply have their translation updated
 		drag.start = [initial.x + translateX, initial.y + translateY];
 		drag.end = [initial.right + translateX, initial.bottom + translateY];
 	}
@@ -87,10 +87,11 @@ var move = function(initial, type) {
 			drag.end[1] = temp;
 		}
 	}
+	svg.new.translateDiff = [translateX, translateY];
 
 	editSVG.update(type);
 
-	svg.previewMove();
+	svg.previewMove(translateX, translateY);
 }
 
 export { move }

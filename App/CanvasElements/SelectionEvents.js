@@ -41,7 +41,7 @@ $('#editor, .selection').mousedown(function (e) {
 	}
 
 	if (tool.type === 'selection' && !$(e.target).is('.selection, .selection *')) {
-		$('.selection').css('display', 'none');
+		// $('.selection').css('display', 'none');
 	}
 
 	if (tool.name === 'selection') {

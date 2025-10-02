@@ -53,20 +53,23 @@ var property = {
 						cache.start = [cache.stop[0], cache.stop[1]];
 						this.value = 0;
 					}
-					cache.ele.attr('stroke-width', value);
-					if (value < 10) {
-						if (value != 0) {
-							value = value.toFixed(1);
+					if (CSS.supports('stroke-width', value)) {
+						cache.ele.attr('stroke-width', value);
+						if (value < 10) {
+							if (value != 0) {
+								value = value.toFixed(1);
+							}
 						}
+						$('.propertyScrubbwer').attr({
+							'data-value': value
+						}).removeClass('smallText');
+						$('.scrub').css({
+							'height': scrubAmount
+						});
+						tool.strokeWidth = value;
+						break;
 					}
-					$('.propertyScrubbwer').attr({
-						'data-value': value
-					}).removeClass('smallText');
-					$('.scrub').css({
-						'height': scrubAmount
-					});
-					tool.strokeWidth = value;
-					break;
+					
 
 			}
 		} else {

@@ -50,8 +50,6 @@ $(document).mousedown(function (e) {
 
 	// console.log('start', drag.start);
 
-	drag.diffStart = drag.start;
-
 	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
 		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
 	}
@@ -60,7 +58,7 @@ $(document).mousedown(function (e) {
 	// and it also points to the last position the cursor was in before the mouseup event
 	cache.stop = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
 	drag.end = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
-	drag.diffEnd = drag.end;
+
 	cache.cursor = [e.clientX, e.clientY];
 
 	if (newSVG.creating) { // checks if the user mouse-pressed down with an element creation tool
