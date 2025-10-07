@@ -90,7 +90,8 @@ $(document).contextmenu(function (e) {
 				pressed.shiftKey = true;
 				break;
 			case 17:
-				pressed.ctrlKey = true;
+				if (!pressed.element && !cache.resizing) // this will prevent unexpected element coordinate jumps if ctrl key is pressed while already dragging an element
+					pressed.ctrlKey = true;
 				break;
 			case 18: // alt key (or option key on mac) is pressed
 				pressed.altKey = true;
@@ -133,8 +134,8 @@ $(document).contextmenu(function (e) {
 					}
 				}
 				break;
-			case 76: // L is pressed, refresh Layers or
-			case 82: // R pressed, used to Refresh the layers tab
+			case 76: // 'L' is pressed, refresh Layers or
+			case 82: // 'R' pressed, used to Refresh the layers tab
 				if (cache.mapKeysTo === 'layers' || cache.mapKeysTo === 'canvas')
 					layers.update();
 		}

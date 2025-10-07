@@ -10,15 +10,13 @@ var move = function(initial, type) {
 	var translateX = cache.stop[0] - cache.start[0];
 	var translateY = cache.stop[1] - cache.start[1];
 	// TODO: Have to address scaling transformations in the future (for resizing as well)
-	translateX = translateX/initial.scale[0];
-	translateY = translateY/initial.scale[1];
+	translateX = translateX/initial.globalScale[0];
+	translateY = translateY/initial.globalScale[1];
 
 	var transXabs = Math.abs(translateX);
 	var transYabs = Math.abs(translateY);
 
 	if ((pressed.shiftKey || pressed.cmdKey) && cache.dragDir == false) {
-		translateX *= initial.scale[0];
-		translateY *= initial.scale[1];
 		if (translateY/3 < translateX && translateY > translateX/3 ||
 			translateY/3 > translateX && translateY < translateX/3) { // Dragging element diagnolly left-up or right-down
 			translateY = translateX;

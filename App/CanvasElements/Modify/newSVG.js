@@ -9,6 +9,7 @@ import { element } from './SVG.js';
 import { editSVG } from './editSVG.js';
 
 var newSVG = {
+	insertNextToGroup: true,
 	// TODO: In the future will need to get the highest ID elements in an opened existing SVG to set numID to
 	numID: 0, // this will increment each time an element is created in order to give each element a unique ID
 	creating: false, // indicates that the user moused-down and might drag to create an element
@@ -28,7 +29,7 @@ var newSVG = {
 			const el = document.createElementNS(svgNS, type);
 			el.setAttribute('id', id);
 
-			if (cache.ele[0].tagName.toLowerCase() !== 'g') { // insert before existing selected elements, but those with are not a group (there we want to insert within)
+			if (this.insertNextToGroup || cache.ele[0].tagName.toLowerCase() !== 'g') { // insert before existing selected elements, but those with are not a group (there we want to insert within)
 				if (parent.tagName.toLowerCase() === 'g' && parent.childElementCount === 1) // do not draw to a group that does not show up as a group already (i.e. a <g> with a single child element)
 					parent = parent.parentElement;
 
@@ -40,8 +41,11 @@ var newSVG = {
 				} else {
 					// if the current element is a group with a single child (does not show up as group in layers tab), then we insert the element like with a regular non-group element
 					parent.insertBefore(el, cache.ele[0].nextElementSibling); // insert element before the next sibling of the current selected element
+					// cache.ele = $(cache.ele[0].nextElementSibling.getAttribute('id'));
+					// svg.storeAttr();
 				}
-
+				// TODO: The user will be able to configure insertNextToGroup setting in the future, this will require slight modification to ensure that the svg.initial data of the frontmost child of the group is used
+				// Currently, all new elements are added in front of the current selected element whether group or not (this else-if block is currently ignored)
 			} 
 		} else
 			$('#editor').html($('#editor').html() + '<' + type + ' id=' + id + '/>');

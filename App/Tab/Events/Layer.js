@@ -98,7 +98,6 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 			if (child.attr('id')) 
 				cache.ele = child.attr('id');
 		}
-		console.log(cache.ele);
 
 		select.area(cache.ele);
 	}

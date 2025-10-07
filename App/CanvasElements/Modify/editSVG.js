@@ -5,12 +5,14 @@ import { doc } from '../../SetUp.js';
 
 import { tool } from '../../Tab/Tool.js';
 
-import { element } from './SVG.js'; // Includes simple key-object pair for each element name
+import { element, svg } from './SVG.js'; // Includes simple key-object pair for each element name
 
 var editSVG = {
 	update(type, axis, ratio) {
+		if (!element[type])
+			type = 'genericElement';
 		// Unless an element is dragged (pressed), calculate new size when resizing
-		if (!pressed.element) {
+		if (!pressed.element && !pressed.ctrlKey && type !== 'genericElement') {
 			if (!ratio) ratio = [1,1]; // set equal ratio for element if none provided (for element creation)
 			if (!axis) axis = 'xy'; // assume element creation when no axis is provided
 
@@ -44,10 +46,8 @@ var editSVG = {
 
 		}
 
-		if (!element[this.type])
-			this.type = 'genericElement';
 
-		let attr = element[type] ? element[type].createAttr() : {}; // this will set the proper attributes based on the element type being created
+		let attr = element[type] ? element[type].createAttr(axis) : {}; // this will set the proper attributes based on the element type being created
 		cache.ele.attr(attr);
 	},
 	attrDefaults(type) {

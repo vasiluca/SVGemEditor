@@ -3,33 +3,48 @@
 import { cache } from '../Cache.js';
 import { newSVG } from '../CanvasElements/Modify/newSVG.js';
 import { svg, getSVGTransform } from '../CanvasElements/Modify/SVG.js';
+import { select } from '../CanvasElements/Selection.js';
 import { doc } from '../SetUp.js';
 
 import { colors } from './Color.js';
 
 import { deleteButton } from './Property/DeleteButton.js';
 
-// getCoord(el) does not account for transformations on any parent <g> element(s)
+// getCoord(el) does not account for transformations on any parent <g> element(s), but accounts for transforms on the current element
 // However getCoord() is much more robust than simply calling getBBox on an element, since it would not account for transformations at all
 function getCoord(el) {
-    const svg = document.querySelector('#editor');
-    const bbox = el.getBBox();
+	// let transform = getSVGTransform(el.parentElement); // we check for a global transform, but for getCoord() we must return local single element transform
+	let globalTransform = getSVGTransform(el.parentElement, true);
+	let transform = getSVGTransform(el.parentElement);
+	
+	const svg = document.querySelector('#editor');
+	const bbox = el.getBBox();
+
+	let point = svg.createSVGPoint();
+	point.x = bbox.x;
+	point.y = bbox.y;
+
+	// Always use getCTM() (more reliable than getScreenCTM for SVG transformations)
+	let ctm = el.getCTM();
+	let svgCtm = svg.getCTM();
+
+	// Always transform the point - don't make it conditional
+	if (ctm && svgCtm) {
+		point = point.matrixTransform(ctm);
+		point = point.matrixTransform(svgCtm.inverse());
+	}
+
+	let pos = point; // point stores values for x and y
+
+	pos = {
+		x: (pos.x) / globalTransform.scaleX,
+		y: (pos.y) / globalTransform.scaleY,
+		other: globalTransform,
+		local: transform
+	};
+
+	return pos;
     
-    let point = svg.createSVGPoint();
-    point.x = bbox.x;
-    point.y = bbox.y;
-    
-    // Always use getCTM() (more reliable than getScreenCTM for SVG transformations)
-    let ctm = el.getCTM();
-    let svgCtm = svg.getCTM();
-    
-    // Always transform the point - don't make it conditional
-    if (ctm && svgCtm) {
-        point = point.matrixTransform(ctm);
-        point = point.matrixTransform(svgCtm.inverse());
-    }
-    
-    return point;
 }
 
 function checkID(id) {
@@ -52,19 +67,16 @@ function prop(el, name) { // will check the rendered property of an element
 //* This function accounts for parent transformation through parentTrans and current element transform while getCoord only accounts for current element transformation
 function getCoordAbsolute(ele, parentTrans) {
 	// NOTE: no longer using parentTrans (currently coordinates are being added up separately between each parent and child - TODO: refactor)
-	// const trans = getSVGTransform(ele[0], true); // this accounts for parent transformations
-	// console.log(trans);
-	// return [trans.x , trans.y ];
 
 	// NOTE: For every element (group) with a transform, we return its entire transformed position since each group is in its own <svg> tag in the layers tab
 	// We only track the transforms on the group elements which have them, since we are also using get coord to track child element transforms
 	// We need the coordinates of the transformed ancestors, since each child as a layer lacks any of the parent contexts
 	// const transform = ele.attr('transform') || ele.css('transform');
-	let transform = getSVGTransform(ele[0]);
+	let transform = getSVGTransform(ele[0], true);
 	if (transform.x || transform.y) {
 		transform = getSVGTransform(ele[0], true);
-		let moveX = transform.x;
-		let moveY = transform.y;
+		let moveX = transform.x/transform.scaleX;
+		let moveY = transform.y/transform.scaleY;
 		parentTrans = [moveX, moveY];
 	}
 
@@ -134,13 +146,19 @@ var layers = {
 						
 					var stroke = ele.attr('stroke-width');
 					stroke = stroke ? Number.parseFloat(stroke) : 0;
-					var width = ele[0].getBBox().width + stroke / 2 * 2;
-					var height = ele[0].getBBox().height + stroke / 2 * 2;
+
+					let coord = getCoord(ele[0]); // with coord.other.scale we can prevent the parent scaling from affecting the bounding rectange of the element's own transform
+					var width = ele[0].getBoundingClientRect().width/doc.zoom/coord.other.scaleX + stroke / 2 * 2;
+					var height = ele[0].getBoundingClientRect().height/doc.zoom/coord.other.scaleY + stroke / 2 * 2;
 
 					// getCoord returns the position of any element, but only accounts for the style transformations on the current element, not including parent
-					var transX = -getCoord(ele[0]).x + stroke / 2;
-					var transY = -getCoord(ele[0]).y + stroke / 2;
-					// we have to account for the parent's translation since getCoord works in the relative local coordinate space
+					var transX = -coord.x + stroke / 2; //+ coord.other.scale[0];
+					var transY = -coord.y + stroke / 2; //+ coord.other.scale[1];
+
+					// getCoord actually accounts for all ancestor transformations
+					// however, we are adding each element individually without its parent transformations (in layers tab)
+					// so we need to re-apply the parent's translations in order for the child to be positioned as expected
+					// though technically, we could just ignore all child and ancestor transforms and simply use an element's coordinates while counter-acting their own transform
 					if (parentTrans) {
 						transX += parentTrans[0];
 						transY += parentTrans[1];
@@ -203,14 +221,6 @@ var layers = {
 					}
 
 					const hasSingleChild = ele.children().length === 1 && ele.children().eq(0).children().length === 0;
-					
-					// This is for ensuring that groups with a single element account for the child that is not traversed
-					if (hasSingleChild) {
-						const childEle = ele.children().eq(0);
-						const childTrans = getCoordAbsolute(childEle, [transX, transY]);
-						transX = childTrans[0];
-						transY = childTrans[1];
-					}
 
 					fillColor = window.getComputedStyle(ele[0]).getPropertyValue('fill').replace(/\s*,\s*/g, ',');
 					strokeColor = window.getComputedStyle(ele[0]).getPropertyValue('stroke').replace(/\s*,\s*/g, ',');
@@ -219,7 +229,8 @@ var layers = {
 
 					$(preview).attr({
 						// 'transform': (parentTrans ? parentTrans : '') + ' translate(' + transX + ',' + transY + ')'
-						'transform': ' translate(' + transX + ',' + transY + ')'
+						'transform': ' translate(' + transX + ',' + transY + ')',
+						// 'transform-origin': '0 0'
 					});
 					$(preview).css({
 						'transform': '',
@@ -320,6 +331,8 @@ var layers = {
 	},
 	drop: function(layer) {
 	svg.prevParent = $('#editor #' + layers.current.attr('id'))[0].parentElement; // we need this to check if the user moved an element up the DOM tree, in which case a different transformation calculation must be done
+	svg.storeAttr();
+	svg.prev = {...svg.initial}; // store the previous data on the element as a non-reference copy of the current state
 	
 	if (layers.current.hasClass('selected') && $('.layers .selected').length > 1) {
 		if (!layer.hasClass('selected')) {
@@ -355,7 +368,7 @@ var layers = {
 		} else if (layer.hasClass('drop-group')) {
 			let svgDoc = document.getElementById('editor');
 			let group;
-			if (refHover.tagName.toLowerCase() !== 'g' && moving.tagName.toLowerCase() !== 'g') { // prevent creation of un-intended double-groups by checking if the object being moved is not a group
+			if (refHover.tagName.toLowerCase() !== 'g') { // prevent creation of un-intended double-groups by checking if the object being hovered is not a group
 				// use SVG API instead
 				
 				if (parentGroup) // use the hovering element's parent in order to use inserBefore
@@ -403,6 +416,10 @@ var layers = {
 	svg.updateAttributes();
 	// layers.update ensures that elements without their own fill or stroke, inherit their parent <g> element colors in the layers tab
 	layers.update(); // TODO: this can be made more efficient by detecting the group element into which an element was droppped and/or detecting if the preview fill/stroke is actually different from the parent color in the different group
+
+	// TODO: need select.area because scaled items do not maintain their position when dropped into scaled groups (need to fix)
+	// However, it is wise to keep select.area() here in case an object does not maintain its position when group/parent container is changed
+	select.area(cache.ele); 
 	//if ()
 
 	/*if (layer.hasClass('drop-above')) {

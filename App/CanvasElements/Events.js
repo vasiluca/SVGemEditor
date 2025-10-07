@@ -27,11 +27,25 @@ let viewBox = cache.viewBox;
 let viewScale = cache.viewScale;
 let parent;
 let offset = cache.canvas;
+let globalScale = { xDiffScale: 1, yDiffScale: 1 };
+//* computeScaleDiff is only needed while drawing a new element
+function computeScaleDiff(e) {
+	let xDiff = e.clientX - offset.x;
+	let xDiffScale = (xDiff * svg.initial.globalScale[0] - xDiff) / svg.initial.globalScale[0]; // compensate for the applied scaling factor(s)
+
+	let yDiff = e.clientY - offset.y;
+	let yDiffScale = (yDiff * svg.initial.globalScale[1] - yDiff) / svg.initial.globalScale[1];
+	return {xDiffScale, yDiffScale};
+}
 $(document).mousedown(function (e) {
+	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
+		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
+	}
+	svg.storeAttr();
+	
 	viewBox = cache.viewBox;
 	viewScale = cache.viewScale;
 
-	svg.storeAttr();
 	
 	cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y }; // this helps ensure that after zooming the canvas coordinates are updated appropriately
 	
@@ -41,23 +55,28 @@ $(document).mousedown(function (e) {
 	// unlike baseVal, getCTM() used to derive globalTrans does not account for viewport scaling caused by viewBox
 	// we want to cancel out the doc.zoom effect on globalTrans, since globalTrans is operating within the internal coordinate system
 	offset = { // we only set offset offset once, before transforming an element
-		x: cache.canvas.x + svg.initial.globalTrans[0]*doc.zoom*cache.viewScale[0], 
-		y: cache.canvas.y + svg.initial.globalTrans[1]*doc.zoom*cache.viewScale[1],
+		x: cache.canvas.x + svg.initial.globalTrans[0]*doc.zoom*cache.viewScale[0],
+		y: cache.canvas.y + svg.initial.globalTrans[1]*doc.zoom*cache.viewScale[1]
 	};
+	globalScale = { xDiffScale: 1, yDiffScale: 1 };
+	if (newSVG.creating) // 
+		globalScale = computeScaleDiff(e); // compensate for the applied scaling factor(s) on parent or ancestor elements while drawing a new element
 
-	cache.start = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
-	drag.start = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
+	cache.start = [(e.clientX - offset.x - globalScale.xDiffScale) / viewScale[0] / doc.zoom + viewBox[0], 
+					(e.clientY - offset.y - globalScale.yDiffScale) / viewScale[1] / doc.zoom + viewBox[1]];
+	drag.start = [...cache.start];
 
 	// console.log('start', drag.start);
 
-	if (cache.press && tool.type != 'selection') { // when the user has an element tool selected
-		newSVG.creating = true; // indicates that the user mouse-pressed down and might create an element by dragging
-	}
 }).mousemove(function (e) {
 	// cache.stop points to the current cursor position on user's mousedown,
 	// and it also points to the last position the cursor was in before the mouseup event
-	cache.stop = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
-	drag.end = [(e.clientX - offset.x) / viewScale[0] / doc.zoom + viewBox[0], (e.clientY - offset.y) / viewScale[1] / doc.zoom + viewBox[1]];
+	if (svgAction.created) // when a new element was just created
+		globalScale = computeScaleDiff(e); // compensate for the applied scaling factor(s) on parent or ancestor elements
+
+	cache.stop = [(e.clientX - offset.x - globalScale.xDiffScale) / viewScale[0] / doc.zoom + viewBox[0],
+					(e.clientY - offset.y - globalScale.yDiffScale) / viewScale[1] / doc.zoom + viewBox[1]];
+	drag.end = [...cache.stop];
 
 	cache.cursor = [e.clientX, e.clientY];
 
