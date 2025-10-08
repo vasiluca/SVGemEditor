@@ -5,26 +5,64 @@ import { layers } from "../Layer.js";
 import { tool } from "../Tool.js";
 // import * as ImageImport from './ImageImport.js';
 
-$(document).mouseup(function (e) {
-	if (tool.name == 'image') {
-		if (tool.imageIndex != -1) {
-			var selection = tool.images[tool.imageIndex];
-			var posX = e.clientX - selection.width / 2;
-			var posY = e.clientY - selection.height / 2;
-			// was previously selection.height and selection.width for height and width
-			var element = '<image xlink:href="' + selection.result + '" height="' + 400 + '" x="' + posX + '" y="' + posY + '"/>';
-			$('#editor').html($('#editor').html() + element);
-			if (!pressed.ctrlKey && tool.imageIndex > -1) {
-				tool.imageIndex--;
+function readAndInsert(file) {
+	var reader = new FileReader();
+	var image = new Image();
+	image.src = file.result;
+	var width = 100;
+	var height = 100;
+	reader.readAsDataURL(file);
+	reader.onload = function () {
+		tool.images.push({
+			result: this.result,
+			width: width,
+			height: height
+		});
+	}
+}
+
+$('#inputFile').on('change', function (e) {
+	tool.images = [];
+	var files = e.target.files;
+	tool.imageIndex = files.length - 1;
+	tool.prevIndexIMG = files.length - 1;
+	for (var i = 0; i < files.length; i++) {
+		readAndInsert(files[i]);
+	}
+});
+
+// $('#image').contextmenu(function () {
+// 	$('#inputFile').trigger('click');
+// });
+
+$(document).on('mouseup', function (e) {
+	if (e.which === 1) { // on left click
+		if (tool.name == 'image') {
+			console.log(tool.images, tool.imageIndex);
+			if (tool.imageIndex != -1) {
+				var selection = tool.images[tool.imageIndex];
+				if (selection) {
+					var posX = e.clientX - selection.width / 2;
+					var posY = e.clientY - selection.height / 2;
+					// was previously selection.height and selection.width for height and width
+					var element = '<image xlink:href="' + selection.result + '" height="' + 400 + '" x="' + posX + '" y="' + posY + '"/>';
+					$('#editor').html($('#editor').html() + element);
+					
+					layers.update();
+				}
+				if (!pressed.ctrlKey && tool.imageIndex > -1) {
+					tool.imageIndex--;
+				}
+
 			}
-			layers.update();
+			if (tool.imageIndex <= -1) {
+				tool.type = 'selection';
+			}
 		}
-		if (tool.imageIndex == -1) {
-			tool.type = 'selection';
+		if (pressed.spaceBar) {
+			ui.cursor('grab');
 		}
+		// layers.update(); // commented out this line for causing errors
 	}
-	if (pressed.spaceBar) {
-		ui.cursor('grab');
-	}
-	// layers.update(); // commented out this line for causing errors
+	
 });
