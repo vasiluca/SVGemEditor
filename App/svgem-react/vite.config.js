@@ -1,0 +1,26 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const repoRoot = path.resolve(__dirname, '../../')
+
+export default defineConfig({
+  root: repoRoot, // React will check all files in the specified root directory for jsx script imports and output them in dist
+  base: './',
+  plugins: [react()],
+  build: {
+    outDir: path.resolve(repoRoot, 'dist'),
+    rollupOptions: {
+      input: {
+        index: path.resolve(repoRoot, 'app.html')
+      }
+    }
+  },
+  server: { // this is specifically for the react dev server
+    open: '/app.html', // this opens app.html on 'npm run dev'
+    fs: { allow: [repoRoot] }
+  },
+})
