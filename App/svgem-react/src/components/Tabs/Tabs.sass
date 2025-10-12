@@ -1,0 +1,78 @@
+// *
+// 	overflow: visible !important
+
+.tools
+	color: black
+
+.draggable
+	margin: 0
+	padding: 0
+	position: fixed
+	border-radius: 4px
+	box-shadow: 0 0 6px 1px rgba(0,0,0,0.4)
+	background-color: white
+	white-space: nowrap
+	transition: all 0.25s ease
+
+[aria-label]
+	position: relative
+	// height: 50px
+	// width: 50px
+	// line-height: 50px
+	&::before
+		content: attr(aria-label)
+		position: absolute
+		top: calc(100% + 6px)
+		left: 50%
+		transform: translateX(-50%)
+		visibility: hidden
+		opacity: 0
+		padding: 3px 4px
+		border-radius: 2px
+		background: rgba(255,255,255,0.9)
+		font-size: 15px
+		box-shadow: 0 0 4px 0 rgba(0,0,0,0.4)
+		transition: all 0s
+		z-index: 50
+		font-family: 'Roboto', sans-serif
+		color: black
+		line-height: 1
+	&:hover
+		&::before
+			visibility: visible
+			opacity: 1
+			transition: all 0.15s ease 1s
+	&:active, &:focus
+		&::before
+			transition: all 0s
+			visibility: hidden
+			opacity: 0
+	> div
+		line-height: 50px
+		width: 50px
+		text-align: center
+		font-size: 28px
+		transition: all 0.25s ease
+		flex: 0 0 50px
+		cursor: default
+		&.disabled
+			&::after
+				color: grey
+		&::before
+			top: -10px
+			transform: translateY(-100%) translateX(-50%)
+		&:hover
+			background-color: gainsboro
+			transition: all 0s ease
+		&[data-icon]::after
+			content: attr(data-icon)
+			position: absolute
+			color: black
+			z-index: 10
+			left: 0
+			top: 0
+			right: 0
+			bottom: 17px
+			overflow: hidden
+			display: block
+			text-shadow: 0 0 1px 0 white

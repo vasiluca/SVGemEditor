@@ -1,0 +1,22 @@
+.Indicator
+	position: absolute
+	left: 110px
+	width: 1.2px
+	border-top: 10px solid cornflowerblue
+	border-left: 5px solid transparent
+	border-right: 5px solid transparent
+	box-shadow: 0 -15px 0 rgba(100, 149, 237, 0.5)
+	transform: translateX(-50%)
+	margin-top: 10px
+	z-index: 100
+	top: 0
+	bottom: 0
+	&:active
+		width: 1.6px
+	&::after
+		content: ''
+		width: inherit
+		height: 100%
+		background-color: cornflowerblue
+		display: block
+

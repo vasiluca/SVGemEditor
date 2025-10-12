@@ -1,0 +1,56 @@
+.AniOptions
+	position: absolute
+	bottom: 0
+	left: 0
+	right: 0
+	height: 20px
+	background-color: rgb(232,232,232)
+	z-index: 20
+	display: flex
+	flex-wrap: no-wrap
+	z-index: 125
+	*
+		vertical-align: middle
+	.tfmMode
+		min-width: 110px
+		text-align: center
+		cursor: pointer
+		.material-icons
+			cursor: pointer
+			font-size: 15px
+			font-weight: bold
+		.txt
+			padding-left: 5px
+		&.activate
+			color: crimson
+	.transforms, .functions
+		max-width: 500px
+		// display: flex
+		// justify-content: space-around
+		// flex-wrap: no-wrap
+		// min-width: 500px
+		transition: opacity 0.15s ease, margin 0.25s ease
+		div
+			padding: 0 10px
+			width: 80px
+			cursor: pointer
+			transition: background 0.15s ease
+			text-align: center
+			//flex: 1
+			display: inline-block
+			.material-icons
+				font-size: 15px
+			.txt
+				padding-left: 5px
+				font-size: 15px
+			&:hover
+				background-color: lightgrey
+		&.hide
+			opacity: 0
+			margin-left: -100px
+	.functions
+		position: absolute
+		right: 0
+		div
+			width: 80px
+			display: inline-block

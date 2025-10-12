@@ -7,9 +7,10 @@ let tabPos = [0,0];
 let mouseStart = [0,0];
 
 $(document).mousemove(function (e) {
+	if (e.which !== 1) return; // prevent right mouse button from triggering move
 	const xDiff = e.clientX - mouseStart[0];
 	const yDiff = e.clientY - mouseStart[1];
-	if (cache.dragTab == true) {
+	if (cache.dragTab) {
 		tabStates.focused.css({
 			'left': tabPos[0] + xDiff,
 			'top': tabPos[1] + yDiff,
@@ -21,9 +22,10 @@ $(document).mousemove(function (e) {
 
 $('.draggable').mousedown(function (e) {
 	mouseStart = [e.clientX, e.clientY];
+	tabPos = [$(this).offset().left, $(this).offset().top];
 	if ($(e.target).is('.drag, .drag *') && e.which == 1) {
 		cache.dragTab = true;
-		tabPos = [$(this).offset().left, $(this).offset().top];
+		
 	} else if ($(e.target).is('.drag, .drag *') && e.which == 3) {
 		$(this).attr('data-resetPos', true);
 	}

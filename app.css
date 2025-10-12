@@ -322,17 +322,6 @@ input#file-selector {
     visibility: hidden
 }
 
-.tools .animation {
-    min-height: 125px;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: white;
-    z-index: 100;
-    display: none
-}
-
 .tools .draggable {
     margin: 0;
     padding: 0;

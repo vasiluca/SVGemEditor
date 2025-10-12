@@ -1,0 +1,42 @@
+.Pt
+	position: absolute
+	background: cornflowerblue
+	width: 26px
+	height: 26px
+	display: inline-block
+	transform: rotate(45deg) scale(0.7)
+	cursor: default
+	font-family: 'material icons'
+	line-height: 26px
+	&:hover
+		box-shadow: 0 0 0 3px blue inset
+		z-index: 75
+	&:active
+		background: blue
+		box-shadow: 0 0 0 3px cornflowerblue inset
+	&.select
+		background: blue
+		box-shadow: 0 0 0 3px crimson inset
+	&::after
+		content: ''
+		display: inline-block
+		font-family: 'material icons'
+		text-align: center
+		line-height: inherit
+		transform: rotate(-45deg)
+		color: white
+	&[data-type='opacity']
+		&::after
+			content: 'opacity'
+	&[data-type='translate']
+		&::after
+			content: 'settings_overscan'
+	&[data-type='scale']
+		&::after
+			content: 'photo_size_select_small'
+	&[data-type='rotate']
+		&::after
+			content: 'refresh'
+	&[data-type='skew']
+		&::after
+			content: 'sync_alt'
