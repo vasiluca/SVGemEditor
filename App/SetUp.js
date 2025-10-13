@@ -23,6 +23,7 @@ $('.splash .settings').click(function () {
 });
 
 var doc = {
+	loaded: false,
 	size: [800, 800],
 	origPos: [0, 0],
 	viewBox: function () {
@@ -33,6 +34,8 @@ var doc = {
 		});
 		$('.svg-contain').addClass('show');
 		$('.tools').removeClass('hide'); // make the tools visible
+		
+		doc.loaded = true;
 	},
 	zoom: 1
 };
@@ -86,7 +89,7 @@ const maxZoom = 20;
 
 
 $(document).on('wheel', function (e) {
-	if (!cache.mousedown) {
+	if (!cache.mousedown && doc.loaded) {
 		cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
 		dim = [editor.getBoundingClientRect().width, editor.getBoundingClientRect().height];
 

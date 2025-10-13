@@ -6,6 +6,7 @@ var tool = {
 	toolType: 'rect',
 	name: false,
 	prevName: false,
+	prevIndexIMG: -1,
 	set type(kind) {
 		$('.shapes div').removeClass('selected');
 		ui.hideTools(false);
@@ -21,10 +22,8 @@ var tool = {
 			ui.cursor('default');
 		}
 		if (kind == 'image') {
-			if (tool.imageIndex == -1) {
-				$('#inputFile').trigger('click');
-				tool.imageIndex = tool.prevIndexIMG;
-			}
+			$('#inputFile').trigger('click');
+			
 			this.toolType = 'selection';
 			ui.hideTools('selection');
 			ui.cursor('copy');

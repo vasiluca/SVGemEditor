@@ -111,6 +111,7 @@ function onFileLoad(event) {
 
 	layers.update();
 
+	doc.loaded = true;
 }
 
 function onChooseFile(event) {

@@ -1,4 +1,4 @@
-import { pressed } from "../../Cache.js";
+import { cache, pressed } from "../../Cache.js";
 import { ui } from "../../UI.js";
 
 import { layers } from "../Layer.js";
@@ -23,12 +23,16 @@ function readAndInsert(file) {
 
 $('#inputFile').on('change', function (e) {
 	tool.images = [];
-	var files = e.target.files;
-	tool.imageIndex = files.length - 1;
-	tool.prevIndexIMG = files.length - 1;
-	for (var i = 0; i < files.length; i++) {
-		readAndInsert(files[i]);
+	
+	if (e.target) {
+		var files = e.target.files;
+		tool.imageIndex = files.length - 1;
+		tool.prevIndexIMG = files.length - 1;
+		for (var i = 0; i < files.length; i++) {
+			readAndInsert(files[i]);
+		}
 	}
+	
 });
 
 // $('#image').contextmenu(function () {
@@ -39,7 +43,7 @@ $(document).on('mouseup', function (e) {
 	if (e.which === 1) { // on left click
 		if (tool.name == 'image') {
 			console.log(tool.images, tool.imageIndex);
-			if (tool.imageIndex != -1) {
+			if (tool.imageIndex !== -1 && cache.mapKeysTo === 'canvas') { // when there are images selected and canvas is clicked
 				var selection = tool.images[tool.imageIndex];
 				if (selection) {
 					var posX = e.clientX - selection.width / 2;

@@ -4,6 +4,10 @@
 <head>
 	<title>SVG Drawing App (Development)</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+
 	<link rel="stylesheet" href="./app.css" />
 	<!--link(href='./libs/fonts/material/material-icons.css' rel='stylesheet')-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -30,7 +34,7 @@
 		<div class="startActions">
 			<div class="start">START</div>
 			<div class="import">IMPORT</div>
-			<input type="file" id="file-selector" onchange="onChooseFile(event)" />
+			<input type="file" id="file-selector" onchange="onChooseFile(event)" accept=".svg" />
 		</div>
 		<div class="quickset">
 			<span>W:</span><input type="number" placeholder="WIDTH" /><span>H:</span><input type="number"
@@ -254,7 +258,7 @@
 	<input id="GetText" type="text" style="opacity: 0; height: 0; width: 0;" />
 
 
-	<input style="display: none" id="inputFile" type="file" accept=".jpg, .jpeg, .png, .svg, .gif" multiple />
+	<input style="display: none" id="inputFile" type="file" accept=".jpg, .jpeg, .png, .svg, .gif, image/*" multiple />
 	<script>
 		function toggleFullScreen() {
 			if (!document.fullscreenElement) {

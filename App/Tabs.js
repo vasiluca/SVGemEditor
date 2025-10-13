@@ -252,6 +252,7 @@ var tabStates = {
 
 	},
 	adjustPos: function (tab, e) {
+		if (!this.focused) return; // prevent errors
 		var height = this.focused.height();
 		var width = this.focused.width();
 		var box = this.focused;
