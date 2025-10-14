@@ -6,6 +6,8 @@ import { util } from "./Tabs.js";
 let tabPos = [0,0];
 let mouseStart = [0,0];
 
+let prevMapKeys = 'selection';
+
 $(document).mousemove(function (e) {
 	if (e.which !== 1) return; // prevent right mouse button from triggering move
 	const xDiff = e.clientX - mouseStart[0];
@@ -18,14 +20,24 @@ $(document).mousemove(function (e) {
 			'right': 'auto'
 		});
 	}
-});
+	
+}).on('mouseup',function() {
+	console.log(cache.mapKeysTo);
+	if (cache.dragTab) {
+		cache.mapKeysTo = prevMapKeys;
+	}
+})
+
 
 $('.draggable').mousedown(function (e) {
 	mouseStart = [e.clientX, e.clientY];
 	tabPos = [$(this).offset().left, $(this).offset().top];
 	if ($(e.target).is('.drag, .drag *') && e.which == 1) {
 		cache.dragTab = true;
+
 		
+		prevMapKeys = cache.mapKeysTo;
+		cache.mapKeysTo = 'dragging'; // prevent mousemove not being detected when mousing over an element with stopPropagation()
 	} else if ($(e.target).is('.drag, .drag *') && e.which == 3) {
 		$(this).attr('data-resetPos', true);
 	}

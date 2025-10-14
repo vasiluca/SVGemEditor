@@ -274,6 +274,7 @@ var tabStates = {
 
 		var winH = $(window).height();
 		var winW = $(window).width();
+
 		if (cache.dragTab == true || tab) {
 			if (box.hasClass('verti')) {
 				if (box.offset().left < -width / 2) {
@@ -303,6 +304,7 @@ var tabStates = {
 					box.css('left', -width + 20);
 				}
 			}
+			
 
 			if (box.offset().top < 20 + resizeMargin) {
 				if (box.hasClass('verti')) {
@@ -318,7 +320,7 @@ var tabStates = {
 					}
 					box.css('top', 10);
 				}
-				if (box.offset().top < 20 - height) {
+				if (box.offset().top < 20 - height && !box.hasClass('noReorient')) {
 					if (!box.hasClass('orientHorizontal')) {
 						box.addClass('orientHorizontal');
 					} else if (!box.hasClass('horiz')) {
@@ -379,7 +381,7 @@ var tabStates = {
 						'left': 10
 					});
 				}
-				if (box.offset().left < 20 - width) {
+				if (box.offset().left < 20 - width && !box.hasClass('noReorient')) {
 					if (!box.hasClass('orientVertical')) {
 						box.addClass('orientVertical');
 					} else if (!box.hasClass('verti')) {

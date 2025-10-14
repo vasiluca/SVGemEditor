@@ -4,6 +4,10 @@
 <head>
 	<title>SVG Drawing App (Development)</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+
 	<!--link(href='./libs/fonts/material/material-icons.css' rel='stylesheet')-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 	<link
@@ -19,8 +23,8 @@
 	<script nomodule>
 		alert("Your browser does not support modules!"); // this alert will occur when modules is not supported
 	</script>
-  <script type="module" crossorigin src="./assets/index-DiiHUZt6.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CCJ7gwGg.css">
+  <script type="module" crossorigin src="./assets/index-BrtabOcT.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BIWBgLRh.css">
 </head>
 
 <body>
@@ -30,7 +34,7 @@
 		<div class="startActions">
 			<div class="start">START</div>
 			<div class="import">IMPORT</div>
-			<input type="file" id="file-selector" onchange="onChooseFile(event)" />
+			<input type="file" id="file-selector" onchange="onChooseFile(event)" accept=".svg" />
 		</div>
 		<div class="quickset">
 			<span>W:</span><input type="number" placeholder="WIDTH" /><span>H:</span><input type="number"
@@ -55,7 +59,7 @@
 		<div class="propertyScrubber">
 			<div class="scrub"></div>
 		</div>
-		<div class="draggable properties horiz">
+		<div class="draggable properties horiz noReorient">
 			<div aria-label="stroke" data-icon="border_color" class="material-icons toggled">
 				border_color
 			</div>
@@ -72,11 +76,11 @@
 			<div aria-label="delete" class="material-icons">delete</div>
 			<span class="material-icons drag">drag_handle</span>
 		</div>
-		<div class="draggable layers verti">
+		<div class="draggable layers verti noReorient">
 			<div class="all"></div>
 			<span class="material-icons drag">drag_handle</span>
 		</div>
-		<div class="draggable actions horiz">
+		<div class="draggable actions horiz noReorient">
 			<span aria-label="drag" class="material-icons drag">drag_handle</span>
 			<div aria-label="undo" id="undo" class="material-icons" style="opacity: 0.3">
 				undo
@@ -207,7 +211,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="draggable Animation animation verti"></div>
+		<div class="draggable Animation animation verti noReorient"></div>
 	</div>
 	<div class="hiddenTemplates">
 		<div class="colorCat">
@@ -254,7 +258,7 @@
 	<input id="GetText" type="text" style="opacity: 0; height: 0; width: 0;" />
 
 
-	<input style="display: none" id="inputFile" type="file" accept=".jpg, .jpeg, .png, .svg, .gif" multiple />
+	<input style="display: none" id="inputFile" type="file" accept=".jpg, .jpeg, .png, .svg, .gif, image/*" multiple />
 	<script>
 		function toggleFullScreen() {
 			if (!document.fullscreenElement) {

@@ -1,6 +1,7 @@
 import { cache, pressed, svgAction } from "../../Cache.js";
 import { newSVG } from "../../CanvasElements/Modify/newSVG.js";
 import { select } from "../../CanvasElements/Selection.js";
+import { tabStates } from "../../Tabs.js";
 
 import { ui } from "../../UI.js";
 
@@ -78,6 +79,8 @@ $('.layers .all').on('mouseenter', 'div', function (e) {
 	/*cache.ele = $(e.target).attr('id');
 	select.area(true);*/
 }).on('mousedown', 'div', function (e) {
+	tabStates.indexUp($('.layers'));
+
 	e.stopPropagation();
 	cache.mapKeysTo = 'layers';
 
