@@ -6,8 +6,7 @@ import { ui } from "../UI.js";
 var select = {
 	display: 'block',
 	area: function(ele) {
-		
-		var area = {
+		this.data = {
 			x: cache.stop[0] > cache.start[0] ? cache.start[0] : cache.stop[0],
 			y: cache.stop[1] > cache.start[1] ? cache.start[1] : cache.stop[1],
 			width: cache.stop[0] > cache.start[0] ? cache.stop[0] - cache.start[0] : cache.start[0] - cache.stop[0],
@@ -15,7 +14,7 @@ var select = {
 		}
 		
 		if (ele) { // This checks that ele is NOT undefined or null
-			area = {
+			this.data = {
 				x: ele[0].getBoundingClientRect().x,
 				y: ele[0].getBoundingClientRect().y,
 				width: ele[0].getBoundingClientRect().width,
@@ -31,15 +30,18 @@ var select = {
 			$('.selection').removeClass('selecting');
 			this.display = 'none';
 		}
-		this.ui(area);
+		this.ui();
 	},
-	ui: function(area) {
+	ui: function() {
+		if (!this.data) return;
+		
 		$('.selection').css({
-			'left': area.x,
-			'top': area.y,
-			'width': area.width,
-			'height': area.height,
-			'display': this.display // By default will show the selection area in case it was previously hidden
+			'left': this.data.x,
+			'top': this.data.y,
+			'width': this.data.width,
+			'height': this.data.height,
+			'display': this.display, // By default will show the selection area in case it was previously hidden
+			'pointer-events': this.pointerEvents ? this.pointerEvents : 'all'
 		});
 	}
 }
