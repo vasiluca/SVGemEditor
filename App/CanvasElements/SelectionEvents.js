@@ -104,8 +104,13 @@ $(document).mousemove(function(e) {
 	
 
 	if (e.which == 1) { // on LEFT click only
-		if (!cache.ele && cache.press) {
-			select.area(false);
+		
+		if (!cache.ele) {
+			if (cache.press)
+				select.area(false);
+
+			cache.currGroupID.clear();
+			
 			// $('.layers #' + cache.svgID).addClass('selected');
 		}
 	}

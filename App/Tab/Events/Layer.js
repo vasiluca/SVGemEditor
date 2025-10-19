@@ -8,6 +8,7 @@ import { ui } from "../../UI.js";
 import { layers } from "../Layer.js";
 import { tool } from "../Tool.js";
 
+let selectLayer;
 $(document).mouseup(function(e) {
 	if (e.which == 1) {
 		if (layers.multiSelect) {
@@ -25,10 +26,12 @@ $(document).mouseup(function(e) {
 		if ($(e.target).is('#editor, #editor *')) {
 			if (!pressed.shiftKey) $('.layers .selected').removeClass('selected');
 
-			let selectLayer = document.querySelector('.layers .all div#' + CSS.escape(cache.svgID));
+			selectLayer = document.querySelector('.layers .all div#' + CSS.escape(cache.svgID));
 
-			if (selectLayer)
+			if (selectLayer) {
 				selectLayer.classList.add('selected');
+				
+			}
 		} else if (tool.name === 'selection' && $(e.target).is('#editor')) {
 			$('.layers .selected').removeClass('selected');
 		}
@@ -40,7 +43,20 @@ $(document).mouseup(function(e) {
 	layers.pressed = false;
 	$('.draggingLayer').remove();
 	$('.layers .all').css('cursor', '');
-});
+}).on('dblclick contextmenu', function(e) {
+	if (cache.mapKeysTo === 'canvas')
+		if ($(e.target).is('#editor, #editor *, .selection'))
+			if (selectLayer) {
+				let scrollTo = 'center';
+				if (selectLayer.getAttribute('data-svgem')) // data-svgem is auto-generated for all <g> elements
+					scrollTo = 'start'; // for group elements scroll them into view at the top
+
+				selectLayer.scrollIntoView({
+					behavior: 'smooth',
+					block: scrollTo
+				});
+			}
+})
 
 // expects this as argument
 function ensureID(self) { // create an identifier for the canvas element if one does not correspond to the layers tab

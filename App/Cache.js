@@ -8,6 +8,7 @@ import { tool } from './Tab/Tool.js';
 
 import { layers } from './Tab/Layer.js';
 import { select } from './CanvasElements/Selection.js';
+import { newSVG } from './CanvasElements/Modify/newSVG.js';
 
 var cache = { // 'canvas' refers to the #editor SVG container element
 	canvas: {
@@ -21,8 +22,34 @@ var cache = { // 'canvas' refers to the #editor SVG container element
 	stop: [],
 	press: false,
 	svgID: 0, // this stores the currently select SVG ID
+	firstClick: '',
+	currGroupID: new Set(),
 	set ele(val) {
 		this.svgID = val;
+
+		const elID = this.ele[0]?.getAttribute('id');
+		const elTag = this.ele[0]?.tagName.toLowerCase();
+
+		const parent = this.ele[0]?.parentElement;
+		let parentID = parent?.getAttribute('id');
+		const parentTag = parent?.tagName.toLowerCase();
+		
+		if (parentTag === 'g' && cache.mapKeysTo === 'canvas') {
+			if (!parentID) {
+				parentID = newSVG.numID;
+				parent.setAttribute('id', parentID);
+				newSVG.numID++;
+			}
+				
+			if (!this.currGroupID.has(parentID)) // the group has not been selected yet, select it first, and then selection of children will happen automatically
+				this.svgID = parentID; // make the parent ID the selected one, otherwise the child element will be selected by default
+	
+			if (this.firstClick == parentID) // add the group on the second consecutive click, allowing for equality between String and Number
+				this.currGroupID.add(parentID);
+
+			this.firstClick = parentID;
+		}
+		
 	},
 	get ele() {
 		var element = $('#editor #' + CSS.escape(this.svgID));
@@ -111,6 +138,8 @@ $(document).contextmenu(function (e) {
 				if (tool.type == 'selection') {
 					$('.selection').css('display', 'none');
 					cache.svgID = -1; // ID of -1 indicates no element selected, cache.ele = -1 does the same thing
+					select.area(false);
+					cache.currGroupID.clear();
 				} else {
 					tool.type = 'selection';
 				}
