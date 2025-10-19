@@ -172,10 +172,24 @@ $(document).on('wheel', function (e) {
 			if (doc.zoom < 0)
 				doc.zoom = 0;
 
+			let newWidth = doc.size[0] * doc.zoom;
+			let newHeight = doc.size[1] * doc.zoom;
+
+			let crispZoom = true;
+			if (crispZoom) {
+				offsetTop = ($(window).height() / 2 - newHeight / 2);
+				offsetLeft = ($(window).width() / 2 - newWidth / 2);
+				if (doc.zoom > 1) {
+					offsetTop = $(window).height() / 2 - (e.clientY - doc.origPos[1])*doc.zoom;
+					offsetLeft = $(window).width() / 2 - (e.clientX - doc.origPos[0])*doc.zoom;
+				}
+			}
 			// we need to include transform-origin, because while 50% 50% (center) is default, a (scaled) viewBox attribute will impact the origin
 			// transform-origin is established relative to the viewBox coordinate system once it is established
 			$('#editor').css({
-				'transform': 'scale(' + doc.zoom + ')',
+				// 'transform': 'scale(' + doc.zoom + ')',
+				'width': doc.size[0] * doc.zoom,
+				'height': doc.size[1] * doc.zoom,
 				'top': offsetTop,
 				'left': offsetLeft,
 				// 'transform-box': 'border-box', // transform-box makes transform-origin relative to the element's own parent bounding box (rather than internal coordinate viewBox for children elements)
