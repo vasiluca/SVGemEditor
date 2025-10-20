@@ -36,12 +36,15 @@ var select = {
 		if (!this.data) return;
 		
 		$('.selection').css({
+			'position': 'absolute',
 			'left': this.data.x,
 			'top': this.data.y,
 			'width': this.data.width,
 			'height': this.data.height,
 			'display': this.display, // By default will show the selection area in case it was previously hidden
-			'pointer-events': this.pointerEvents ? this.pointerEvents : 'all'
+			'pointer-events': this.pointerEvents ? this.pointerEvents : 'all',
+			'transition': this.transition ? 'position 0.25s ease, opacity 0.15s ease' : 'opacity 0.5s ease',
+			'opacity': this.transition ? 0 : 1
 		});
 	}
 }

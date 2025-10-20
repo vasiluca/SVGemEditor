@@ -87,7 +87,12 @@ let origin;
 const zoomSpeed = 0.05;
 const maxZoom = 20;
 
+let client = [0, 0]; // this stores a fixed mouse position point (unless zooming out, in which case it is updated)
+let clientX, clientY; // this stores relative mouse position limited/affescted by the 'client' mouse point var and zoom level
 
+let lastCheckedZoom = doc.zoom;
+let timeoutFn;
+let prevZoomDir = '';
 $(document).on('wheel', function (e) {
 	if (!cache.mousedown && doc.loaded) {
 		cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
@@ -117,7 +122,12 @@ $(document).on('wheel', function (e) {
 					}
 
 				}
+				
+				if (prevZoomDir === 'in')
+					client = [clientX, clientY];
+
 				prevZoom = doc.zoom;
+				prevZoomDir = 'out';
 			}
 			if (e.originalEvent.deltaY < 0) { // scrolling down - zooming in
 				// we will only change the origin when zooming in, because otherwise it becomes disorienting
@@ -145,6 +155,10 @@ $(document).on('wheel', function (e) {
 				}
 
 				prevZoom = doc.zoom;
+				prevZoomDir = 'in';
+			}
+			if (prevZoom <= 1) {
+				client = [e.clientX, e.clientY];
 			}
 			// the left and top CSS properties are always applied after transformations
 
@@ -180,40 +194,42 @@ $(document).on('wheel', function (e) {
 				offsetTop = ($(window).height() / 2 - newHeight / 2);
 				offsetLeft = ($(window).width() / 2 - newWidth / 2);
 				if (doc.zoom > 1) {
-					offsetTop = $(window).height() / 2 - (e.clientY - doc.origPos[1])*doc.zoom;
-					offsetLeft = $(window).width() / 2 - (e.clientX - doc.origPos[0])*doc.zoom;
+					const zoomX = newWidth / doc.size[0];
+					const zoomY = newHeight / doc.size[1];
+					clientX = client[0] + (e.clientX - client[0])/zoomX;
+					clientY = client[1] + (e.clientY - client[1])/zoomY;
+					offsetTop = $(window).height() / 2 - (clientY - doc.origPos[1])*zoomY;
+					offsetLeft = $(window).width() / 2 - (clientX - doc.origPos[0])*zoomX;
 				}
 			}
 			// we need to include transform-origin, because while 50% 50% (center) is default, a (scaled) viewBox attribute will impact the origin
 			// transform-origin is established relative to the viewBox coordinate system once it is established
 			$('#editor').css({
 				// 'transform': 'scale(' + doc.zoom + ')',
-				'width': doc.size[0] * doc.zoom,
-				'height': doc.size[1] * doc.zoom,
+				'width': doc.size[0] * doc.zoom || 1,
+				'height': doc.size[1] * doc.zoom || 1,
 				'top': offsetTop,
 				'left': offsetLeft,
 				// 'transform-box': 'border-box', // transform-box makes transform-origin relative to the element's own parent bounding box (rather than internal coordinate viewBox for children elements)
 				'transform-origin': origin[0] + 'px ' + origin[1] + 'px',
 				// 'transition': 'all 0s ease'
 			});
+			select.transition = true;
 			select.area(cache.ele);
 
-			if (!timeout) {
-				timeout = true;
-
-				interval = setInterval(function () {
+			function selectFn() {
+				timeout = false;
+				if (lastCheckedZoom === doc.zoom) {
+					select.transition = false;
 					select.area(cache.ele);
-					// cache.canvas = { x: editor.getBoundingClientRect().x, y: editor.getBoundingClientRect().y };
-				}, 160);
-
-				setTimeout(function() {
-					clearInterval(interval);
-					select.area(cache.ele);
-					timeout = false;
-				}, 500)
+				} else {
+					clearTimeout(timeoutFn);
+					timeoutFn = setTimeout(selectFn, 500);
+				}
 			}
-
-
+			
+			selectFn();
+			lastCheckedZoom = doc.zoom;
 		}
 	}
 	

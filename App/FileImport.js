@@ -18,6 +18,14 @@ function getViewBox() {
 	viewBox = $('#editor').attr('viewBox');
 	let viewScale = [1, 1];
 	let dimensions = [0, 0];
+
+	const width = $(editor).width();
+	const height = $(editor).height();
+
+	function viewBoxDefaultSet() {
+		viewBox = [0, 0, width, height]
+		editor.setAttribute('viewBox', viewBox.join(' ')); // ensure zooming works properly (because the width and height of the svg element is changed)
+	}
 	if (viewBox) {
 		try { // when viewBox attribute is set, the SVG image will not render without the proper four number values - so we can always expect there to be four numbers for a viewBox
 			let viewB = editor.viewBox.baseVal;
@@ -28,19 +36,18 @@ function getViewBox() {
 			let widthRect = editor.getBoundingClientRect().width;
 			let heightRect = editor.getBoundingClientRect().height;
 			// taking advantage of jQuery's width() and height() functions to return pixel unit (px) dimensions while ignoring transformations, padding/border etc.
-			const width = $(editor).width();
-			const height = $(editor).height();
+			
 
 			doc.zoom = widthRect/width; // set doc.zoom to ensure proper drawing for svg imports that are already scaled
 
 			viewScale = [width / viewB.width, height / viewB.height];
 		} catch(e) {
 			console.warn(e);
-			viewBox = [0,0,0,0];
+			viewBoxDefaultSet();
 		}
 		
 	} else {
-		viewBox = [0, 0, 0, 0]
+		viewBoxDefaultSet();
 	}
 	
 	cache.viewBox = viewBox;

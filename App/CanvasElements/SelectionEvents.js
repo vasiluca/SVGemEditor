@@ -70,8 +70,11 @@ $('#editor, .selection').mousedown(function (e) {
 })
 
 $(document).mousemove(function(e) {
-	select.pointerEvents = 'all';
-	select.ui(); // apply pointer events
+	if (select.pointerEvents === 'none') {
+		select.pointerEvents = 'all';
+		select.ui(); // apply pointer events
+	}
+		
 
 	if (tool.name === 'drag' && windowPress) {
 		// reset the checks used for element dragging and resizing, to prevent them after space up
