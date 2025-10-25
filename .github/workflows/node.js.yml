@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     # container: node:22 # This might help the `act` command run faster, and possibly ensure that it uses the correct container for the Node version
 
-    strategy:
-      matrix:
-        node-version: [] # [22.x]
+    # strategy:
+      # matrix:
+        # node-version: [22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version-file: '.nvmrc'
-        # node-version: ${{ matrix.node-version || '' }} # When no node-version is specified within node-versions, then GitHub will use .nvmrc
+        node-version: ${{ matrix.node-version || '' }} # When no node-version is specified within node-versions, then GitHub will use .nvmrc
         cache: 'npm'
     
     - run: node --version && npm --version # Check the expected correct node and npm versions are used
