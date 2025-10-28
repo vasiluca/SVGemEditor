@@ -19,22 +19,39 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version-file: '.nvmrc'
-        node-version: ${{ matrix.node-version || '' }} # When no node-version is specified within node-versions, then GitHub will use .nvmrc
-        cache: 'npm'
-    
-    - run: node --version && npm --version # Check the expected correct node and npm versions are used
-    - run: npm ci --prefix ./App/svgem-react
-    - run: npm run build --if-present
+      - uses: actions/checkout@v4
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          node-version: ${{ matrix.node-version || '' }} # When no node-version is specified within node-versions, then GitHub will use .nvmrc
+          cache: 'npm'
 
-    # Upload artifact for GitHub Pages
-    - name: Upload artifact for Pages
-      # will not attempt to upload to GitHub Pages if `act` command is used locally, which sets env.ACT, but remotely resolves to ''
-      if: ${{ !env.ACT }}
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: ./dist
+      - uses: actions/configure-pages@v5
+      
+      - run: node --version && npm --version # Check the expected correct node and npm versions are used
+      - run: npm ci --prefix ./App/svgem-react
+      - run: npm run build --if-present
+
+      # Upload artifact for GitHub Pages
+      - name: Upload artifact for Pages
+        # will not attempt to upload to GitHub Pages if `act` command is used locally, which sets env.ACT, but remotely resolves to ''
+        if: ${{ !env.ACT }}
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
