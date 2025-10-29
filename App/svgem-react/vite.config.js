@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import checker from 'vite-plugin-checker'
+
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -8,9 +10,16 @@ const __dirname = path.dirname(__filename)
 const repoRoot = path.resolve(__dirname, '../../')
 
 export default defineConfig({
-  root: repoRoot, // React will check all files in the specified root directory for jsx script imports and output them in dist
+  root: repoRoot, // React will check all files in the specified root directory for jsx script imports and output them in dist, root is set to this because there are jsx imports in that root html file 
   base: './',
-  plugins: [react()],
+  plugins: [
+    react(),
+    checker({
+      typescript: {
+        tsconfigPath: path.resolve(__dirname, 'tsconfig.json')
+      }
+    })
+  ],
   build: {
     outDir: path.resolve(repoRoot, 'dist'),
     rollupOptions: {

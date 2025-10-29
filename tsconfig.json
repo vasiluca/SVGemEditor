@@ -1,0 +1,6 @@
+{
+	"files": [],
+	"references": [
+		{ "path": "./App/svgem-react" }
+	]
+}

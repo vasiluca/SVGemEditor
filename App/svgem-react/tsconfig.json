@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		// Language and modules
+		"target": "ES2020",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"jsx": "react-jsx",
+
+		"allowJs": true,
+		"checkJs": false, // False ensures that TypeScript checks only .jsx/.tsx files (in src), and skips any external imported .js files
+		"noEmit": true,
+
+		"forceConsistentCasingInFileNames": true,
+
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		
+		// "types": ["vite/client", "react", "react-dom", "jquery"],
+	},
+	"include": ["./src"]
+}
