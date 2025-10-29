@@ -1,5 +1,5 @@
 ## Project Link
-https://vasiluca.github.io/SVGemEditor/dist/app.html
+https://vasiluca.github.io/SVGemEditor
 The project can be accessed directly in the browser through the github.io website.
 
 ## React with Vite (Integration)

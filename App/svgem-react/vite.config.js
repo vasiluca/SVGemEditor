@@ -15,12 +15,12 @@ export default defineConfig({
     outDir: path.resolve(repoRoot, 'dist'),
     rollupOptions: {
       input: {
-        index: path.resolve(repoRoot, 'app.html')
+        index: path.resolve(repoRoot, 'index.html')
       }
     }
   },
   server: { // this is specifically for the react dev server
-    open: '/app.html', // this opens app.html on 'npm run dev'
+    open: '/index.html', // this opens app.html on 'npm run dev'
     fs: { allow: [repoRoot] }
   },
 })
