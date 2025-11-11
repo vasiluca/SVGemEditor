@@ -1,40 +1,43 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Timeline, TimelineModel } from "animation-timeline-js";
 
-function TimelineComponent(props) {
-  const { model, time } = props;
-  const timelineElRef = useRef(null);
-  const [timeline, setTimeline] = useState(undefined);
+import Scene from "scenejs";
 
-  useEffect(() => {
-    let newTimeline = null;
-    // On component init
-    console.log('timelineElRef.current', timelineElRef.current);
-    if (timelineElRef.current) {
-      
-      newTimeline = new Timeline({ id: timelineElRef.current });
-      // Here you can subscribe on timeline component events
-      setTimeline(newTimeline);
+import {
+    useScene,
+    useSceneItem,
+    useFrame,
+    useNowFrame
+} from "react-scenejs";
+
+import Timeline from "react-scenejs-timeline";
+
+import './TimelineComponent.sass';
+
+function TimelineComponent() {
+  const scene = new Scene({
+    "#editor": {
+      0: {
+          left: "0px",
+          top: "0px",
+          transform: `translate(0px, 0px)`,
+      },
+      1: {
+          left: "100px",
+          top: "100px",
+          transform: `translate(100px, 0px)`,
+      },
     }
+  });
+  // useEffect(() => {
+  //   scene.play();
+  // }, [])
 
-    // cleanup on component unmounted.
-    return () => newTimeline?.dispose();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timelineElRef.current]);
-
-  // Example to subscribe and pass model or time update:
-  useEffect(() => {
-    timeline?.setModel(model);
-  }, [model, timeline]);
-
-  // Example to subscribe and pass model or time update:
-  useEffect(() => {
-    if (time || time === 0) {
-      timeline?.setTime(time);
-    }
-  }, [time, timeline]);
-
-  return <div style={{ width: "100%", height: '100%'}} ref={timelineElRef} />;
+  return <Timeline 
+            scene={scene} 
+            keyboard={false}
+            onSelect={(e) => {
+              console.log('selected', e.target);
+            }} />;
 }
 
 export default TimelineComponent;

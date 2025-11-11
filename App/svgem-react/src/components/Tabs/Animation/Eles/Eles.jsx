@@ -11,33 +11,7 @@ const Eles = (props) => {
 	return (
 
 		<div className={style.Eles}>
-			<TimelineComponent
-				time={0}
-				model={{
-					rows: [
-						{
-							keyframes: [
-							{
-								val: 40,
-							},
-							{
-								val: 3000,
-							},
-							],
-						},
-						{
-							keyframes: [
-							{
-								val: 40,
-							},
-							{
-								val: 2000,
-							},
-							],
-						},
-					],
-				}}
-			></TimelineComponent>
+			<TimelineComponent/>
 		</div>
 	);
 }
