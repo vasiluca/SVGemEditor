@@ -4,7 +4,43 @@ import { layers } from "./Tab/Layer.js";
 
 $('.import').click(function () {
 	$('input#file-selector').trigger('click'); // trigger an artifical click on input to run the funciton onChooseFile(event)
+	$('.Animation').removeClass('open');
 })
+
+const demoPath = 'images/demo/';
+const demoFiles = ['embark.svg'];
+const checkDemoMode = () => { // this applies when the url contains a query like ?demoFile=embark.svg
+	const queryString = window.location.search;
+
+	const urlParams = new URLSearchParams(queryString);
+
+	if (urlParams.size > 0) {
+		const fileName = urlParams.get('demo');
+
+		fetch('demo/' + fileName).then(res => {
+			
+			console.log('Demo res: ', res);
+			if (!res.ok)
+				return console.warn('Unable to retrieve demo file. Showing Default Screen.');
+			else if (res.body.locked)
+				return console.warn('File locked');
+
+			const result = res.text().then(result => {
+				if (result.includes('html')) // the fetched file does not exist and React returned a copy of the page code
+					return; // the default page will continue to be shown
+					
+				console.log('result ', result);
+				onFileLoad(result);
+
+				doc.showCanvas();
+				$('.Animation').removeClass('open');
+			});
+		}).catch(e => {
+			console.error('Error retrieving demo file', e);
+		});
+	}
+}
+checkDemoMode(); // automatically check browser URL for Demo Mode
 
 const editor = document.querySelector('#editor');
 
@@ -68,20 +104,20 @@ function centerCanvas() {
 }
 
 // TODO: Create a new embedded <object> element which includes the SVG to further prevent interference between IDs and element accesses in the container application
-function onFileLoad(event) {
+function onFileLoad(content) {
+	console.log(content);
 	// $('.svg-contain #editor').remove(); // remove the the default #editor SVG canvas
 	// const parser = new DOMParser();
 	// const doc = parser.parseFromString(event.target, 'application/xml');
 	// console.log(doc);
 
 	// avoid removing or directly changing HTML of #editor in order to not invalidate eventListeners (i.e. $('.svg-contain #editor').replaceWith(event.target.result))
-	$('.svg-contain').prepend(event.target.result);
+	$('.svg-contain').prepend(content);
 	const src = $('.svg-contain > svg')[0];
 	const dest = $('.svg-contain > svg')[1];
 	copyAttributes(src, dest);
 
 	let srcInnerHTML = src.innerHTML;
-	// console.log(event.target.result);
 
 	src.remove();
 
@@ -127,7 +163,7 @@ function onChooseFile(event) {
 
 	var reader = new FileReader();
 	reader.addEventListener('load', function (e) {
-		onFileLoad(e);
+		onFileLoad(e.target.result);
 	});
 	
 	reader.readAsText(file);

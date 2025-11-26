@@ -26,16 +26,19 @@ var doc = {
 	loaded: false,
 	size: [800, 800],
 	origPos: [0, 0],
+	showCanvas: function() {
+		$('.svg-contain').addClass('show');
+		$('.tools').removeClass('hide'); // make the tools visible
+
+		doc.loaded = true;
+	},
 	viewBox: function () {
 		$('#editor').attr({
 			'viewBox': '0 0 ' + this.size[0] + ' ' + this.size[1],
 			'width': this.size[0],
 			'height': this.size[1]
 		});
-		$('.svg-contain').addClass('show');
-		$('.tools').removeClass('hide'); // make the tools visible
-		
-		doc.loaded = true;
+		this.showCanvas();
 	},
 	zoom: 1
 };
