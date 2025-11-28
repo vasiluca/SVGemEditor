@@ -22,7 +22,6 @@ $(document).mousemove(function (e) {
 	}
 	
 }).on('mouseup',function() {
-	console.log(cache.mapKeysTo);
 	if (cache.dragTab) {
 		cache.mapKeysTo = prevMapKeys;
 	}

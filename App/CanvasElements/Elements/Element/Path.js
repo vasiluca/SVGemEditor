@@ -8,7 +8,7 @@ class Path extends Element {
 		// This constructor might be used in the future, although it's not guaranteed
 	}
 
-	static createAttr() {
+	static createAttr(x, y) {
 		// var x = drag.end[0] - drag.start[0];
 		// var y = drag.end[1] - drag.start[1];
 		// console.log(drag.end[0], drag.start[0]);

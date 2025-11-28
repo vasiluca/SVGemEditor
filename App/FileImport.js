@@ -8,14 +8,15 @@ $('.import').click(function () {
 })
 
 const demoPath = 'images/demo/';
-const demoFiles = ['embark.svg'];
+const demoFiles = ['reading.svg']; // first file is default when demo does not specify a file
 const checkDemoMode = () => { // this applies when the url contains a query like ?demoFile=embark.svg
 	const queryString = window.location.search;
 
 	const urlParams = new URLSearchParams(queryString);
 
 	if (urlParams.size > 0) {
-		const fileName = urlParams.get('demo');
+		let fileName = urlParams.get('demo');
+		if (fileName === '') fileName = demoFiles[0];
 
 		fetch('demo/' + fileName).then(res => {
 			

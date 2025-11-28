@@ -29,7 +29,7 @@ export default defineConfig({
     }
   },
   server: { // this is specifically for the react dev server
-    open: '/index.html', // this opens app.html on 'npm run dev'
+    open: '/index.html', // this opens the app on 'npm run dev'
     fs: { allow: [repoRoot] }
   },
 })
