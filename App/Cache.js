@@ -34,7 +34,8 @@ var cache = { // 'canvas' refers to the #editor SVG container element
 		let parentID = parent?.getAttribute('id');
 		const parentTag = parent?.tagName.toLowerCase();
 		
-		if (parentTag === 'g' && cache.mapKeysTo === 'canvas') {
+		// Click-through group functionality (if selection mode and mapped to canvas)
+		if (parentTag === 'g' && cache.mapKeysTo === 'canvas' && tool.type === 'selection') {
 			if (!parentID) {
 				parentID = newSVG.numID;
 				parent.setAttribute('id', parentID);
