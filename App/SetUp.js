@@ -90,7 +90,7 @@ let origin;
 const zoomSpeed = 0.05;
 const maxZoom = 20;
 
-let client = [0, 0]; // this stores a fixed mouse position point (unless zooming out, in which case it is updated)
+let client = [$(window).width()/2, $(window).height()/2]; // this stores a fixed mouse position point (unless zooming out, in which case it is updated)
 let clientX, clientY; // this stores relative mouse position limited/affescted by the 'client' mouse point var and zoom level
 
 let lastCheckedZoom = doc.zoom;

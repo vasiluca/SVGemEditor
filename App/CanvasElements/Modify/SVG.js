@@ -329,8 +329,8 @@ var svg = {
 		var x1 = (this.initial.x + this.initial.width / 2)  * svg.initial.globalScale[0] + this.initial.globalTrans[0];
 		var y1 = (this.initial.y + this.initial.height / 2) * svg.initial.globalScale[1] + this.initial.globalTrans[1];
 
-		let x2 = x1 + transX*this.initial.globalScale[0];
-		let y2 = y1 + transY*this.initial.globalScale[1];
+		let x2 = x1 + transX*this.initial.globalScale[0] * cache.viewScale[0];
+		let y2 = y1 + transY*this.initial.globalScale[1] * cache.viewScale[1];
 
 		if (pressed.cmdKey || pressed.shiftKey) {
 			var selectionX = cache.origSelectArea.x + cache.origSelectArea.width / 2;
@@ -344,8 +344,8 @@ var svg = {
 				$('#movePreview').html($('#movePreview').html() + '<line class="draggingPreview2" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="orange" stroke-width="' + 1 + '"></line>');
 
 			} else {
-				let selectionX2 = selectionX + transX * this.initial.globalScale[0] * doc.zoom;
-				let selectionY2 = selectionY + transY * this.initial.globalScale[1] * doc.zoom;
+				let selectionX2 = selectionX + transX * this.initial.globalScale[0] * doc.zoom * cache.viewScale[0];
+				let selectionY2 = selectionY + transY * this.initial.globalScale[1] * doc.zoom * cache.viewScale[1];
 				$('.draggingPreview, .draggingPreview2').attr({
 					'x1': selectionX,
 					'y1': selectionY,
