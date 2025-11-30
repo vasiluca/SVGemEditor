@@ -1,6 +1,7 @@
 /** This contains all functions pertaining to the Properties Tab */
 
 import { cache } from '../Cache.js';
+import { ui } from '../UI.js';
 
 import { tool } from './Tool.js';
 
@@ -12,12 +13,17 @@ var property = {
 	showOptions: function () {
 
 	},
+	value: 0,
 	setNumValue: function () { // Change the value of a property
+		if (!cache.ele) return;
+		
 		var property = this.scrubberTo;
-		var valueChange = cache.stop[1] - cache.start[1];
+		var valueChange;
 		var scrubAmount = 0;
 		if (!$('.propertyScrubber').hasClass('down')) {
-			valueChange = cache.start[1] - cache.stop[1];
+			valueChange = ui.location('stroke', 'top') - cache.cursor[1];
+		} else {
+			valueChange = cache.cursor[1] - ui.location('stroke', 'bottom');
 		}
 		if (cache.ele.attr('stroke-opacity') == '0') {
 			cache.ele.attr('stroke-opacity', 1);
@@ -25,34 +31,14 @@ var property = {
 		if (cache.ele) {
 			switch (property.attr('aria-label')) {
 				case 'stroke':
-					if (!$('.propertyScrubber').hasClass('show')) {
-						if (cache.ele.attr('stroke-width')) {
-							this.value = Math.round(parseFloat(cache.ele.attr('stroke-width')));
-						} else {
-							this.value = 0;
-						}
-					}
 					valueChange = this.value + valueChange;
 					var value;
-					if (valueChange < 100) {
-						value = valueChange / 10;
-						scrubAmount = value * 10;
-					} else {
-						value = Math.round((valueChange) - 90);
-						scrubAmount = value + 90;
-					}
-					if (value > 100) {
-						value = 100;
+
+					value = valueChange;
+					scrubAmount = value;
+					if (scrubAmount > 190)
 						scrubAmount = 190;
-						cache.start = [cache.stop[0], cache.stop[1]];
-						this.value = 100;
-					}
-					if (value < 0) {
-						value = 0;
-						scrubAmount = 0;
-						cache.start = [cache.stop[0], cache.stop[1]];
-						this.value = 0;
-					}
+						
 					if (CSS.supports('stroke-width', value)) {
 						cache.ele.attr('stroke-width', value);
 						if (value < 10) {

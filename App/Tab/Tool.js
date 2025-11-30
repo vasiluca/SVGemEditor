@@ -42,7 +42,7 @@ var tool = {
 		return this.toolType;
 	},
 	stroke: 'black',
-	strokeWidth: 10,
+	strokeWidth: 4,
 	strokeOpacity: 1,
 	fillOpacity: 1,
 	paintOrder: 'fill',

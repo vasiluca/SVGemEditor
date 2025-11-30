@@ -76,7 +76,7 @@ var ui = {
 			});
 		}
 	},
-	location: function (btnName) {
+	location: function (btnName, edge) {
 		var btn;
 		if (typeof btnName == 'string') {
 			btn = {
@@ -93,6 +93,9 @@ var ui = {
 				right: btnName.offset().left + btnName.width()
 			}
 		}
+		if (edge)
+			return btn[edge];
+		
 		return (cache.cursor[0] > btn.left && cache.cursor[0] < btn.right && cache.cursor[1] > btn.top && cache.cursor[1] < btn.bottom);
 	},
 	cursorFeedback: function () { // Depending on where the user is dragging the color, it will change styles if it over a droppable area

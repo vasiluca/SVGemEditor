@@ -53,7 +53,7 @@ $('.properties div').click(function () {
 		bottom: $(this).offset().top + $(this).height()
 	};
 }).mouseleave(function (e) {
-	if (cache.swipe && !$('.propertyScrubber').hasClass('show')) {
+	if ($(e.target).attr('aria-label') === 'stroke' && cache.swipe && !$('.propertyScrubber').hasClass('show')) {
 		cache.start = [e.clientX, e.clientY];
 		if (e.clientX > cache.btnArea.left && e.clientX < cache.btnArea.right) {
 			cache.start = [e.clientX, e.clientY];
