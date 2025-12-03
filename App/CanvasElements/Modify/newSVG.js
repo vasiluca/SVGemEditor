@@ -15,19 +15,26 @@ var newSVG = {
 	creating: false, // indicates that the user moused-down and might drag to create an element
 	finished: false,
 
-	create(type, id) {
+	create(type, id, attrs) {
 		
 		if (!id) {
 			id = this.numID;
 			this.numID++; // increment id for the next time it is accessed
 		}
+		let parent = document.querySelector('body svg#editor');
+		const svgNS = "http://www.w3.org/2000/svg";
+		const el = document.createElementNS(svgNS, type);
+		el.setAttribute('id', id);
+		if (attrs) {
+			for (const key in attrs) {
+				console.log(key);
+				el.setAttribute(key, attrs[key]);
+			}
+		}
 		
 		// the below code simply append to the HTML Document
 		if (cache.ele) {
-			let parent = cache.ele[0].parentElement;
-			const svgNS = "http://www.w3.org/2000/svg";
-			const el = document.createElementNS(svgNS, type);
-			el.setAttribute('id', id);
+			parent = cache.ele[0].parentElement;
 
 			if (this.insertNextToGroup || cache.ele[0].tagName.toLowerCase() !== 'g') { // insert before existing selected elements, including before selected <g> elements (if insert nextToGroup enabled)
 				if (parent.tagName.toLowerCase() === 'g' && parent.childElementCount === 1) // do not draw to a group that does not show up as a group already (i.e. a <g> with a single child element)
@@ -47,8 +54,9 @@ var newSVG = {
 				// TODO: The user will be able to configure insertNextToGroup setting in the future, this will require slight modification to ensure that the svg.initial data of the frontmost child of the group is used
 				// Currently, all new elements are added in front of the current selected element whether group or not (this else-if block is currently ignored)
 			} 
-		} else
-			$('#editor').html($('#editor').html() + '<' + type + ' id=' + id + '/>');
+		} else {
+			parent.appendChild(el); // insert the new element just after the last element (by accessing its next sibling), after is the counterpart to insertBefore
+		}
 
 		cache.ele = id;
 

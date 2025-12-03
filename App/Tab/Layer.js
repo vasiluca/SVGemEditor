@@ -14,36 +14,51 @@ import { deleteButton } from './Property/DeleteButton.js';
 // However getCoord() is much more robust than simply calling getBBox on an element, since it would not account for transformations at all
 function getCoord(el) {
 	// let transform = getSVGTransform(el.parentElement); // we check for a global transform, but for getCoord() we must return local single element transform
-	let globalTransform = getSVGTransform(el.parentElement, true);
-	let transform = getSVGTransform(el.parentElement);
-	
-	const svg = document.querySelector('#editor');
-	const bbox = el.getBBox();
+	try {
+		let globalTransform = getSVGTransform(el.parentElement, true);
+		let transform = getSVGTransform(el.parentElement);
 
-	let point = svg.createSVGPoint();
-	point.x = bbox.x;
-	point.y = bbox.y;
+		const svg = document.querySelector('#editor');
+		const bbox = el.getBBox();
 
-	// Always use getCTM() (more reliable than getScreenCTM for SVG transformations)
-	let ctm = el.getCTM();
-	let svgCtm = svg.getCTM();
+		let point = svg.createSVGPoint();
+		point.x = bbox.x;
+		point.y = bbox.y;
 
-	// Always transform the point - don't make it conditional
-	if (ctm && svgCtm) {
-		point = point.matrixTransform(ctm);
-		point = point.matrixTransform(svgCtm.inverse());
+		// Always use getCTM() (more reliable than getScreenCTM for SVG transformations)
+		let ctm = el.getCTM();
+		let svgCtm = svg.getCTM();
+
+		// Always transform the point - don't make it conditional
+		if (ctm && svgCtm) {
+			point = point.matrixTransform(ctm);
+			point = point.matrixTransform(svgCtm.inverse());
+		}
+
+		let pos = point; // point stores values for x and y
+
+		pos = {
+			x: (pos.x) / globalTransform.scaleX,
+			y: (pos.y) / globalTransform.scaleY,
+			other: globalTransform,
+			local: transform
+		};
+
+		return pos;
+	} catch (e) {
+		return {
+			x: 0,
+			y: 0,
+			other: {
+				x: 0,
+				y: 0
+			},
+			local: {
+				x: 0,
+				y: 0
+			}
+		};
 	}
-
-	let pos = point; // point stores values for x and y
-
-	pos = {
-		x: (pos.x) / globalTransform.scaleX,
-		y: (pos.y) / globalTransform.scaleY,
-		other: globalTransform,
-		local: transform
-	};
-
-	return pos;
     
 }
 
@@ -140,7 +155,7 @@ var layers = {
 				
 
 				if (data.type == 'circle' || data.type == 'ellipse' || data.type == 'rect' ||
-					data.type == 'line' || data.type == 'path' || data.type == 'polyline' || data.type == 'polygon' || data.type == 'g' || data.type == 'text' || data.type == 'image') {
+					data.type == 'line' || data.type == 'path' || data.type == 'polyline' || data.type == 'polygon' || data.type == 'g' || data.type == 'text' || data.type == 'image' && ele[0]) {
 					let div;
 					// if (!(data.type == 'g' && ele.children().length === 1 && ele.children().eq(0).children().length === 0)) { // avoid including a single element twice
 						
@@ -277,6 +292,13 @@ var layers = {
 						//section = document.querySelector('.layers .all section#group-' + groupNum); // reset the parent group element to the previous one from recursion
 					}
 
+				} else { // we will create a placeholder for an element (like defs) so that the layers and canvas item indexes align (this will prevent bugs)
+					const span = document.createElement('span');
+					if (child) {
+						document.querySelector('.layers .all section#group-' + groupNum).appendChild(span);
+					} else {
+						document.querySelector('.layers .all').appendChild(span);
+					}
 				}
 			// }
 		}

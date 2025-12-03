@@ -1,4 +1,5 @@
 import { cache, pressed } from "../../Cache.js";
+import { newSVG } from "../../CanvasElements/Modify/newSVG.js";
 import { ui } from "../../UI.js";
 
 import { layers } from "../Layer.js";
@@ -49,8 +50,12 @@ $(document).on('mouseup', function (e) {
 					var posX = e.clientX - selection.width / 2;
 					var posY = e.clientY - selection.height / 2;
 					// was previously selection.height and selection.width for height and width
-					var element = '<image xlink:href="' + selection.result + '" x="' + posX + '" y="' + posY + '"/>';
-					$('#editor').html($('#editor').html() + element);
+					// not specifying width and height so the image auto-sizes to its default dimensions
+					newSVG.create('image', undefined, {
+						x: posX,
+						y: posY
+					});
+					cache.ele[0].setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', selection.result); // need to use 'namespace' XML link (first parameter) to prevent bugs of non-rendering
 					
 					layers.update();
 				}
