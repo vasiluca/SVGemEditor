@@ -63,18 +63,18 @@ var resize = function (initial, type) { initial = svg.initial; type = svg.type;
 	if (type === 'genericElement') {
 		
 		if (rightHandle) {
-			translateX = (drag.end[0] - drag.start[0])*cache.viewScale[0];
+			translateX = (drag.end[0] - drag.start[0])*doc.viewScale[0];
 		}
 		if (bottomHandle) {
-			translateY = (drag.end[1] - drag.start[1])*cache.viewScale[1];
+			translateY = (drag.end[1] - drag.start[1])*doc.viewScale[1];
 		}
 
 
 		if (leftHandle) {
-			translateX = (drag.start[0] - drag.end[0])*cache.viewScale[0];
+			translateX = (drag.start[0] - drag.end[0])*doc.viewScale[0];
 		}
 		if (topHandle) {
-			translateY = (drag.start[1] - drag.end[1])*cache.viewScale[1];
+			translateY = (drag.start[1] - drag.end[1])*doc.viewScale[1];
 		}
 
 		svg.new.translateDiff = [translateX * doc.zoom, translateY * doc.zoom];

@@ -40,7 +40,11 @@ var doc = {
 		});
 		this.showCanvas();
 	},
-	zoom: 1
+	zoom: 1,
+	newScale: 1,
+	viewScale: [1, 1],
+	scaleFit: [1, 1],
+	scale: () => [this.viewScale[0] / this.scaleFit[0], this.viewScale[1] / this.scaleFit[1]]
 };
 
 $('.start').click(function () {

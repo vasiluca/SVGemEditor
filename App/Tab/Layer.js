@@ -163,8 +163,8 @@ var layers = {
 					stroke = stroke ? Number.parseFloat(stroke) : 0;
 
 					let coord = getCoord(ele[0]); // with coord.other.scale we can prevent the parent scaling from affecting the bounding rectange of the element's own transform
-					var width = ele[0].getBoundingClientRect().width/doc.zoom/coord.other.scaleX/cache.viewScale[0] + stroke / 2 * 2;
-					var height = ele[0].getBoundingClientRect().height/doc.zoom/coord.other.scaleY/cache.viewScale[1] + stroke / 2 * 2;
+					var width = ele[0].getBoundingClientRect().width/doc.zoom/coord.other.scaleX/doc.viewScale[0]/doc.scaleFit[0] + stroke / 2 * 2;
+					var height = ele[0].getBoundingClientRect().height/doc.zoom/coord.other.scaleY/doc.viewScale[1]/doc.scaleFit[1] + stroke / 2 * 2;
 
 					// getCoord returns the position of any element, but only accounts for the style transformations on the current element, not including parent
 					var transX = -coord.x + stroke / 2; //+ coord.other.scale[0];

@@ -43,7 +43,7 @@ const checkDemoMode = () => { // this applies when the url contains a query like
 }
 checkDemoMode(); // automatically check browser URL for Demo Mode
 
-const editor = document.querySelector('#editor');
+const editor = document.querySelector('body > .svg-contain > svg#editor');
 
 function copyAttributes(source, target) {
 	const attributes = source.attributes;
@@ -52,7 +52,7 @@ function copyAttributes(source, target) {
 }
 let viewBox;
 function getViewBox() {
-	viewBox = $('#editor').attr('viewBox');
+	viewBox = $(editor).attr('viewBox');
 	let viewScale = [1, 1];
 	let dimensions = [0, 0];
 
@@ -88,7 +88,7 @@ function getViewBox() {
 	}
 	
 	cache.viewBox = viewBox;
-	cache.viewScale = viewScale;
+	doc.viewScale = viewScale;
 }
 
 function centerCanvas() {
@@ -97,16 +97,46 @@ function centerCanvas() {
 	const offsetTop = ($(window).height() / 2 - doc.size[1] / 2);
 	const offsetLeft = ($(window).width() / 2 - doc.size[0] / 2);
 	doc.origPos = [offsetLeft, offsetTop]; // we store the untransformed left and top position of the element
-	$('#editor').css({
+	$(editor).css({
 		'transform': 'scale(' + doc.zoom + ')',
 		'top': offsetTop,
 		'left': offsetLeft
 	});
 }
 
+function scaleToFit(width, height) {
+	const prevW = width, prevH = height;
+
+	const viewW = $(window).width();
+	const viewH = $(window).height();
+
+	let newSize = [doc.size[0], doc.size[1]];
+	if (viewH < viewW) {
+		const scaleDiff = viewH / prevH;
+		newSize[0] = prevW * scaleDiff;
+		newSize[1] = viewH;
+
+	} else {
+		const scaleDiff = viewW / prevW;
+		newSize[0] = viewW;
+		newSize[1] = prevH * scaleDiff;
+	}
+
+	doc.size = newSize;
+	$(editor).css({
+		width: newSize[0] + 'px',
+		height: newSize[1] + 'px'
+	})
+
+	$(editor).attr({
+		width: newSize[0] + 'px',
+		height: newSize[1] + 'px'
+	})
+
+	doc.scaleFit = [newSize[0] / prevW, newSize[1] / prevH];
+}
 // TODO: Create a new embedded <object> element which includes the SVG to further prevent interference between IDs and element accesses in the container application
 function onFileLoad(content) {
-	console.log(content);
 	// $('.svg-contain #editor').remove(); // remove the the default #editor SVG canvas
 	// const parser = new DOMParser();
 	// const doc = parser.parseFromString(event.target, 'application/xml');
@@ -126,8 +156,8 @@ function onFileLoad(content) {
 	$('.svg-contain').addClass('show');
 
 	// the jQuery width() and height() methods auto-convert any values that are non-px into pixel values
-	var width = $('#editor').width();
-	var height = $('#editor').height();
+	var width = editor.getBoundingClientRect().width;
+	var height = editor.getBoundingClientRect().height;
 
 	
 
@@ -138,9 +168,11 @@ function onFileLoad(content) {
 
 	getViewBox();
 
+	scaleToFit(doc.size[0], doc.size[1]);
+	
 	centerCanvas();
 
-	$('svg#editor').css('transition', 'all 0.15s ease'); // smooth zooming
+	$(editor).css('transition', 'all 0.15s ease'); // smooth zooming
 
 	// $('#editor').attr('preserveAspectRatios', 'xMidYMid meet');
 	// $('#editor').attr('overflow', 'hidden');
