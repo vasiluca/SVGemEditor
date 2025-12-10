@@ -1,0 +1,8 @@
+# https://lefthook.dev/configuration/
+
+pre-commit:
+  commands:
+    build:
+      glob: "App/svgem-react/**/*.{js,jsx,ts,tsx,json,html}"
+      run: pnpm build
+      fail_text: "Build failed. Please fix file errors before committing."

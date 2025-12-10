@@ -1,12 +1,11 @@
 {
   "scripts": {
-    "build": "npm --prefix ./App/svgem-react run build",
-    "dev": "npm --prefix ./App/svgem-react run dev",
-    "test": "jest",
-    "prepare": "husky"
+    "build": "pnpm --filter svgem-react build",
+    "dev": "pnpm --filter svgem-react dev",
+    "test": "jest"
   },
   "devDependencies": {
-    "husky": "^9.1.7",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "lefthook": "^2.0.9"
   }
 }

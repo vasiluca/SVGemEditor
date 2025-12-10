@@ -4,6 +4,7 @@ import checker from 'vite-plugin-checker'
 
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { listHostURL } from './plugins/vite-plugin-list-host-url';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -18,7 +19,8 @@ export default defineConfig({
       typescript: {
         tsconfigPath: path.resolve(__dirname, 'tsconfig.json')
       }
-    })
+    }),
+    listHostURL
   ],
   build: {
     outDir: path.resolve(repoRoot, 'dist'),
