@@ -5,7 +5,8 @@ import Points from './Points/Points';
 const Ele = (props) => {
 	return (
 		<div className={style.Ele}>
-			<input type='text' value={props.dispName}/>
+			{/* stopPropagation prevents a change to the name in the animation tab from propagating up */}
+			<input type='text' defaultValue={props.dispName} onKeyDown={(e) => e.stopPropagation()}/> 
 
 			<Points points={props.points}/>
 		</div>
