@@ -3,3 +3,7 @@ node_modules/
 coverage/
 temp/
 dist/
+
+.lefthook/
+# In case lefthook uses a .husky directory (for whatever reason)
+.husky/

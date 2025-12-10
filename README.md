@@ -1,3 +1,10 @@
+## About
+[View License](./LICENSE)
+
+This SVG editor and animation application is being continuously developed. If you wish to collaborate, then you can become a contributor through [luminflow.app](https://luminflow.app).
+
+[Please fill out this quick survey](https://form.typeform.com/to/Joe43P9Z) if you work with SVG image files.
+
 ## Project Link
 https://vasiluca.github.io/SVGemEditor
 The project can be accessed directly in the browser through the github.io website.
