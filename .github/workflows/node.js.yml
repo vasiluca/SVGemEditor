@@ -26,13 +26,18 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           node-version: ${{ matrix.node-version || '' }} # When no node-version is specified within node-versions, then GitHub will use .nvmrc
-          cache: 'npm'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - uses: actions/configure-pages@v5
       
-      - run: node --version && npm --version # Check the expected correct node and npm versions are used
-      - run: npm ci --prefix ./App/svgem-react
-      - run: npm run build --if-present
+      - run: node --version && pnpm --version # Check the expected correct node and pnpm versions are used
+      - run: pnpm install
+      - run: pnpm build
 
       # Upload artifact for GitHub Pages
       - name: Upload artifact for Pages

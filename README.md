@@ -1,7 +1,8 @@
 ## About
 [View License](./LICENSE)
 
-This SVG editor and animation application is being continuously developed. If you wish to collaborate, then you can become a contributor through [luminflow.app](https://luminflow.app).
+This SVG editor and animation application is being continuously developed as [Luminflow Studio](https://github.com/luminflow-software/studio) at Luminflow.
+If you wish to collaborate, then you can become a contributor through [luminflow.app](https://luminflow.app).
 
 [Please fill out this quick survey](https://form.typeform.com/to/Joe43P9Z) if you work with SVG image files.
 
