@@ -2,7 +2,8 @@
   "scripts": {
     "build": "pnpm --filter svgem-react build",
     "dev": "pnpm --filter svgem-react dev",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "lefthook install"
   },
   "devDependencies": {
     "jest": "^29.7.0",
